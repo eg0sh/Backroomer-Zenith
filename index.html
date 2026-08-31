@@ -180,28 +180,27 @@
             margin-bottom: 28px;
             position: relative;
             box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6), inset 0 0 80px rgba(245, 176, 65, 0.02);
-            overflow-x: auto;
-            overflow-y: visible;
+            overflow: hidden; /* чтобы скрыть вылезающие части, если что */
         }
 
         .timeline-track {
             position: relative;
             height: 100px;
             width: 100%;
-            min-width: 500px;
+            padding: 0 3%; /* отступы для крайних кружков */
         }
 
         .timeline-line {
             position: absolute;
             top: 50%;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: #1a2332;
+            left: 3%;
+            right: 3%;
+            height: 5px;
+            background: linear-gradient(90deg, #4a5a6e, #6a7a8e);
             border-radius: 4px;
             transform: translateY(-50%);
             z-index: 1;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05), inset 0 0 8px rgba(0, 0, 0, 0.5);
         }
 
         .timeline-line .phase-fill {
@@ -211,7 +210,7 @@
             left: 0;
             top: 0;
             background: linear-gradient(90deg, #f5b041, #e67e22);
-            box-shadow: 0 0 30px rgba(245, 176, 65, 0.3);
+            box-shadow: 0 0 30px rgba(245, 176, 65, 0.6), 0 0 60px rgba(245, 176, 65, 0.2);
             transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
         }
@@ -220,8 +219,8 @@
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -233,14 +232,15 @@
             z-index: 2;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
             background: #1a2332;
             text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+            will-change: transform;
         }
 
         .timeline-dot .dot-pct {
-            font-size: 16px;
+            font-size: 17px;
             line-height: 1.1;
         }
 
@@ -249,9 +249,13 @@
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.3px;
-            opacity: 0.7;
+            opacity: 0.8;
             margin-top: 1px;
             text-align: center;
+            max-width: 56px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .timeline-dot::after {
@@ -267,13 +271,13 @@
         .timeline-dot.done {
             background: linear-gradient(135deg, #2b6a9e, #1d4a7a);
             border-color: #4a8ec4;
-            box-shadow: 0 0 30px rgba(42, 106, 158, 0.3), inset 0 0 20px rgba(74, 142, 196, 0.2);
+            box-shadow: 0 0 30px rgba(42, 106, 158, 0.4), inset 0 0 20px rgba(74, 142, 196, 0.2);
         }
 
         .timeline-dot.active {
             background: linear-gradient(135deg, #c0392b, #e74c3c);
             border-color: #e74c3c;
-            box-shadow: 0 0 50px rgba(231, 76, 60, 0.5), inset 0 0 30px rgba(231, 76, 60, 0.3);
+            box-shadow: 0 0 50px rgba(231, 76, 60, 0.6), inset 0 0 30px rgba(231, 76, 60, 0.3);
             animation: pulse-red 1.8s ease-in-out infinite;
         }
 
@@ -289,7 +293,7 @@
         }
 
         .timeline-dot:hover {
-            transform: translate(-50%, -50%) scale(1.15);
+            transform: translate(-50%, -50%) scale(1.12);
             z-index: 5;
         }
 
@@ -315,11 +319,11 @@
             }
         }
 
-        /* всплывающая подсказка (название) */
+        /* tooltip – теперь не выходит за границы */
         .timeline-dot .tooltip {
             display: none;
             position: absolute;
-            bottom: calc(100% + 16px);
+            bottom: calc(100% + 14px);
             left: 50%;
             transform: translateX(-50%);
             background: rgba(15, 23, 34, 0.95);
@@ -330,17 +334,29 @@
             font-size: 13px;
             font-weight: 500;
             color: #e8edf5;
-            white-space: nowrap;
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
             pointer-events: none;
             z-index: 10;
             max-width: 200px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            word-break: break-word;
+            text-align: center;
+            line-height: 1.3;
         }
 
         .timeline-dot:hover .tooltip {
             display: block;
+        }
+
+        /* корректировка для крайних точек, чтобы подсказка не улетала */
+        .timeline-dot:first-child .tooltip {
+            left: 0;
+            transform: translateX(0);
+        }
+        .timeline-dot:last-child .tooltip {
+            left: auto;
+            right: 0;
+            transform: translateX(0);
         }
 
         /* ----- info panel (по клику на кружок) ----- */
@@ -667,18 +683,19 @@
                 gap: 12px;
             }
             .timeline-track {
-                min-width: 400px;
                 height: 80px;
+                padding: 0 2%;
             }
             .timeline-dot {
-                width: 48px;
-                height: 48px;
+                width: 52px;
+                height: 52px;
             }
             .timeline-dot .dot-pct {
-                font-size: 13px;
+                font-size: 14px;
             }
             .timeline-dot .dot-label {
                 font-size: 7px;
+                max-width: 44px;
             }
             .info-panel {
                 flex-direction: column;
@@ -722,18 +739,19 @@
                 font-size: 15px;
             }
             .timeline-track {
-                min-width: 320px;
                 height: 70px;
+                padding: 0 1%;
             }
             .timeline-dot {
-                width: 40px;
-                height: 40px;
+                width: 44px;
+                height: 44px;
             }
             .timeline-dot .dot-pct {
-                font-size: 11px;
+                font-size: 12px;
             }
             .timeline-dot .dot-label {
                 font-size: 6px;
+                max-width: 36px;
             }
             .phase-block {
                 padding: 12px 14px;
@@ -771,7 +789,7 @@
         <!-- ===== TIMELINE ===== -->
         <div class="timeline-wrapper">
             <div class="timeline-track" id="timelineTrack">
-                <div class="timeline-line">
+                <div class="timeline-line" id="timelineLine">
                     <div class="phase-fill" id="phaseFill"></div>
                 </div>
                 <!-- dots будут вставлены JS -->
@@ -811,8 +829,8 @@
         const phases = [{
             id: 'p1',
             label: 'Разведка и бурение',
-            startDate: '2026-08-16', // дата начала фазы (если есть)
-            endDate: null, // дата окончания (если есть)
+            startDate: '2026-08-16',
+            endDate: null,
             budget: '$500 млн',
         }, {
             id: 'p2',
@@ -835,8 +853,6 @@
         }];
 
         // Подэтапы
-        // Поля: id, phaseId, name, startDate (строка YYYY-MM-DD или null), endDate (или null),
-        // pct (0-100), description, characteristics, dependencies (массив id)
         const subPhases = [{
             id: '1.1',
             phaseId: 'p1',
@@ -1130,17 +1146,19 @@
         //  RENDER
         // ============================================================
 
-        // ---- timeline dots (for phases) ----
         function renderTimeline() {
             const track = document.getElementById('timelineTrack');
-            // remove old dots
             track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
 
             const n = phases.length;
+            const leftMargin = 3; // %
+            const rightMargin = 3;
+            const range = 100 - leftMargin - rightMargin;
+
             phases.forEach((phase, index) => {
                 const progress = getPhaseProgress(phase.id);
                 const status = getStatusInfo(progress);
-                const x = (index / (n - 1)) * 100; // равномерно
+                const x = leftMargin + (index / (n - 1)) * range;
 
                 const dot = document.createElement('div');
                 dot.className = `timeline-dot ${status.status}`;
@@ -1154,7 +1172,6 @@
 
                 const labelSpan = document.createElement('span');
                 labelSpan.className = 'dot-label';
-                // сокращённое название (первое слово)
                 labelSpan.textContent = phase.label.split(' ')[0];
                 dot.appendChild(labelSpan);
 
@@ -1171,13 +1188,11 @@
                 track.appendChild(dot);
             });
 
-            // обновить заливку линии (общий прогресс)
             const fill = document.getElementById('phaseFill');
             const overall = getOverallProgress();
             fill.style.width = overall + '%';
         }
 
-        // ---- info panel (при клике на кружок фазы) ----
         function showPhaseInfo(phaseId) {
             const phase = getPhaseById(phaseId);
             if (!phase) return;
@@ -1210,7 +1225,6 @@
             `;
         }
 
-        // ---- phases section (sub-phases cards) ----
         function renderPhases() {
             const container = document.getElementById('phasesContainer');
             container.innerHTML = '';
@@ -1243,7 +1257,6 @@
                 const cardsWrap = document.createElement('div');
                 cardsWrap.className = 'phase-cards';
 
-                // сортировка по id (можно по дате начала, но оставим по порядку)
                 const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id));
                 sorted.forEach(sub => {
                     const card = createPhaseCard(sub);
@@ -1280,7 +1293,6 @@
 
             card.appendChild(top);
 
-            // мета (даты)
             const meta = document.createElement('div');
             meta.className = 'card-meta';
             if (sub.startDate) {
@@ -1291,7 +1303,6 @@
             }
             card.appendChild(meta);
 
-            // клик -> модалка с полными данными
             card.addEventListener('click', function() {
                 openModal(sub);
             });
@@ -1299,7 +1310,6 @@
             return card;
         }
 
-        // ---- modal ----
         function openModal(sub) {
             const overlay = document.getElementById('modalOverlay');
             document.getElementById('modalTitle').textContent = sub.name;
@@ -1318,7 +1328,6 @@
                 { key: 'Характеристики', value: sub.characteristics || '—' },
             ];
 
-            // Зависимости
             if (sub.dependencies && sub.dependencies.length) {
                 const depNames = sub.dependencies.map(id => getSubName(id)).join(', ');
                 fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
@@ -1335,7 +1344,6 @@
             overlay.classList.add('active');
         }
 
-        // ---- stats & time ----
         function updateStats() {
             const total = subPhases.length;
             const completed = getCompletedCount();
@@ -1356,7 +1364,6 @@
             document.getElementById('lastUpdate').textContent = timeStr;
         }
 
-        // ---- init ----
         function init() {
             renderTimeline();
             renderPhases();
