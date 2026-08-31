@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arion · Дашборд статуса проекта</title>
+    <title>Arion · Статус проекта</title>
     <style>
         /* ----- reset & base ----- */
         * {
@@ -23,7 +23,7 @@
         }
 
         .dashboard {
-            max-width: 1440px;
+            max-width: 1400px;
             width: 100%;
         }
 
@@ -54,40 +54,16 @@
             gap: 16px;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .logo-icon {
-            font-size: 32px;
-            line-height: 1;
-            background: linear-gradient(135deg, #f5b041, #d48c2c);
-            padding: 8px 14px;
-            border-radius: 12px;
-            color: #0b0e14;
+        .header-left h1 {
+            font-size: 42px;
             font-weight: 700;
             letter-spacing: -0.5px;
-            box-shadow: 0 4px 20px rgba(212, 140, 44, 0.25);
-        }
-
-        .header h1 {
-            font-size: 26px;
-            font-weight: 600;
-            letter-spacing: -0.3px;
-            background: linear-gradient(90deg, #f5d6a8, #f5b041);
+            background: linear-gradient(135deg, #f5d6a8, #f5b041);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        .header h1 small {
-            font-size: 15px;
-            font-weight: 400;
-            -webkit-text-fill-color: #8a9bb5;
-            background: none;
-            margin-left: 8px;
+            text-shadow: 0 0 40px rgba(245, 176, 65, 0.15);
+            margin: 0;
         }
 
         .header-right {
@@ -102,7 +78,7 @@
             align-items: center;
             gap: 8px;
             background: #141b26;
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 40px;
             border: 1px solid #25303e;
             font-size: 14px;
@@ -128,8 +104,9 @@
             font-size: 13px;
             color: #5a6a7e;
             display: flex;
-            align-items: center;
-            gap: 6px;
+            flex-direction: column;
+            align-items: flex-end;
+            line-height: 1.4;
         }
         .update-time .dot {
             display: inline-block;
@@ -138,6 +115,16 @@
             border-radius: 50%;
             background: #4cd9a0;
             animation: pulse-dot 2s ease-in-out infinite;
+            margin-right: 6px;
+        }
+        .update-time .time-row {
+            display: flex;
+            align-items: center;
+        }
+        .update-time .date-range {
+            font-size: 12px;
+            color: #5a6a7e;
+            margin-top: 2px;
         }
 
         @keyframes pulse-dot {
@@ -152,464 +139,435 @@
             }
         }
 
-        /* ----- main timeline (macro phases) ----- */
+        /* ----- timeline (шкала с кружками) ----- */
         .timeline-wrapper {
             background: #111822;
             border-radius: 20px;
-            padding: 22px 28px 18px;
+            padding: 30px 20px 20px;
             border: 1px solid #1e2938;
             margin-bottom: 28px;
+            position: relative;
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
-            position: relative;
+            overflow-x: auto;
+            overflow-y: visible;
         }
 
-        .timeline-bar {
+        .timeline-track {
             position: relative;
-            height: 32px;
-            border-radius: 40px;
-            overflow: hidden;
+            height: 80px;
+            width: 100%;
+            min-width: 600px;
+            /* чтобы не сжималось слишком */;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 4px;
             background: #1a2332;
-            display: flex;
-            margin-bottom: 10px;
+            border-radius: 4px;
+            transform: translateY(-50%);
+            z-index: 1;
         }
 
-        .phase-segment {
+        .timeline-line .phase-fill {
             height: 100%;
+            border-radius: 4px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0.3;
+            transition: width 0.6s ease;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            color: rgba(255, 255, 255, 0.85);
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-            transition: width 0.6s ease;
-            position: relative;
-            min-width: 60px;
-            flex-shrink: 0;
+            font-weight: 700;
+            color: #fff;
+            cursor: pointer;
+            z-index: 2;
+            transition: all 0.2s ease;
+            background: #2a3a4e;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            user-select: none;
         }
 
-        .phase-segment .p-label {
-            white-space: nowrap;
+        .timeline-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-dot.done {
+            background: #2b6a9e;
+            border-color: #4a8ec4;
+            box-shadow: 0 0 20px rgba(42, 106, 158, 0.3);
+        }
+
+        .timeline-dot.active {
+            background: #c0392b;
+            border-color: #e74c3c;
+            box-shadow: 0 0 30px rgba(231, 76, 60, 0.6);
+            animation: pulse-red 1.6s ease-in-out infinite;
+        }
+
+        .timeline-dot.active::after {
+            border-color: rgba(231, 76, 60, 0.4);
+            animation: ring-pulse 1.6s ease-in-out infinite;
+        }
+
+        .timeline-dot.pending {
+            background: #2a3a4e;
+            border-color: #3a4a5e;
+            box-shadow: none;
+        }
+
+        .timeline-dot:hover {
+            transform: translate(-50%, -50%) scale(1.12);
+            z-index: 5;
+        }
+
+        .timeline-dot .dot-label {
             font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.3px;
-            opacity: 0.95;
-        }
-        .phase-segment .p-pct {
-            font-size: 10px;
-            font-weight: 500;
-            opacity: 0.8;
-            margin-left: 6px;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 1px 8px;
-            border-radius: 20px;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
         }
 
-        .phase-segment.p1 {
-            background: linear-gradient(135deg, #2b6a9e, #1d4a7a);
+        .timeline-dot.done .dot-label {
+            color: #b0d4f0;
         }
-        .phase-segment.p2 {
-            background: linear-gradient(135deg, #2d7a5a, #1a5a3e);
+        .timeline-dot.active .dot-label {
+            color: #fff;
         }
-        .phase-segment.p3 {
-            background: linear-gradient(135deg, #b07d3a, #8a5f2a);
-        }
-        .phase-segment.p4 {
-            background: linear-gradient(135deg, #8a4a7a, #6a2a5a);
+        .timeline-dot.pending .dot-label {
+            color: #8a9bb5;
         }
 
-        .timeline-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #5a6a7e;
-            padding: 0 2px;
-            margin-top: 4px;
-        }
-
-        .timeline-labels span {
-            font-weight: 450;
-        }
-
-        /* ----- tracks ----- */
-        .tracks {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .track-row {
-            background: #111822;
-            border-radius: 16px;
-            border: 1px solid #1a2332;
-            padding: 12px 16px 10px;
-            transition: border-color 0.2s;
-        }
-
-        .track-row:hover {
-            border-color: #2a3a4e;
-        }
-
-        .track-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #b0c4de;
-            letter-spacing: 0.2px;
-        }
-
-        .track-header .track-dot {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-        .track-dot.geo {
-            background: #4a8ec4;
-        }
-        .track-dot.build {
-            background: #e8b84a;
-        }
-        .track-dot.log {
-            background: #5cb0a0;
-        }
-        .track-dot.energy {
-            background: #d97a5a;
-        }
-
-        .track-header .track-count {
-            font-weight: 400;
-            font-size: 12px;
-            color: #5a6a7e;
-            margin-left: auto;
-        }
-
-        .track-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px 12px;
-            min-height: 48px;
-            align-items: center;
-        }
-
-        /* ----- card (sub-phase) ----- */
-        .sub-card {
-            background: #1a2332;
-            border-radius: 12px;
-            padding: 8px 14px 8px 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border: 1px solid #25303e;
-            transition: all 0.25s ease;
-            cursor: default;
-            position: relative;
-            flex: 0 1 auto;
-            min-width: 140px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .sub-card:hover {
-            border-color: #3a4a5e;
-            background: #1f2a3a;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-        }
-
-        .sub-card .card-status {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            transition: background 0.3s;
-        }
-        .card-status.done {
-            background: #4cd9a0;
-            box-shadow: 0 0 12px rgba(76, 217, 160, 0.3);
-        }
-        .card-status.inprogress {
-            background: #f5b041;
-            box-shadow: 0 0 12px rgba(245, 176, 65, 0.25);
-            animation: glow-yellow 1.8s ease-in-out infinite;
-        }
-        .card-status.pending {
-            background: #3a4a5e;
-        }
-        .card-status.critical {
-            background: #e74c5e;
-            box-shadow: 0 0 14px rgba(231, 76, 94, 0.35);
-            animation: glow-red 1.2s ease-in-out infinite;
-        }
-
-        @keyframes glow-yellow {
+        @keyframes pulse-red {
             0%,
             100% {
-                box-shadow: 0 0 8px rgba(245, 176, 65, 0.2);
+                box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
             }
             50% {
-                box-shadow: 0 0 18px rgba(245, 176, 65, 0.5);
+                box-shadow: 0 0 50px rgba(231, 76, 60, 0.8);
             }
         }
-        @keyframes glow-red {
+
+        @keyframes ring-pulse {
             0%,
             100% {
-                box-shadow: 0 0 8px rgba(231, 76, 94, 0.2);
+                transform: scale(1);
+                opacity: 0.6;
             }
             50% {
-                box-shadow: 0 0 22px rgba(231, 76, 94, 0.5);
+                transform: scale(1.3);
+                opacity: 0;
             }
         }
 
-        .sub-card .card-name {
-            font-size: 12px;
-            font-weight: 500;
-            color: #d0dcec;
-            white-space: nowrap;
-            flex: 1;
-            min-width: 60px;
-        }
-
-        .sub-card .card-pct {
-            font-size: 14px;
-            font-weight: 700;
-            color: #f5b041;
-            min-width: 36px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
-        .sub-card .card-pct.done {
-            color: #4cd9a0;
-        }
-        .sub-card .card-pct.pending {
-            color: #5a6a7e;
-        }
-
-        .sub-card input[type="range"] {
-            width: 68px;
-            height: 4px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #2a3a4e;
-            border-radius: 4px;
-            outline: none;
-            flex-shrink: 0;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .sub-card input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #f5b041;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(245, 176, 65, 0.3);
-            border: 2px solid #0b0e14;
-            transition: 0.15s;
-        }
-
-        .sub-card input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
-            box-shadow: 0 0 20px rgba(245, 176, 65, 0.5);
-        }
-
-        .sub-card input[type="range"]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #f5b041;
-            cursor: pointer;
-            border: 2px solid #0b0e14;
-        }
-
-        .sub-card .card-tooltip {
+        .timeline-dot .tooltip {
             display: none;
             position: absolute;
-            bottom: calc(100% + 10px);
+            bottom: calc(100% + 12px);
             left: 50%;
             transform: translateX(-50%);
             background: #0f1722;
             border: 1px solid #2a3a4e;
-            border-radius: 12px;
-            padding: 12px 16px;
-            min-width: 200px;
-            font-size: 12px;
-            color: #b0c4de;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            pointer-events: none;
-            white-space: normal;
-        }
-
-        .sub-card .card-tooltip strong {
-            color: #e8edf5;
-            display: block;
-            margin-bottom: 4px;
+            border-radius: 10px;
+            padding: 8px 14px;
             font-size: 13px;
+            font-weight: 500;
+            color: #e8edf5;
+            white-space: nowrap;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            pointer-events: none;
+            z-index: 10;
         }
 
-        .sub-card .card-tooltip .tt-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 0;
-            border-bottom: 1px solid #1a2332;
-        }
-
-        .sub-card .card-tooltip .tt-row:last-child {
-            border-bottom: none;
-        }
-
-        .sub-card:hover .card-tooltip {
+        .timeline-dot:hover .tooltip {
             display: block;
         }
 
-        /* ----- detail section (all sub-phases with controls) ----- */
-        .detail-section {
+        /* ----- информационная панель (по клику на кружок) ----- */
+        .info-panel {
+            margin-top: 16px;
+            background: #141c28;
+            border-radius: 16px;
+            border: 1px solid #1e2938;
+            padding: 14px 20px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        .info-panel .info-placeholder {
+            color: #5a6a7e;
+            font-size: 14px;
+        }
+
+        .info-panel .info-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #f5b041;
+        }
+
+        .info-panel .info-details {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: #b0c4de;
+        }
+
+        .info-panel .info-details .detail-item {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .info-panel .info-details .detail-item .label {
+            color: #5a6a7e;
+        }
+
+        /* ----- нижняя секция: фазы с плашками ----- */
+        .phases-section {
+            margin-top: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .phase-block {
             background: #111822;
             border-radius: 20px;
             border: 1px solid #1e2938;
-            padding: 22px 24px 18px;
-            margin-top: 8px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .detail-section .section-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #b0c4de;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .detail-section .section-title .badge {
-            background: #1a2332;
-            padding: 2px 12px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 400;
-            color: #8a9bb5;
-        }
-
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 12px;
-        }
-
-        .detail-item {
-            background: #141c28;
-            border-radius: 12px;
-            padding: 12px 16px;
-            border: 1px solid #1e2938;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            padding: 18px 22px 20px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
             transition: border-color 0.2s;
         }
 
-        .detail-item:hover {
+        .phase-block:hover {
             border-color: #2a3a4e;
         }
 
-        .detail-item .d-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .detail-item .d-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: #d0dcec;
+        .phase-header {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
+            margin-bottom: 14px;
         }
 
-        .detail-item .d-name .d-phase {
-            font-size: 10px;
-            font-weight: 400;
-            color: #5a6a7e;
+        .phase-header .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #d0dcec;
+            letter-spacing: 0.2px;
+        }
+
+        .phase-header .phase-progress {
+            font-size: 14px;
+            font-weight: 500;
+            color: #f5b041;
             background: #1a2332;
-            padding: 0 8px;
-            border-radius: 20px;
+            padding: 4px 16px;
+            border-radius: 40px;
         }
 
-        .detail-item .d-track {
-            font-size: 10px;
+        .phase-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .phase-card {
+            background: #141c28;
+            border-radius: 14px;
+            padding: 12px 18px;
+            border: 1px solid #1e2938;
+            flex: 0 1 auto;
+            min-width: 140px;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .phase-card:hover {
+            border-color: #3a4a5e;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .phase-card .card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .phase-card .card-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #d0dcec;
+        }
+
+        .phase-card .card-pct {
+            font-size: 16px;
+            font-weight: 700;
+            color: #f5b041;
+        }
+
+        .phase-card .card-pct.done {
+            color: #4cd9a0;
+        }
+        .phase-card .card-pct.pending {
             color: #5a6a7e;
+        }
+
+        .phase-card .card-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: 6px;
+        }
+
+        .phase-card .card-status-dot.done {
+            background: #4cd9a0;
+            box-shadow: 0 0 12px rgba(76, 217, 160, 0.3);
+        }
+        .phase-card .card-status-dot.active {
+            background: #e74c3c;
+            box-shadow: 0 0 16px rgba(231, 76, 60, 0.5);
+            animation: pulse-dot 1.6s ease-in-out infinite;
+        }
+        .phase-card .card-status-dot.pending {
+            background: #3a4a5e;
+        }
+
+        .phase-card .card-meta {
+            font-size: 11px;
+            color: #5a6a7e;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
             margin-top: 2px;
         }
 
-        .detail-item .d-controls {
+        .phase-card .card-meta span {
             display: flex;
             align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
+            gap: 4px;
         }
 
-        .detail-item .d-controls input[type="range"] {
-            width: 80px;
-            height: 4px;
-            -webkit-appearance: none;
-            appearance: none;
-            background: #2a3a4e;
-            border-radius: 4px;
-            outline: none;
-            cursor: pointer;
+        /* ----- модальное окно для деталей ----- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
-        .detail-item .d-controls input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #f5b041;
-            cursor: pointer;
-            border: 2px solid #0b0e14;
-            box-shadow: 0 0 12px rgba(245, 176, 65, 0.2);
+        .modal-overlay.active {
+            display: flex;
         }
 
-        .detail-item .d-controls input[type="range"]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: #f5b041;
-            cursor: pointer;
-            border: 2px solid #0b0e14;
+        .modal {
+            background: #111822;
+            border-radius: 24px;
+            padding: 30px 34px;
+            max-width: 520px;
+            width: 100%;
+            border: 1px solid #2a3a4e;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            animation: modal-in 0.3s ease;
         }
 
-        .detail-item .d-pct {
-            font-size: 15px;
-            font-weight: 700;
+        @keyframes modal-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal .modal-title {
+            font-size: 22px;
+            font-weight: 600;
             color: #f5b041;
-            min-width: 38px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
+            margin-bottom: 16px;
         }
 
-        .detail-item .d-pct.done {
-            color: #4cd9a0;
+        .modal .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 15px;
+            color: #b0c4de;
         }
-        .detail-item .d-pct.pending {
+
+        .modal .modal-body .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #1a2332;
+        }
+
+        .modal .modal-body .row .key {
             color: #5a6a7e;
         }
 
-        .detail-item .d-status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
+        .modal .modal-body .row .value {
+            font-weight: 500;
+            color: #d0dcec;
+            text-align: right;
+        }
+
+        .modal .modal-close {
+            margin-top: 20px;
+            background: #1a2332;
+            border: none;
+            color: #b0c4de;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .modal .modal-close:hover {
+            background: #2a3a4e;
         }
 
         /* ----- responsive ----- */
@@ -622,50 +580,52 @@
                 align-items: stretch;
                 gap: 12px;
             }
+            .header-left h1 {
+                font-size: 32px;
+            }
             .header-right {
                 justify-content: flex-start;
                 gap: 12px;
-                flex-wrap: wrap;
             }
-            .timeline-wrapper {
-                padding: 16px 14px 14px;
+            .timeline-track {
+                min-width: 500px;
+                height: 70px;
             }
-            .phase-segment .p-label {
+            .timeline-dot {
+                width: 36px;
+                height: 36px;
+                font-size: 10px;
+            }
+            .timeline-dot .dot-label {
                 font-size: 9px;
             }
-            .phase-segment .p-pct {
-                font-size: 8px;
-                padding: 0 6px;
-                margin-left: 3px;
+            .info-panel {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
             }
-            .sub-card {
-                min-width: 100px;
-                padding: 6px 10px;
+            .info-panel .info-details {
+                flex-direction: column;
+                gap: 4px;
             }
-            .sub-card .card-name {
-                font-size: 10px;
-                min-width: 40px;
+            .phase-header .phase-title {
+                font-size: 16px;
             }
-            .sub-card input[type="range"] {
-                width: 44px;
+            .phase-cards {
+                flex-direction: column;
             }
-            .detail-grid {
-                grid-template-columns: 1fr;
+            .phase-card {
+                max-width: 100%;
+                min-width: 0;
             }
-            .detail-item .d-controls input[type="range"] {
-                width: 60px;
+            .modal {
+                padding: 24px;
             }
-            .header h1 {
-                font-size: 20px;
-            }
-            .header h1 small {
-                font-size: 12px;
-                display: block;
-                margin-left: 0;
-            }
-            .logo-icon {
-                font-size: 24px;
-                padding: 4px 10px;
+        }
+
+        @media (max-width: 480px) {
+            .header-left h1 {
+                font-size: 26px;
             }
             .stat-badge {
                 padding: 4px 12px;
@@ -674,88 +634,31 @@
             .stat-badge .num {
                 font-size: 15px;
             }
-            .track-cards {
-                gap: 6px;
+            .timeline-track {
+                min-width: 400px;
+                height: 60px;
             }
-            .track-row {
-                padding: 8px 10px;
-            }
-            .detail-item {
-                padding: 10px 12px;
-                flex-wrap: wrap;
-            }
-            .detail-item .d-controls {
-                margin-left: auto;
-            }
-            .sub-card .card-tooltip {
-                display: none !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .sub-card {
-                min-width: 80px;
-                padding: 4px 8px;
-            }
-            .sub-card .card-name {
+            .timeline-dot {
+                width: 30px;
+                height: 30px;
                 font-size: 9px;
-                min-width: 30px;
             }
-            .sub-card input[type="range"] {
-                width: 32px;
+            .timeline-dot .dot-label {
+                font-size: 8px;
             }
-            .sub-card .card-pct {
-                font-size: 11px;
-                min-width: 28px;
+            .phase-block {
+                padding: 12px 14px;
             }
-            .phase-segment .p-label {
-                font-size: 7px;
-            }
-            .phase-segment .p-pct {
-                font-size: 7px;
-                padding: 0 4px;
-            }
-            .timeline-bar {
-                height: 24px;
-            }
-            .detail-item .d-name {
-                font-size: 11px;
-            }
-            .detail-item .d-pct {
-                font-size: 13px;
-                min-width: 30px;
-            }
-            .header h1 {
-                font-size: 17px;
-            }
-        }
-
-        /* ----- utility ----- */
-        .mt-2 {
-            margin-top: 6px;
-        }
-        .text-muted {
-            color: #5a6a7e;
-        }
-        .flex-center {
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
     </style>
 </head>
 <body>
 
     <div class="dashboard">
-
         <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="header-left">
-                <div class="logo-icon">⛰️</div>
-                <h1>
-                    Arion
-                    <small>Sentinel · Zenith</small>
-                </h1>
+                <h1>Arion</h1>
             </div>
             <div class="header-right">
                 <div class="stat-badge">
@@ -768,147 +671,300 @@
                     <span class="label">/ <span id="totalCount">0</span></span>
                 </div>
                 <div class="update-time">
-                    <span class="dot"></span>
-                    <span>Обновлено: <span id="lastUpdate">сегодня</span></span>
+                    <div class="time-row">
+                        <span class="dot"></span>
+                        <span>Обновлено: <span id="lastUpdate">—</span></span>
+                    </div>
+                    <div class="date-range" id="projectDates">Строительство: <span id="projectStart">—</span> — <span id="projectEnd">—</span></div>
                 </div>
             </div>
         </header>
 
-        <!-- ===== TIMELINE (macro phases) ===== -->
+        <!-- ===== TIMELINE ===== -->
         <div class="timeline-wrapper">
-            <div class="timeline-bar" id="timelineBar">
-                <!-- phase segments rendered by JS -->
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-line" id="timelineLine">
+                    <div class="phase-fill" id="phaseFill" style="width:0%;"></div>
+                </div>
+                <!-- dots will be rendered by JS -->
             </div>
-            <div class="timeline-labels">
-                <span>0 мес</span>
-                <span>6 мес</span>
-                <span>14 мес</span>
-                <span>28 мес</span>
-                <span>36 мес</span>
+
+            <!-- info panel (при клике на кружок) -->
+            <div class="info-panel" id="infoPanel">
+                <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть название</span>
+                <span class="info-name" id="infoName" style="display:none;"></span>
+                <div class="info-details" id="infoDetails" style="display:none;"></div>
             </div>
         </div>
 
-        <!-- ===== TRACKS ===== -->
-        <div class="tracks" id="tracksContainer">
+        <!-- ===== PHASES SECTION ===== -->
+        <div class="phases-section" id="phasesContainer">
             <!-- rendered by JS -->
         </div>
 
-        <!-- ===== DETAIL SECTION (all sub-phases with sliders) ===== -->
-        <div class="detail-section">
-            <div class="section-title">
-                <span>📋 Все подэтапы</span>
-                <span class="badge" id="detailBadge">0</span>
-            </div>
-            <div class="detail-grid" id="detailGrid">
-                <!-- rendered by JS -->
+        <!-- ===== MODAL ===== -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-title" id="modalTitle">Название</div>
+                <div class="modal-body" id="modalBody">
+                    <!-- dynamic rows -->
+                </div>
+                <button class="modal-close" id="modalClose">Закрыть</button>
             </div>
         </div>
-
     </div>
 
     <script>
         // ============================================================
-        //  DATA
+        //  DATA (редактируйте здесь)
         // ============================================================
 
-        const TRACKS = {
-            geo: { label: 'Геологоразведка и бурение', icon: '🔍', cssClass: 'geo' },
-            build: { label: 'Строительство объектов', icon: '🏗️', cssClass: 'build' },
-            log: { label: 'Логистика и закупки', icon: '🚢', cssClass: 'log' },
-            energy: { label: 'Энергетика и оборона', icon: '⚡', cssClass: 'energy' }
-        };
+        // Глобальные даты проекта (для отображения в шапке)
+        const PROJECT_START = '2026-01-01'; // или null, если не указано
+        const PROJECT_END = '2029-01-01'; // или null
 
-        const phases = [{
-            id: 'p1',
-            label: 'Разведка и бурение',
-            short: 'Разведка',
-            color: 'p1',
-            startMonth: 0,
-            endMonth: 6
-        }, {
-            id: 'p2',
-            label: 'Промысел и ЦПС',
-            short: 'Промысел',
-            color: 'p2',
-            startMonth: 6,
-            endMonth: 14
-        }, {
-            id: 'p3',
-            label: 'Магистраль и НПЗ',
-            short: 'Магистраль',
-            color: 'p3',
-            startMonth: 14,
-            endMonth: 28
-        }, {
-            id: 'p4',
-            label: 'СПГ, порт, энергетика',
-            short: 'СПГ / Порт',
-            color: 'p4',
-            startMonth: 20,
-            endMonth: 36
-        }];
-
-        // ---------- sub-phases ----------
-        // each item: { id, phaseId, trackId, name, month (start), pct, deps? }
-        const subPhases = [
-            // Phase 1
-            { id: '1.1', phaseId: 'p1', trackId: 'log', name: 'Сейсморазведочный корабль', month: 0, pct: 30 },
-            { id: '1.2', phaseId: 'p1', trackId: 'geo', name: 'Сейсморазведка', month: 0, pct: 100 },
-            { id: '1.3', phaseId: 'p1', trackId: 'geo', name: 'Бурение разведочных скважин', month: 2, pct: 100 },
-            { id: '1.4', phaseId: 'p1', trackId: 'geo', name: 'Анализ керна', month: 5, pct: 0 },
-            { id: '1.5', phaseId: 'p1', trackId: 'build', name: 'Выбор площадки ЦПС / НПЗ', month: 6, pct: 0 },
-
-            // Phase 2
-            { id: '2.1', phaseId: 'p2', trackId: 'geo', name: 'Бурение эксплуатационных скважин', month: 6, pct: 0 },
-            { id: '2.2', phaseId: 'p2', trackId: 'build', name: 'Монтаж арматуры и фонтанной системы', month: 8, pct: 0 },
-            { id: '2.3', phaseId: 'p2', trackId: 'build', name: 'Строительство ЦПС', month: 7, pct: 0 },
-            { id: '2.4', phaseId: 'p2', trackId: 'build', name: 'Система ППД и водоочистка', month: 10, pct: 0 },
-            { id: '2.5', phaseId: 'p2', trackId: 'build', name: 'Факельная система и газотрубы', month: 10, pct: 0 },
-
-            // Phase 3
-            { id: '3.1', phaseId: 'p3', trackId: 'build', name: 'Нефтепровод до моря', month: 14, pct: 0 },
-            { id: '3.2', phaseId: 'p3', trackId: 'build', name: 'Промежуточные НПС', month: 16, pct: 0 },
-            { id: '3.3', phaseId: 'p3', trackId: 'build', name: 'Головная НПС у НПЗ', month: 18, pct: 0 },
-            { id: '3.4', phaseId: 'p3', trackId: 'build', name: 'Строительство НПЗ', month: 20, pct: 0 },
-            { id: '3.5', phaseId: 'p3', trackId: 'build', name: 'Резервуарный парк РВС', month: 22, pct: 0 },
-            { id: '3.6', phaseId: 'p3', trackId: 'build', name: 'Обваловка и системы безопасности', month: 24, pct: 0 },
-
-            // Phase 4
-            { id: '4.1', phaseId: 'p4', trackId: 'build', name: 'Завод СПГ (линии сжижения)', month: 20, pct: 0 },
-            { id: '4.2', phaseId: 'p4', trackId: 'build', name: 'Изотермические резервуары', month: 22, pct: 0 },
-            { id: '4.3', phaseId: 'p4', trackId: 'build', name: 'Глубоководный порт', month: 20, pct: 0 },
-            { id: '4.4', phaseId: 'p4', trackId: 'build', name: 'Криогенный терминал', month: 24, pct: 0 },
-            { id: '4.5', phaseId: 'p4', trackId: 'energy', name: 'Газотурбинная электростанция (ГТЭС)', month: 18, pct: 0 },
-            { id: '4.6', phaseId: 'p4', trackId: 'energy', name: 'ЛЭП и трансформаторные подстанции', month: 22, pct: 0 },
-            { id: '4.7', phaseId: 'p4', trackId: 'log', name: 'Танкеры и газовозы (верфи)', month: 14, pct: 0 },
-            { id: '4.8', phaseId: 'p4', trackId: 'energy', name: 'Береговая оборона (Sentinel)', month: 24, pct: 0 },
+        // Фазы
+        const phases = [
+            { id: 'p1', label: 'Разведка и бурение', color: '#1d4a7a' },
+            { id: 'p2', label: 'Промысел и ЦПС', color: '#1a5a3e' },
+            { id: 'p3', label: 'Магистраль и НПЗ', color: '#8a5f2a' },
+            { id: 'p4', label: 'СПГ, порт, энергетика', color: '#6a2a5a' }
         ];
 
-        // ============================================================
-        //  STATE
-        // ============================================================
-
-        // We'll mutate pct in place via the UI.
-        // We also store a reference to all sub-phases for quick lookup.
+        // Подэтапы
+        const subPhases = [{
+            id: '1.1',
+            phaseId: 'p1',
+            name: 'Сейсморазведочный корабль',
+            startMonth: 0,
+            endMonth: 5,
+            pct: 30,
+            description: 'Строительство судна для сейсморазведки',
+            responsible: 'Верфь №3',
+            characteristics: 'Водоизмещение 5000 т, экипаж 60 чел.'
+        }, {
+            id: '1.2',
+            phaseId: 'p1',
+            name: 'Сейсморазведка',
+            startMonth: 1,
+            endMonth: 3,
+            pct: 100,
+            description: 'Поиск залежей методом 3D сейсмики',
+            responsible: 'Геофизическая партия',
+            characteristics: 'Площадь 200 км²'
+        }, {
+            id: '1.3',
+            phaseId: 'p1',
+            name: 'Бурение разведочных скважин',
+            startMonth: 2,
+            endMonth: 5,
+            pct: 100,
+            description: 'Бурение 3 скважин с отбором керна',
+            responsible: 'Буровая бригада',
+            characteristics: 'Глубина 2500 м'
+        }, {
+            id: '1.4',
+            phaseId: 'p1',
+            name: 'Анализ керна',
+            startMonth: 5,
+            endMonth: 7,
+            pct: 0,
+            description: 'Лабораторные исследования образцов',
+            responsible: 'Лаборатория'
+        }, {
+            id: '1.5',
+            phaseId: 'p1',
+            name: 'Выбор площадки ЦПС / НПЗ',
+            startMonth: 6,
+            endMonth: 8,
+            pct: 0,
+            description: 'Геодезические и инженерные изыскания',
+            responsible: 'Проектный институт'
+        }, {
+            id: '2.1',
+            phaseId: 'p2',
+            name: 'Бурение эксплуатационных скважин',
+            startMonth: 7,
+            endMonth: 12,
+            pct: 0,
+            description: 'Бурение 10 скважин на промысле',
+            responsible: 'Буровая компания'
+        }, {
+            id: '2.2',
+            phaseId: 'p2',
+            name: 'Монтаж арматуры и фонтанной системы',
+            startMonth: 9,
+            endMonth: 14,
+            pct: 0,
+            description: 'Установка устьевого оборудования',
+            responsible: 'Сервисная бригада'
+        }, {
+            id: '2.3',
+            phaseId: 'p2',
+            name: 'Строительство ЦПС',
+            startMonth: 8,
+            endMonth: 15,
+            pct: 0,
+            description: 'Центральный пункт сбора',
+            responsible: 'Строительный трест'
+        }, {
+            id: '2.4',
+            phaseId: 'p2',
+            name: 'Система ППД и водоочистка',
+            startMonth: 11,
+            endMonth: 16,
+            pct: 0,
+            description: 'Поддержание пластового давления',
+            responsible: 'Инжиниринговая компания'
+        }, {
+            id: '2.5',
+            phaseId: 'p2',
+            name: 'Факельная система и газотрубы',
+            startMonth: 11,
+            endMonth: 16,
+            pct: 0,
+            description: 'Утилизация газа и трубопроводы',
+            responsible: 'Монтажное управление'
+        }, {
+            id: '3.1',
+            phaseId: 'p3',
+            name: 'Нефтепровод до моря',
+            startMonth: 15,
+            endMonth: 22,
+            pct: 0,
+            description: 'Трубопровод от ЦПС до порта',
+            responsible: 'Трубопроводная компания'
+        }, {
+            id: '3.2',
+            phaseId: 'p3',
+            name: 'Промежуточные НПС',
+            startMonth: 17,
+            endMonth: 24,
+            pct: 0,
+            description: 'Насосные станции на трассе',
+            responsible: 'Строительная организация'
+        }, {
+            id: '3.3',
+            phaseId: 'p3',
+            name: 'Головная НПС у НПЗ',
+            startMonth: 19,
+            endMonth: 26,
+            pct: 0,
+            description: 'Насосная станция при НПЗ',
+            responsible: 'Монтажники'
+        }, {
+            id: '3.4',
+            phaseId: 'p3',
+            name: 'Строительство НПЗ',
+            startMonth: 21,
+            endMonth: 30,
+            pct: 0,
+            description: 'Нефтеперерабатывающий завод',
+            responsible: 'Генподрядчик'
+        }, {
+            id: '3.5',
+            phaseId: 'p3',
+            name: 'Резервуарный парк РВС',
+            startMonth: 23,
+            endMonth: 28,
+            pct: 0,
+            description: 'Резервуары для хранения нефти',
+            responsible: 'Строительная фирма'
+        }, {
+            id: '3.6',
+            phaseId: 'p3',
+            name: 'Обваловка и системы безопасности',
+            startMonth: 25,
+            endMonth: 30,
+            pct: 0,
+            description: 'Защитные сооружения и автоматика',
+            responsible: 'Специализированная организация'
+        }, {
+            id: '4.1',
+            phaseId: 'p4',
+            name: 'Завод СПГ (линии сжижения)',
+            startMonth: 22,
+            endMonth: 32,
+            pct: 0,
+            description: 'Технологические линии сжижения',
+            responsible: 'Подрядчик по СПГ'
+        }, {
+            id: '4.2',
+            phaseId: 'p4',
+            name: 'Изотермические резервуары',
+            startMonth: 24,
+            endMonth: 34,
+            pct: 0,
+            description: 'Хранение сжиженного газа',
+            responsible: 'Строительная компания'
+        }, {
+            id: '4.3',
+            phaseId: 'p4',
+            name: 'Глубоководный порт',
+            startMonth: 22,
+            endMonth: 30,
+            pct: 0,
+            description: 'Причалы, волнолом, терминал',
+            responsible: 'Портстроитель'
+        }, {
+            id: '4.4',
+            phaseId: 'p4',
+            name: 'Криогенный терминал',
+            startMonth: 26,
+            endMonth: 34,
+            pct: 0,
+            description: 'Перегрузочный комплекс',
+            responsible: 'Специализированная фирма'
+        }, {
+            id: '4.5',
+            phaseId: 'p4',
+            name: 'Газотурбинная электростанция (ГТЭС)',
+            startMonth: 20,
+            endMonth: 28,
+            pct: 0,
+            description: 'Энергообеспечение всего проекта',
+            responsible: 'Энергостроительная компания'
+        }, {
+            id: '4.6',
+            phaseId: 'p4',
+            name: 'ЛЭП и трансформаторные подстанции',
+            startMonth: 24,
+            endMonth: 30,
+            pct: 0,
+            description: 'Линии электропередачи',
+            responsible: 'Сетевая организация'
+        }, {
+            id: '4.7',
+            phaseId: 'p4',
+            name: 'Танкеры и газовозы (верфи)',
+            startMonth: 16,
+            endMonth: 36,
+            pct: 0,
+            description: 'Строительство флота для вывоза',
+            responsible: 'Судостроительный завод'
+        }, {
+            id: '4.8',
+            phaseId: 'p4',
+            name: 'Береговая оборона (Sentinel)',
+            startMonth: 26,
+            endMonth: 34,
+            pct: 0,
+            description: 'Системы защиты и наблюдения',
+            responsible: 'Оборонный подрядчик'
+        }];
 
         // ============================================================
         //  HELPERS
         // ============================================================
 
+        const TOTAL_MONTHS = 36; // от 0 до 36
+
         function getPhaseById(id) {
             return phases.find(p => p.id === id);
         }
 
-        function getTrackById(id) {
-            return TRACKS[id];
-        }
-
         function getSubsByPhase(phaseId) {
             return subPhases.filter(s => s.phaseId === phaseId);
-        }
-
-        function getSubsByTrack(trackId) {
-            return subPhases.filter(s => s.trackId === trackId);
         }
 
         function getPhaseProgress(phaseId) {
@@ -929,301 +985,217 @@
         }
 
         function getStatusInfo(pct) {
-            if (pct >= 100) return { status: 'done', label: 'Завершён', cssClass: 'done' };
-            if (pct > 0) return { status: 'inprogress', label: 'В процессе', cssClass: 'inprogress' };
-            return { status: 'pending', label: 'Не начат', cssClass: 'pending' };
+            if (pct >= 100) return { status: 'done', label: 'Завершён' };
+            if (pct > 0) return { status: 'active', label: 'В процессе' };
+            return { status: 'pending', label: 'Не начат' };
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
 
         // ============================================================
         //  RENDER
         // ============================================================
 
-        function renderAll() {
-            renderTimeline();
-            renderTracks();
-            renderDetailGrid();
-            updateStats();
-        }
-
-        // ----- timeline -----
+        // ---- timeline dots ----
         function renderTimeline() {
-            const bar = document.getElementById('timelineBar');
-            bar.innerHTML = '';
-            phases.forEach(phase => {
-                const pct = getPhaseProgress(phase.id);
-                const seg = document.createElement('div');
-                seg.className = `phase-segment ${phase.color}`;
-                // width proportional to duration (36 months total)
-                const dur = phase.endMonth - phase.startMonth;
-                const width = (dur / 36) * 100;
-                seg.style.width = width + '%';
-                seg.innerHTML = `
-                    <span class="p-label">${phase.short}</span>
-                    <span class="p-pct">${pct}%</span>
-                `;
-                bar.appendChild(seg);
+            const track = document.getElementById('timelineTrack');
+            // remove old dots (keep line)
+            const line = track.querySelector('.timeline-line');
+            track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
+
+            // sort by startMonth
+            const sorted = [...subPhases].sort((a, b) => a.startMonth - b.startMonth);
+
+            sorted.forEach(sub => {
+                const x = (sub.startMonth / TOTAL_MONTHS) * 100;
+                const status = getStatusInfo(sub.pct);
+
+                const dot = document.createElement('div');
+                dot.className = `timeline-dot ${status.status}`;
+                dot.style.left = x + '%';
+                dot.dataset.id = sub.id;
+
+                // label with percent
+                const label = document.createElement('span');
+                label.className = 'dot-label';
+                label.textContent = sub.pct + '%';
+                dot.appendChild(label);
+
+                // tooltip (название при наведении)
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tooltip';
+                tooltip.textContent = sub.name;
+                dot.appendChild(tooltip);
+
+                // click -> show name in info panel
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showInfo(sub);
+                });
+
+                track.appendChild(dot);
             });
+
+            // обновить заливку фазы на линии (просто для красоты, показываем общий прогресс)
+            const fill = document.getElementById('phaseFill');
+            const overall = getOverallProgress();
+            fill.style.width = overall + '%';
+            fill.style.background = 'linear-gradient(90deg, #f5b041, #e67e22)';
         }
 
-        // ----- tracks -----
-        function renderTracks() {
-            const container = document.getElementById('tracksContainer');
+        // ---- info panel (при клике на кружок) ----
+        function showInfo(sub) {
+            const panel = document.getElementById('infoPanel');
+            const placeholder = panel.querySelector('.info-placeholder');
+            const nameEl = document.getElementById('infoName');
+            const detailsEl = document.getElementById('infoDetails');
+
+            placeholder.style.display = 'none';
+            nameEl.style.display = 'block';
+            detailsEl.style.display = 'flex';
+
+            nameEl.textContent = sub.name;
+
+            // детали: показываем только даты начала/окончания, если есть
+            let detailsHtml = '';
+            if (sub.startMonth !== undefined && sub.startMonth !== null) {
+                detailsHtml +=
+                    `<div class="detail-item"><span class="label">Начало:</span> ${sub.startMonth} мес.</div>`;
+            }
+            if (sub.endMonth !== undefined && sub.endMonth !== null) {
+                detailsHtml +=
+                    `<div class="detail-item"><span class="label">Окончание:</span> ${sub.endMonth} мес.</div>`;
+            }
+            if (sub.responsible) {
+                detailsHtml +=
+                    `<div class="detail-item"><span class="label">Ответственный:</span> ${sub.responsible}</div>`;
+            }
+            if (sub.characteristics) {
+                detailsHtml +=
+                    `<div class="detail-item"><span class="label">Характеристики:</span> ${sub.characteristics}</div>`;
+            }
+            detailsEl.innerHTML = detailsHtml || '<span class="label">Нет дополнительных данных</span>';
+        }
+
+        // ---- phases section ----
+        function renderPhases() {
+            const container = document.getElementById('phasesContainer');
             container.innerHTML = '';
 
-            const trackKeys = Object.keys(TRACKS);
-            trackKeys.forEach(tk => {
-                const track = TRACKS[tk];
-                const subs = getSubsByTrack(tk);
+            phases.forEach(phase => {
+                const subs = getSubsByPhase(phase.id);
                 if (!subs.length) return;
 
-                const row = document.createElement('div');
-                row.className = 'track-row';
+                const progress = getPhaseProgress(phase.id);
 
-                // header
+                const block = document.createElement('div');
+                block.className = 'phase-block';
+
                 const header = document.createElement('div');
-                header.className = 'track-header';
+                header.className = 'phase-header';
                 header.innerHTML = `
-                    <span class="track-dot ${track.cssClass}"></span>
-                    ${track.icon} ${track.label}
-                    <span class="track-count">${subs.length} подэтапов</span>
+                    <span class="phase-title">${phase.label}</span>
+                    <span class="phase-progress">${progress}%</span>
                 `;
-                row.appendChild(header);
+                block.appendChild(header);
 
-                // cards
                 const cardsWrap = document.createElement('div');
-                cardsWrap.className = 'track-cards';
+                cardsWrap.className = 'phase-cards';
 
-                // sort by month
-                const sorted = [...subs].sort((a, b) => a.month - b.month);
-                sorted.forEach(s => {
-                    const card = createCard(s);
+                // сортировка по startMonth
+                const sorted = [...subs].sort((a, b) => a.startMonth - b.startMonth);
+                sorted.forEach(sub => {
+                    const card = createPhaseCard(sub);
                     cardsWrap.appendChild(card);
                 });
 
-                row.appendChild(cardsWrap);
-                container.appendChild(row);
+                block.appendChild(cardsWrap);
+                container.appendChild(block);
             });
         }
 
-        // ----- single card -----
-        function createCard(sub) {
+        function createPhaseCard(sub) {
             const status = getStatusInfo(sub.pct);
             const card = document.createElement('div');
-            card.className = 'sub-card';
+            card.className = 'phase-card';
             card.dataset.id = sub.id;
 
-            const dot = document.createElement('span');
-            dot.className = `card-status ${status.cssClass}`;
-            card.appendChild(dot);
+            const top = document.createElement('div');
+            top.className = 'card-top';
 
             const nameSpan = document.createElement('span');
             nameSpan.className = 'card-name';
             nameSpan.textContent = sub.name;
-            card.appendChild(nameSpan);
+            top.appendChild(nameSpan);
 
             const pctSpan = document.createElement('span');
-            pctSpan.className = `card-pct ${status.cssClass}`;
+            pctSpan.className = `card-pct ${status.status}`;
             pctSpan.textContent = sub.pct + '%';
-            card.appendChild(pctSpan);
+            top.appendChild(pctSpan);
 
-            // slider
-            const range = document.createElement('input');
-            range.type = 'range';
-            range.min = 0;
-            range.max = 100;
-            range.value = sub.pct;
-            range.addEventListener('input', function(e) {
-                const val = parseInt(e.target.value, 10);
-                sub.pct = val;
-                // update this card's display
-                updateCardDisplay(card, sub);
-                // update all other instances (detail grid)
-                syncDetailItem(sub.id);
-                // re-render timeline & stats
-                renderTimeline();
-                updateStats();
-                // update track cards (just re-render tracks to keep in sync)
-                // but to avoid flicker, we update the card in place.
-                // However, other cards in the same track might need re-sorting? No, we just update display.
-                // We'll also update the detail grid item.
-                // We'll also update the phase progress on timeline.
-                // But we also need to update the track card if it's in another track? No, each card is unique.
-                // We'll update the card's pct display and status dot.
-                // Also update the corresponding detail item.
-                // Also re-calc phase progress and timeline.
-                // We already did renderTimeline and updateStats.
-                // But the detail grid item is updated via syncDetailItem.
-                // Also update the track card's pct display and dot.
-                // But we're already updating the card display here.
-                // The track card is the same element, so it's fine.
-                // However, the detail grid item is a separate element, so we sync it.
-                // We also need to update the phase progress on the timeline.
-                // And the overall stats.
-                // Done.
+            const dot = document.createElement('span');
+            dot.className = `card-status-dot ${status.status}`;
+            top.appendChild(dot);
+
+            card.appendChild(top);
+
+            // мета (даты)
+            const meta = document.createElement('div');
+            meta.className = 'card-meta';
+            if (sub.startMonth !== undefined && sub.startMonth !== null) {
+                meta.innerHTML += `<span>Старт: ${sub.startMonth} мес.</span>`;
+            }
+            if (sub.endMonth !== undefined && sub.endMonth !== null) {
+                meta.innerHTML += `<span>Финиш: ${sub.endMonth} мес.</span>`;
+            }
+            if (sub.responsible) {
+                meta.innerHTML += `<span>Ответственный: ${sub.responsible}</span>`;
+            }
+            card.appendChild(meta);
+
+            // клик -> открыть модальное окно с полными данными
+            card.addEventListener('click', function() {
+                openModal(sub);
             });
-            card.appendChild(range);
-
-            // tooltip
-            const tooltip = document.createElement('div');
-            tooltip.className = 'card-tooltip';
-            const phase = getPhaseById(sub.phaseId);
-            const track = getTrackById(sub.trackId);
-            tooltip.innerHTML = `
-                <strong>${sub.name}</strong>
-                <div class="tt-row"><span>Фаза</span><span>${phase ? phase.label : '—'}</span></div>
-                <div class="tt-row"><span>Трек</span><span>${track ? track.label : '—'}</span></div>
-                <div class="tt-row"><span>Старт</span><span>${sub.month} мес.</span></div>
-                <div class="tt-row"><span>Прогресс</span><span>${sub.pct}%</span></div>
-                <div class="tt-row"><span>Статус</span><span>${status.label}</span></div>
-            `;
-            card.appendChild(tooltip);
 
             return card;
         }
 
-        function updateCardDisplay(card, sub) {
-            const status = getStatusInfo(sub.pct);
-            const dot = card.querySelector('.card-status');
-            if (dot) {
-                dot.className = `card-status ${status.cssClass}`;
-            }
-            const pctSpan = card.querySelector('.card-pct');
-            if (pctSpan) {
-                pctSpan.textContent = sub.pct + '%';
-                pctSpan.className = `card-pct ${status.cssClass}`;
-            }
-            const range = card.querySelector('input[type="range"]');
-            if (range) {
-                range.value = sub.pct;
-            }
-            // update tooltip
-            const tooltip = card.querySelector('.card-tooltip');
-            if (tooltip) {
-                const phase = getPhaseById(sub.phaseId);
-                const track = getTrackById(sub.trackId);
-                tooltip.innerHTML = `
-                    <strong>${sub.name}</strong>
-                    <div class="tt-row"><span>Фаза</span><span>${phase ? phase.label : '—'}</span></div>
-                    <div class="tt-row"><span>Трек</span><span>${track ? track.label : '—'}</span></div>
-                    <div class="tt-row"><span>Старт</span><span>${sub.month} мес.</span></div>
-                    <div class="tt-row"><span>Прогресс</span><span>${sub.pct}%</span></div>
-                    <div class="tt-row"><span>Статус</span><span>${status.label}</span></div>
-                `;
-            }
-        }
+        // ---- modal ----
+        function openModal(sub) {
+            const overlay = document.getElementById('modalOverlay');
+            document.getElementById('modalTitle').textContent = sub.name;
 
-        // ----- detail grid -----
-        function renderDetailGrid() {
-            const grid = document.getElementById('detailGrid');
-            grid.innerHTML = '';
-            subPhases.forEach(sub => {
-                const item = createDetailItem(sub);
-                grid.appendChild(item);
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+
+            const fields = [
+                { key: 'Фаза', value: getPhaseById(sub.phaseId)?.label || '—' },
+                { key: 'Статус', value: getStatusInfo(sub.pct).label },
+                { key: 'Прогресс', value: sub.pct + '%' },
+                { key: 'Начало (мес.)', value: sub.startMonth !== undefined ? sub.startMonth : '—' },
+                { key: 'Окончание (мес.)', value: sub.endMonth !== undefined ? sub.endMonth : '—' },
+                { key: 'Описание', value: sub.description || '—' },
+                { key: 'Ответственный', value: sub.responsible || '—' },
+                { key: 'Характеристики', value: sub.characteristics || '—' }
+            ];
+
+            fields.forEach(f => {
+                const row = document.createElement('div');
+                row.className = 'row';
+                row.innerHTML = `<span class="key">${f.key}</span><span class="value">${f.value}</span>`;
+                body.appendChild(row);
             });
-            document.getElementById('detailBadge').textContent = subPhases.length;
+
+            overlay.classList.add('active');
         }
 
-        function createDetailItem(sub) {
-            const status = getStatusInfo(sub.pct);
-            const phase = getPhaseById(sub.phaseId);
-            const track = getTrackById(sub.trackId);
-
-            const div = document.createElement('div');
-            div.className = 'detail-item';
-            div.dataset.id = sub.id;
-
-            // status dot
-            const dot = document.createElement('span');
-            dot.className = `d-status-dot ${status.cssClass}`;
-            div.appendChild(dot);
-
-            // info
-            const info = document.createElement('div');
-            info.className = 'd-info';
-            const nameDiv = document.createElement('div');
-            nameDiv.className = 'd-name';
-            nameDiv.innerHTML = `
-                ${sub.name}
-                <span class="d-phase">${phase ? phase.short : ''}</span>
-            `;
-            info.appendChild(nameDiv);
-            const trackSpan = document.createElement('div');
-            trackSpan.className = 'd-track';
-            trackSpan.textContent = `${track ? track.icon + ' ' + track.label : ''} · старт ${sub.month} мес.`;
-            info.appendChild(trackSpan);
-            div.appendChild(info);
-
-            // controls
-            const controls = document.createElement('div');
-            controls.className = 'd-controls';
-
-            const range = document.createElement('input');
-            range.type = 'range';
-            range.min = 0;
-            range.max = 100;
-            range.value = sub.pct;
-            range.addEventListener('input', function(e) {
-                const val = parseInt(e.target.value, 10);
-                sub.pct = val;
-                // update this detail item
-                updateDetailItemDisplay(div, sub);
-                // sync track card
-                syncTrackCard(sub.id);
-                // re-render timeline & stats
-                renderTimeline();
-                updateStats();
-            });
-            controls.appendChild(range);
-
-            const pctSpan = document.createElement('span');
-            pctSpan.className = `d-pct ${status.cssClass}`;
-            pctSpan.textContent = sub.pct + '%';
-            controls.appendChild(pctSpan);
-
-            div.appendChild(controls);
-
-            return div;
-        }
-
-        function updateDetailItemDisplay(div, sub) {
-            const status = getStatusInfo(sub.pct);
-            const dot = div.querySelector('.d-status-dot');
-            if (dot) {
-                dot.className = `d-status-dot ${status.cssClass}`;
-            }
-            const pctSpan = div.querySelector('.d-pct');
-            if (pctSpan) {
-                pctSpan.textContent = sub.pct + '%';
-                pctSpan.className = `d-pct ${status.cssClass}`;
-            }
-            const range = div.querySelector('input[type="range"]');
-            if (range) {
-                range.value = sub.pct;
-            }
-            // update track info in the detail item (just for consistency)
-            const trackSpan = div.querySelector('.d-track');
-            if (trackSpan) {
-                const track = getTrackById(sub.trackId);
-                trackSpan.textContent = `${track ? track.icon + ' ' + track.label : ''} · старт ${sub.month} мес.`;
-            }
-        }
-
-        // ----- sync helpers -----
-        function syncDetailItem(id) {
-            const sub = subPhases.find(s => s.id === id);
-            if (!sub) return;
-            const items = document.querySelectorAll(`.detail-item[data-id="${id}"]`);
-            items.forEach(el => updateDetailItemDisplay(el, sub));
-        }
-
-        function syncTrackCard(id) {
-            const sub = subPhases.find(s => s.id === id);
-            if (!sub) return;
-            const cards = document.querySelectorAll(`.sub-card[data-id="${id}"]`);
-            cards.forEach(el => updateCardDisplay(el, sub));
-        }
-
-        // ----- stats -----
+        // ---- stats & dates ----
         function updateStats() {
             const total = subPhases.length;
             const completed = getCompletedCount();
@@ -1233,7 +1205,7 @@
             document.getElementById('completedCount').textContent = completed;
             document.getElementById('totalCount').textContent = total;
 
-            // update time
+            // время обновления
             const now = new Date();
             const timeStr = now.toLocaleString('ru-RU', {
                 day: '2-digit',
@@ -1243,29 +1215,30 @@
                 minute: '2-digit'
             });
             document.getElementById('lastUpdate').textContent = timeStr;
+
+            // даты проекта
+            document.getElementById('projectStart').textContent = formatDate(PROJECT_START);
+            document.getElementById('projectEnd').textContent = formatDate(PROJECT_END);
         }
 
-        // ============================================================
-        //  INIT
-        // ============================================================
+        // ---- init ----
+        function init() {
+            renderTimeline();
+            renderPhases();
+            updateStats();
 
-        renderAll();
-
-        // Auto-update time every minute
-        setInterval(() => {
-            const now = new Date();
-            const timeStr = now.toLocaleString('ru-RU', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+            // закрытие модалки
+            document.getElementById('modalClose').addEventListener('click', function() {
+                document.getElementById('modalOverlay').classList.remove('active');
             });
-            document.getElementById('lastUpdate').textContent = timeStr;
-        }, 60000);
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        }
 
-        console.log('🚀 Arion Dashboard готов!');
-        console.log(`📊 ${subPhases.length} подэтапов, ${getCompletedCount()} завершено, общий прогресс ${getOverallProgress()}%`);
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 
 </body>
