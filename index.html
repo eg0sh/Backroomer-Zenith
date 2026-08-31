@@ -9,169 +9,254 @@
         /* ----- CSS Variables (темы) ----- */
         :root {
             --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
-            --bg-panel: rgba(17, 24, 34, 0.7);
-            --bg-card: rgba(20, 28, 40, 0.8);
-            --border-color: rgba(255, 255, 255, 0.06);
+            --bg-panel: rgba(17,24,34,0.7);
+            --bg-card: rgba(20,28,40,0.8);
+            --border-color: rgba(255,255,255,0.06);
             --text-primary: #e8edf5;
             --text-secondary: #b0c4de;
             --text-muted: #5a6a7e;
-            --accent-gold: #f5b041;
-            --accent-glow: rgba(245, 176, 65, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            --accent: #f5b041;
+            --accent-glow: rgba(245,176,65,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.3);
             --dot-done: #4cd9a0;
             --dot-active: #e74c3c;
             --dot-pending: #3a4a5e;
             --line-bg: #4a5a6e;
             --line-fill: linear-gradient(90deg, #f5b041, #e67e22);
-            --chart-bg: rgba(20, 28, 40, 0.5);
+            --chart-bg: rgba(20,28,40,0.5);
             --chart-text: #b0c4de;
             --shadow-color: rgba(0,0,0,0.3);
+            --font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         }
-        /* Светлая тема */
+        /* Светлая */
         [data-theme="light"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #f0f4f8, #d9e2ec);
-            --bg-panel: rgba(255, 255, 255, 0.85);
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --border-color: rgba(0, 0, 0, 0.1);
+            --bg-panel: rgba(255,255,255,0.85);
+            --bg-card: rgba(255,255,255,0.9);
+            --border-color: rgba(0,0,0,0.1);
             --text-primary: #1a2332;
             --text-secondary: #2a3a4e;
             --text-muted: #6a7a8e;
-            --accent-gold: #d48c2c;
-            --accent-glow: rgba(212, 140, 44, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            --accent: #d48c2c;
+            --accent-glow: rgba(212,140,44,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
             --dot-done: #2b6a9e;
             --dot-active: #c0392b;
             --dot-pending: #8a9bb5;
             --line-bg: #b0c4de;
             --line-fill: linear-gradient(90deg, #d48c2c, #b06a1a);
-            --chart-bg: rgba(255, 255, 255, 0.6);
+            --chart-bg: rgba(255,255,255,0.6);
             --chart-text: #2a3a4e;
             --shadow-color: rgba(0,0,0,0.1);
         }
-        /* Золотая тема */
+        /* Золотая */
         [data-theme="gold"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #2a1f0e, #1a1008);
-            --bg-panel: rgba(40, 30, 20, 0.85);
-            --bg-card: rgba(40, 30, 20, 0.9);
-            --border-color: rgba(212, 140, 44, 0.25);
+            --bg-panel: rgba(40,30,20,0.85);
+            --bg-card: rgba(40,30,20,0.9);
+            --border-color: rgba(212,140,44,0.25);
             --text-primary: #f5e6c8;
             --text-secondary: #d4b88a;
             --text-muted: #8a7a5a;
-            --accent-gold: #f5b041;
-            --accent-glow: rgba(245, 176, 65, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            --accent: #f5b041;
+            --accent-glow: rgba(245,176,65,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.6);
             --dot-done: #4cd9a0;
             --dot-active: #e74c3c;
             --dot-pending: #6a5a3a;
             --line-bg: #5a4a2a;
             --line-fill: linear-gradient(90deg, #f5b041, #e67e22);
-            --chart-bg: rgba(40, 30, 20, 0.6);
+            --chart-bg: rgba(40,30,20,0.6);
             --chart-text: #d4b88a;
             --shadow-color: rgba(0,0,0,0.6);
         }
-        /* Синяя тема */
+        /* Синяя */
         [data-theme="blue"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a1628, #050d1a);
-            --bg-panel: rgba(10, 22, 40, 0.8);
-            --bg-card: rgba(10, 22, 40, 0.9);
-            --border-color: rgba(74, 142, 196, 0.2);
+            --bg-panel: rgba(10,22,40,0.8);
+            --bg-card: rgba(10,22,40,0.9);
+            --border-color: rgba(74,142,196,0.2);
             --text-primary: #b0d4f0;
             --text-secondary: #8ab4d4;
             --text-muted: #4a6a8a;
-            --accent-gold: #4a8ec4;
-            --accent-glow: rgba(74, 142, 196, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --accent: #4a8ec4;
+            --accent-glow: rgba(74,142,196,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
             --dot-done: #4cd9a0;
             --dot-active: #e74c3c;
             --dot-pending: #3a5a7a;
             --line-bg: #2a4a6a;
             --line-fill: linear-gradient(90deg, #4a8ec4, #2a6a9e);
-            --chart-bg: rgba(10, 22, 40, 0.6);
+            --chart-bg: rgba(10,22,40,0.6);
             --chart-text: #8ab4d4;
             --shadow-color: rgba(0,0,0,0.5);
         }
-        /* Зелёная тема */
+        /* Зелёная */
         [data-theme="green"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a12, #050d08);
-            --bg-panel: rgba(10, 26, 18, 0.8);
-            --bg-card: rgba(10, 26, 18, 0.9);
-            --border-color: rgba(76, 217, 160, 0.2);
+            --bg-panel: rgba(10,26,18,0.8);
+            --bg-card: rgba(10,26,18,0.9);
+            --border-color: rgba(76,217,160,0.2);
             --text-primary: #b0e8d0;
             --text-secondary: #80c8a8;
             --text-muted: #4a7a62;
-            --accent-gold: #4cd9a0;
-            --accent-glow: rgba(76, 217, 160, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --accent: #4cd9a0;
+            --accent-glow: rgba(76,217,160,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
             --dot-done: #2b6a9e;
             --dot-active: #e74c3c;
             --dot-pending: #3a5a4a;
             --line-bg: #2a5a42;
             --line-fill: linear-gradient(90deg, #4cd9a0, #2a9a6e);
-            --chart-bg: rgba(10, 26, 18, 0.6);
+            --chart-bg: rgba(10,26,18,0.6);
             --chart-text: #80c8a8;
             --shadow-color: rgba(0,0,0,0.5);
         }
-        /* Фиолетовая тема */
+        /* Фиолетовая */
         [data-theme="purple"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
-            --bg-panel: rgba(26, 10, 42, 0.8);
-            --bg-card: rgba(26, 10, 42, 0.9);
-            --border-color: rgba(160, 76, 217, 0.2);
+            --bg-panel: rgba(26,10,42,0.8);
+            --bg-card: rgba(26,10,42,0.9);
+            --border-color: rgba(160,76,217,0.2);
             --text-primary: #d8b0f0;
             --text-secondary: #b080d4;
             --text-muted: #6a4a8a;
-            --accent-gold: #a04cd9;
-            --accent-glow: rgba(160, 76, 217, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --accent: #a04cd9;
+            --accent-glow: rgba(160,76,217,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
             --dot-done: #4cd9a0;
             --dot-active: #e74c3c;
             --dot-pending: #5a3a6a;
             --line-bg: #4a2a6a;
             --line-fill: linear-gradient(90deg, #a04cd9, #7a2a9e);
-            --chart-bg: rgba(26, 10, 42, 0.6);
+            --chart-bg: rgba(26,10,42,0.6);
             --chart-text: #b080d4;
             --shadow-color: rgba(0,0,0,0.5);
         }
-        /* Красная тема */
+        /* Красная */
         [data-theme="red"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #2a0a0a, #180505);
-            --bg-panel: rgba(42, 10, 10, 0.8);
-            --bg-card: rgba(42, 10, 10, 0.9);
-            --border-color: rgba(217, 76, 76, 0.2);
+            --bg-panel: rgba(42,10,10,0.8);
+            --bg-card: rgba(42,10,10,0.9);
+            --border-color: rgba(217,76,76,0.2);
             --text-primary: #f0b0b0;
             --text-secondary: #d48080;
             --text-muted: #8a4a4a;
-            --accent-gold: #d94c4c;
-            --accent-glow: rgba(217, 76, 76, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --accent: #d94c4c;
+            --accent-glow: rgba(217,76,76,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
             --dot-done: #4cd9a0;
             --dot-active: #e74c3c;
             --dot-pending: #6a3a3a;
             --line-bg: #6a2a2a;
             --line-fill: linear-gradient(90deg, #d94c4c, #b02a2a);
-            --chart-bg: rgba(42, 10, 10, 0.6);
+            --chart-bg: rgba(42,10,10,0.6);
             --chart-text: #d48080;
             --shadow-color: rgba(0,0,0,0.5);
         }
-        /* Тема для защиты глаз (EyeCare) — тёмно-зелёная с низким контрастом */
+        /* Защита глаз (EyeCare) — мягкий контраст */
         [data-theme="eyecare"] {
-            --bg-body: radial-gradient(ellipse at 50% 20%, #1a2a1a, #0d1a0d);
-            --bg-panel: rgba(20, 30, 20, 0.85);
-            --bg-card: rgba(20, 30, 20, 0.9);
-            --border-color: rgba(100, 150, 100, 0.15);
-            --text-primary: #c8e6c8;
-            --text-secondary: #a8c8a8;
-            --text-muted: #6a8a6a;
-            --accent-gold: #8aba8a;
-            --accent-glow: rgba(138, 186, 138, 0.02);
-            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
-            --dot-done: #6aba6a;
-            --dot-active: #d97a7a;
-            --dot-pending: #3a5a3a;
-            --line-bg: #3a5a3a;
-            --line-fill: linear-gradient(90deg, #8aba8a, #6a9a6a);
-            --chart-bg: rgba(20, 30, 20, 0.6);
-            --chart-text: #a8c8a8;
+            --bg-body: radial-gradient(ellipse at 50% 20%, #e8e8e8, #d0d0d0);
+            --bg-panel: rgba(240,240,240,0.85);
+            --bg-card: rgba(245,245,245,0.9);
+            --border-color: rgba(160,160,160,0.3);
+            --text-primary: #3a3a3a;
+            --text-secondary: #5a5a5a;
+            --text-muted: #7a7a7a;
+            --accent: #6a8a8a;
+            --accent-glow: rgba(100,120,120,0.05);
+            --shadow: 0 8px 40px rgba(0,0,0,0.05);
+            --dot-done: #5a8a7a;
+            --dot-active: #b06a6a;
+            --dot-pending: #a0a0a0;
+            --line-bg: #b0b0b0;
+            --line-fill: linear-gradient(90deg, #7a9a9a, #5a7a7a);
+            --chart-bg: rgba(240,240,240,0.6);
+            --chart-text: #5a5a5a;
+            --shadow-color: rgba(0,0,0,0.05);
+        }
+        /* Киберпанк */
+        [data-theme="cyberpunk"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0a1a, #050510);
+            --bg-panel: rgba(10,10,26,0.85);
+            --bg-card: rgba(10,10,26,0.9);
+            --border-color: rgba(0,255,255,0.2);
+            --text-primary: #00ffff;
+            --text-secondary: #80ffff;
+            --text-muted: #40a0a0;
+            --accent: #ff00ff;
+            --accent-glow: rgba(255,0,255,0.05);
+            --shadow: 0 8px 40px rgba(0,0,0,0.6);
+            --dot-done: #00ff80;
+            --dot-active: #ff0080;
+            --dot-pending: #4040a0;
+            --line-bg: #006080;
+            --line-fill: linear-gradient(90deg, #ff00ff, #00ffff);
+            --chart-bg: rgba(10,10,26,0.6);
+            --chart-text: #80ffff;
+            --shadow-color: rgba(0,0,0,0.6);
+        }
+        /* Графическая (чёрно-белая) */
+        [data-theme="graphical"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #ffffff, #e0e0e0);
+            --bg-panel: rgba(255,255,255,0.9);
+            --bg-card: rgba(255,255,255,0.95);
+            --border-color: rgba(0,0,0,0.15);
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-muted: #666666;
+            --accent: #555555;
+            --accent-glow: rgba(0,0,0,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #555555;
+            --dot-active: #888888;
+            --dot-pending: #aaaaaa;
+            --line-bg: #cccccc;
+            --line-fill: linear-gradient(90deg, #666666, #333333);
+            --chart-bg: rgba(255,255,255,0.6);
+            --chart-text: #333333;
+            --shadow-color: rgba(0,0,0,0.1);
+        }
+        /* Ретро (зелёный монитор) */
+        [data-theme="retro"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a0a, #050d05);
+            --bg-panel: rgba(10,20,10,0.85);
+            --bg-card: rgba(10,20,10,0.9);
+            --border-color: rgba(0,255,0,0.2);
+            --text-primary: #00ff00;
+            --text-secondary: #80ff80;
+            --text-muted: #40a040;
+            --accent: #00ff00;
+            --accent-glow: rgba(0,255,0,0.05);
+            --shadow: 0 8px 40px rgba(0,0,0,0.6);
+            --dot-done: #00ff00;
+            --dot-active: #ff0000;
+            --dot-pending: #408040;
+            --line-bg: #004000;
+            --line-fill: linear-gradient(90deg, #00ff00, #00aa00);
+            --chart-bg: rgba(10,20,10,0.6);
+            --chart-text: #80ff80;
+            --shadow-color: rgba(0,0,0,0.6);
+        }
+        /* Vaporwave */
+        [data-theme="vaporwave"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
+            --bg-panel: rgba(26,10,42,0.85);
+            --bg-card: rgba(26,10,42,0.9);
+            --border-color: rgba(255,100,200,0.2);
+            --text-primary: #ff80c0;
+            --text-secondary: #ffb0d0;
+            --text-muted: #a06080;
+            --accent: #80ffff;
+            --accent-glow: rgba(128,255,255,0.05);
+            --shadow: 0 8px 40px rgba(0,0,0,0.6);
+            --dot-done: #80ff80;
+            --dot-active: #ff80c0;
+            --dot-pending: #604080;
+            --line-bg: #602060;
+            --line-fill: linear-gradient(90deg, #80ffff, #ff80c0);
+            --chart-bg: rgba(26,10,42,0.6);
+            --chart-text: #ffb0d0;
             --shadow-color: rgba(0,0,0,0.6);
         }
 
@@ -181,10 +266,9 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: var(--bg-body);
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            font-family: var(--font-family);
             color: var(--text-primary);
             min-height: 100vh;
             padding: 24px 24px 40px;
@@ -194,60 +278,28 @@
             overflow-x: hidden;
             transition: background 0.4s, color 0.4s;
         }
-
         .dashboard {
             max-width: 1400px;
             width: 100%;
             position: relative;
         }
-
         /* ----- scrollbar ----- */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1a1f2a;
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4a5568;
-            border-radius: 8px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6b7a8f;
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1f2a; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #4a5568; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7a8f; }
 
         /* ----- animations ----- */
         @keyframes glow-title {
             0% { text-shadow: 0 0 40px var(--accent-glow), 0 0 80px rgba(245,176,65,0.05); }
             100% { text-shadow: 0 0 70px var(--accent-glow), 0 0 140px rgba(245,176,65,0.2); }
         }
-        @keyframes pulse-dot {
-            0%,100% { opacity:1; transform:scale(1); }
-            50% { opacity:0.3; transform:scale(0.7); }
-        }
-        @keyframes pulse-red {
-            0%,100% { box-shadow: 0 0 30px rgba(231,76,60,0.4), 0 0 60px rgba(231,76,60,0.2); }
-            50% { box-shadow: 0 0 80px rgba(231,76,60,0.8), 0 0 150px rgba(231,76,60,0.3); }
-        }
-        @keyframes ring-pulse {
-            0%,100% { transform:scale(1); opacity:0.6; }
-            50% { transform:scale(1.6); opacity:0; }
-        }
-        @keyframes modal-in {
-            from { opacity:0; transform:scale(0.95) translateY(20px); }
-            to { opacity:1; transform:scale(1) translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity:0; transform:translateY(15px) scale(0.97); }
-            to { opacity:1; transform:translateY(0) scale(1); }
-        }
-        @keyframes wave {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.3;transform:scale(0.7);} }
+        @keyframes pulse-red { 0%,100%{box-shadow:0 0 30px rgba(231,76,60,0.4),0 0 60px rgba(231,76,60,0.2);} 50%{box-shadow:0 0 80px rgba(231,76,60,0.8),0 0 150px rgba(231,76,60,0.3);} }
+        @keyframes ring-pulse { 0%,100%{transform:scale(1);opacity:0.6;} 50%{transform:scale(1.6);opacity:0;} }
+        @keyframes modal-in { from{opacity:0;transform:scale(0.95) translateY(20px);} to{opacity:1;transform:scale(1) translateY(0);} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(15px) scale(0.97);} to{opacity:1;transform:translateY(0) scale(1);} }
+        @keyframes wave { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
         .wave-bg {
             background: linear-gradient(270deg, var(--bg-panel), var(--bg-card), var(--bg-panel));
             background-size: 200% 200%;
@@ -261,7 +313,7 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 32px;
-            gap: 16px;
+            gap: 12px;
         }
         .header-left {
             display: flex;
@@ -295,10 +347,10 @@
         .header-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: wrap;
         }
-        .theme-btn {
+        .header-btn {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
@@ -311,11 +363,11 @@
             align-items: center;
             gap: 6px;
         }
-        .theme-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
+        .header-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
         }
-        .theme-btn:focus-visible { outline: 2px solid var(--accent-gold); }
+        .header-btn:focus-visible { outline: 2px solid var(--accent); }
         .header-right {
             display: flex;
             align-items: center;
@@ -336,13 +388,13 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .stat-badge:hover {
-            border-color: var(--accent-gold);
+            border-color: var(--accent);
             box-shadow: 0 4px 30px var(--accent-glow);
         }
         .stat-badge .num {
             font-weight: 700;
             font-size: 18px;
-            color: var(--accent-gold);
+            color: var(--accent);
         }
         .stat-badge .num.green { color: var(--dot-done); }
         .stat-badge .num.danger { color: var(--dot-active); }
@@ -372,9 +424,10 @@
             border-radius: 50%;
             background: var(--dot-done);
             animation: pulse-dot 2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(76, 217, 160, 0.4);
+            box-shadow: 0 0 12px rgba(76,217,160,0.4);
         }
 
+        /* toast */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -391,7 +444,7 @@
             background: var(--bg-card);
             backdrop-filter: blur(8px);
             border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-gold);
+            border-left: 4px solid var(--accent);
             border-radius: 12px;
             padding: 12px 16px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.4);
@@ -408,7 +461,7 @@
         .toast.success { border-left-color: var(--dot-done); }
         .toast .toast-close { background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer; padding:0 4px; }
 
-        /* ----- timeline ----- */
+        /* timeline */
         .timeline-wrapper {
             background: var(--bg-panel);
             backdrop-filter: blur(10px);
@@ -481,9 +534,8 @@
         .timeline-dot.active::after { border-color:rgba(231,76,60,0.3); animation:ring-pulse 1.8s ease-in-out infinite; }
         .timeline-dot.pending { background:linear-gradient(135deg,#2a3a4e,#1a2332); border-color:#3a4a5e; box-shadow:0 0 20px rgba(0,0,0,0.3); }
         .timeline-dot:hover { transform:translate(-50%,-50%) scale(1.12); z-index:5; }
-        .timeline-dot:focus-visible { outline:2px solid var(--accent-gold); outline-offset:4px; }
+        .timeline-dot:focus-visible { outline:2px solid var(--accent); outline-offset:4px; }
 
-        /* info panel */
         .info-panel {
             margin-top: 18px;
             background: var(--bg-card);
@@ -502,7 +554,7 @@
         .info-panel .info-placeholder { color: var(--text-muted); font-size:14px; }
         .info-panel .info-name { font-size:20px; font-weight:600; transition:color 0.3s; }
         .info-panel .info-name.status-done { color:var(--dot-done); text-shadow:0 0 30px rgba(76,217,160,0.3); }
-        .info-panel .info-name.status-active { color:var(--accent-gold); text-shadow:0 0 30px var(--accent-glow); }
+        .info-panel .info-name.status-active { color:var(--accent); text-shadow:0 0 30px var(--accent-glow); }
         .info-panel .info-name.status-pending { color:var(--text-muted); text-shadow:none; }
         .info-panel .info-details { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); }
         .info-panel .info-details .detail-item { display:flex; align-items:baseline; gap:6px; }
@@ -525,7 +577,7 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .phase-block:hover {
-            border-color: var(--accent-gold);
+            border-color: var(--accent);
             box-shadow: var(--shadow);
         }
         .phase-header {
@@ -539,7 +591,7 @@
         .phase-header .phase-title { font-size:18px; font-weight:600; color:var(--text-primary); letter-spacing:0.2px; }
         .phase-header .phase-meta { display:flex; align-items:center; gap:16px; font-size:13px; color:var(--text-muted); }
         .phase-header .phase-meta span { background:var(--bg-card); padding:2px 12px; border-radius:40px; border:1px solid var(--border-color); }
-        .phase-header .phase-progress { font-size:14px; font-weight:500; color:var(--accent-gold); background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
+        .phase-header .phase-progress { font-size:14px; font-weight:500; color:var(--accent); background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
         .phase-cards { display:flex; flex-wrap:wrap; gap:12px; }
         .phase-card {
             background: var(--bg-card);
@@ -571,15 +623,15 @@
         .phase-card:nth-child(9){ animation-delay:0.34s; }
         .phase-card:nth-child(10){ animation-delay:0.38s; }
         .phase-card:hover {
-            border-color: var(--accent-gold);
+            border-color: var(--accent);
             transform: translateY(-3px) scale(1.02);
             box-shadow: var(--shadow), 0 0 40px var(--accent-glow);
         }
-        .phase-card:focus-visible { outline:2px solid var(--accent-gold); outline-offset:2px; }
+        .phase-card:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
         .phase-card.overdue { border-color: var(--dot-active); box-shadow: 0 0 20px rgba(231,76,60,0.3); }
         .phase-card .card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
         .phase-card .card-name { font-size:14px; font-weight:500; color:var(--text-primary); flex:1; min-width:0; }
-        .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent-gold); min-width:48px; text-align:right; flex-shrink:0; }
+        .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent); min-width:48px; text-align:right; flex-shrink:0; }
         .phase-card .card-pct.done { color:var(--dot-done); }
         .phase-card .card-pct.pending { color:var(--text-muted); }
         .phase-card .card-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; box-shadow:0 0 12px rgba(0,0,0,0.3); transition:box-shadow 0.3s; }
@@ -588,7 +640,7 @@
         .phase-card .card-status-dot.pending { background:var(--dot-pending); }
         .phase-card .card-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
         .phase-card .card-meta span { display:flex; align-items:center; gap:4px; }
-        .phase-card .card-meta .eta { color:var(--accent-gold); }
+        .phase-card .card-meta .eta { color:var(--accent); }
 
         /* modal */
         .modal-overlay {
@@ -618,7 +670,7 @@
         }
         .modal .modal-title { font-size:24px; font-weight:600; margin-bottom:16px; transition:color 0.3s; }
         .modal .modal-title.status-done { color:var(--dot-done); text-shadow:0 0 30px rgba(76,217,160,0.3); }
-        .modal .modal-title.status-active { color:var(--accent-gold); text-shadow:0 0 30px var(--accent-glow); }
+        .modal .modal-title.status-active { color:var(--accent); text-shadow:0 0 30px var(--accent-glow); }
         .modal .modal-title.status-pending { color:var(--text-muted); text-shadow:none; }
         .modal .modal-body { display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--text-secondary); }
         .modal .modal-body .row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color); }
@@ -626,10 +678,10 @@
         .modal .modal-body .row .value { font-weight:500; color:var(--text-primary); text-align:right; word-break:break-word; }
         .modal .modal-body .row .value.dependencies { font-weight:400; color:var(--text-muted); font-size:13px; }
         .modal .modal-close { margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-secondary); padding:10px 24px; border-radius:40px; font-size:14px; cursor:pointer; transition:all 0.2s; width:100%; }
-        .modal .modal-close:hover { border-color:var(--accent-gold); box-shadow:0 0 20px var(--accent-glow); }
-        .modal .modal-close:focus-visible { outline:2px solid var(--accent-gold); }
+        .modal .modal-close:hover { border-color:var(--accent); box-shadow:0 0 20px var(--accent-glow); }
+        .modal .modal-close:focus-visible { outline:2px solid var(--accent); }
 
-        /* export bar */
+        /* export */
         .export-bar {
             display: flex;
             gap: 10px;
@@ -650,13 +702,13 @@
             gap: 6px;
         }
         .export-btn:hover {
-            border-color: var(--accent-gold);
-            color: var(--accent-gold);
+            border-color: var(--accent);
+            color: var(--accent);
             box-shadow: 0 0 20px var(--accent-glow);
         }
-        .export-btn:focus-visible { outline:2px solid var(--accent-gold); }
+        .export-btn:focus-visible { outline:2px solid var(--accent); }
 
-        /* analytics section */
+        /* analytics */
         .analytics-section {
             margin-top: 32px;
             background: var(--bg-panel);
@@ -702,24 +754,22 @@
         .analytics-card .value {
             font-size: 24px;
             font-weight: 700;
-            color: var(--accent-gold);
+            color: var(--accent);
         }
         .analytics-card .value.done { color: var(--dot-done); }
         .analytics-card .value.danger { color: var(--dot-active); }
-        .analytics-card .forecast-list {
-            max-height: 150px;
-            overflow-y: auto;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        .analytics-card .forecast-list .forecast-item {
+        .analytics-card .risk-item {
             display: flex;
             justify-content: space-between;
             padding: 6px 0;
             border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
         }
-        .analytics-card .forecast-list .forecast-item .name { color: var(--text-primary); }
-        .analytics-card .forecast-list .forecast-item .date { color: var(--accent-gold); margin-left:12px; }
+        .analytics-card .risk-item .risk-name { color: var(--text-secondary); }
+        .analytics-card .risk-item .risk-score { font-weight:500; }
+        .analytics-card .risk-item .risk-score.high { color: var(--dot-active); }
+        .analytics-card .risk-item .risk-score.medium { color: var(--accent); }
+        .analytics-card .risk-item .risk-score.low { color: var(--dot-done); }
 
         /* theme modal */
         .theme-modal .theme-options {
@@ -740,11 +790,11 @@
             font-size: 14px;
         }
         .theme-modal .theme-option:hover {
-            border-color: var(--accent-gold);
+            border-color: var(--accent);
             transform: scale(1.03);
         }
         .theme-modal .theme-option.active {
-            border-color: var(--accent-gold);
+            border-color: var(--accent);
             background: var(--accent-glow);
         }
         .theme-modal .theme-option .color-preview {
@@ -786,10 +836,8 @@
             .phase-block { padding: 12px 14px; }
             .theme-modal .theme-options { grid-template-columns: 1fr; }
         }
-
-        /* print */
         @media print {
-            .export-bar, .theme-btn, .update-time, .stat-badge .label { display: none; }
+            .export-bar, .header-btn, .update-time, .stat-badge .label { display: none; }
             .header { margin-bottom: 16px; }
             .timeline-wrapper, .phase-block, .analytics-section { break-inside: avoid; }
             body { background: #fff; color: #000; }
@@ -801,34 +849,34 @@
     </style>
 </head>
 <body>
-
     <div class="dashboard" id="dashboard">
         <!-- ===== HEADER ===== -->
         <header class="header">
             <div class="header-left">
                 <h1>Arion</h1>
                 <div class="header-controls">
-                    <button class="theme-btn" id="themeToggle">🎨 Тема</button>
+                    <button class="header-btn" id="themeToggle" data-i18n="theme">🎨 Тема</button>
+                    <button class="header-btn" id="langToggle" data-i18n="lang">🌐 Язык</button>
                 </div>
             </div>
             <div class="header-right">
                 <div class="stat-badge">
-                    <span class="label">Общий прогресс</span>
+                    <span class="label" data-i18n="totalProgress">Общий прогресс</span>
                     <span class="num gold" id="totalProgress">0%</span>
                 </div>
                 <div class="stat-badge">
-                    <span class="label">Завершено</span>
+                    <span class="label" data-i18n="completed">Завершено</span>
                     <span class="num green" id="completedCount">0</span>
                     <span class="label">/ <span id="totalCount">0</span></span>
                 </div>
                 <div class="stat-badge" id="overdueBadge" style="display:none;">
-                    <span class="label">Превышение прогноза</span>
+                    <span class="label" data-i18n="overdueBadge">Превышение прогноза</span>
                     <span class="num danger" id="overdueCount" style="color:var(--dot-active);">0</span>
                 </div>
                 <div class="update-time">
                     <div class="time-row">
                         <span class="dot"></span>
-                        <span>Текущее время: <span id="lastUpdate">—</span></span>
+                        <span data-i18n="currentTime">Текущее время: <span id="lastUpdate">—</span></span>
                     </div>
                 </div>
             </div>
@@ -836,9 +884,9 @@
 
         <!-- ===== EXPORT BAR ===== -->
         <div class="export-bar">
-            <button class="export-btn" id="exportPDF">📄 PDF</button>
-            <button class="export-btn" id="exportPNG">🖼️ PNG</button>
-            <button class="export-btn" id="exportCSV">📊 CSV</button>
+            <button class="export-btn" id="exportPDF" data-i18n="exportPDF">📄 PDF</button>
+            <button class="export-btn" id="exportPNG" data-i18n="exportPNG">🖼️ PNG</button>
+            <button class="export-btn" id="exportCSV" data-i18n="exportCSV">📊 CSV</button>
         </div>
 
         <!-- ===== TIMELINE ===== -->
@@ -847,7 +895,7 @@
                 <div class="timeline-line" id="timelineLine"></div>
             </div>
             <div class="info-panel" id="infoPanel">
-                <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть информацию</span>
+                <span class="info-placeholder" data-i18n="clickHint">Нажмите на кружок этапа, чтобы увидеть информацию</span>
                 <span class="info-name" id="infoName" style="display:none;"></span>
                 <div class="info-details" id="infoDetails" style="display:none;"></div>
             </div>
@@ -856,69 +904,55 @@
         <!-- ===== PHASES SECTION ===== -->
         <div class="phases-section" id="phasesContainer"></div>
 
-        <!-- ===== ANALYTICS SECTION ===== -->
+        <!-- ===== ANALYTICS SECTION (только бюджет и риски) ===== -->
         <div class="analytics-section" id="analyticsSection">
-            <div class="analytics-title">📊 Аналитика проекта</div>
+            <div class="analytics-title" data-i18n="analytics">📊 Аналитика проекта</div>
             <div class="analytics-grid">
-                <!-- График скорости (прогресс в неделю) -->
                 <div class="analytics-card">
-                    <h3>Скорость выполнения (прогресс в неделю)</h3>
-                    <canvas id="velocityChart" width="400" height="160"></canvas>
-                </div>
-                <!-- График отклонения от плана -->
-                <div class="analytics-card">
-                    <h3>Отклонение факта от плана (по фазам)</h3>
-                    <canvas id="deviationChart" width="400" height="160"></canvas>
-                </div>
-                <!-- Бюджет (круговая диаграмма) -->
-                <div class="analytics-card">
-                    <h3>Бюджет проекта ($ млн)</h3>
+                    <h3 data-i18n="budgetChart">Бюджет проекта</h3>
                     <canvas id="budgetChart" width="400" height="160"></canvas>
                 </div>
-                <!-- Прогноз завершения активных подэтапов -->
                 <div class="analytics-card">
-                    <h3>Прогноз завершения подэтапов (в процессе)</h3>
-                    <div class="forecast-list" id="forecastList"></div>
-                </div>
-                <!-- Прогноз завершения всего проекта (экстраполяция) -->
-                <div class="analytics-card">
-                    <h3>Прогноз завершения проекта</h3>
-                    <div id="projectForecast" style="font-size:20px; font-weight:600; color:var(--accent-gold);">—</div>
-                    <div style="font-size:13px; color:var(--text-muted); margin-top:4px;">на основе текущей скорости</div>
-                </div>
-                <!-- Оценка рисков (список) -->
-                <div class="analytics-card">
-                    <h3>Оценка рисков</h3>
+                    <h3 data-i18n="risks">Оценка рисков</h3>
                     <div id="riskList"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== MODAL (основная) ===== -->
+        <!-- ===== MODAL ===== -->
         <div class="modal-overlay" id="modalOverlay">
             <div class="modal">
                 <div class="modal-title" id="modalTitle">Название</div>
                 <div class="modal-body" id="modalBody"></div>
-                <button class="modal-close" id="modalClose">Закрыть</button>
+                <button class="modal-close" id="modalClose" data-i18n="close">Закрыть</button>
             </div>
         </div>
 
         <!-- ===== MODAL ДЛЯ ВЫБОРА ТЕМЫ ===== -->
         <div class="modal-overlay" id="themeModalOverlay">
             <div class="modal theme-modal">
-                <div class="modal-title" style="color:var(--text-primary);">Выберите тему</div>
+                <div class="modal-title" style="color:var(--text-primary);" data-i18n="chooseTheme">Выберите тему</div>
                 <div class="theme-options" id="themeOptions"></div>
-                <button class="modal-close" id="themeModalClose">Закрыть</button>
+                <button class="modal-close" id="themeModalClose" data-i18n="close">Закрыть</button>
             </div>
         </div>
 
-        <!-- ===== TOAST CONTAINER ===== -->
+        <!-- ===== MODAL ДЛЯ ВЫБОРА ЯЗЫКА ===== -->
+        <div class="modal-overlay" id="langModalOverlay">
+            <div class="modal theme-modal">
+                <div class="modal-title" style="color:var(--text-primary);" data-i18n="chooseLanguage">Выберите язык</div>
+                <div class="theme-options" id="langOptions" style="grid-template-columns:1fr 1fr 1fr;"></div>
+                <button class="modal-close" id="langModalClose" data-i18n="close">Закрыть</button>
+            </div>
+        </div>
+
+        <!-- ===== TOAST ===== -->
         <div class="toast-container" id="toastContainer"></div>
     </div>
 
     <script>
         // ============================================================
-        //  DATA (редактируйте здесь)
+        //  DATA (проектные данные)
         // ============================================================
 
         const phases = [
@@ -928,114 +962,149 @@
             { id: 'p4', label: 'СПГ, порт, энергетика', startDate: null, endDate: null, budget: null }
         ];
 
-        // Подэтапы (сокращённо для краткости, но все есть)
         const subPhases = [
             { id: '1.1', phaseId: 'p1', name: 'Постройка сейсморазведочного корабля', startDate: '2026-08-16', endDate: null,
-                pct: 30, description: 'Строительство специализированного судна...',
-                characteristics: 'Длина 90 м, водоизмещение 6 000 т...', dependencies: [] },
+                pct: 30, description: 'Строительство специализированного судна для проведения морской сейсморазведки. Оснащается пневматическими источниками (пушки), буксируемой косой с гидрофонами и мобильной буровой установкой для взятия проб грунта.',
+                characteristics: 'Длина 90 м, водоизмещение 6 000 т, автономность 60 суток, оборудование для 3D-сейсмики, буровая вышка для керна до 1 000 м.',
+                dependencies: [] },
             { id: '1.2', phaseId: 'p1', name: 'Сейсморазведка', startDate: '2026-08-16', endDate: '2026-08-25', pct: 100,
-                description: 'Проведение сейсмических профилей...', characteristics: 'Площадь съёмки ~5 000 км²...',
+                description: 'Проведение сейсмических профилей в перспективном районе. Корабль или грузовики создают вибрационные волны, приёмники регистрируют отражения, строятся геологические разрезы для выявления структур-ловушек.',
+                characteristics: 'Площадь съёмки ~5 000 км², глубина исследования до 8 км, точность выявления аномалий ±10 м.',
                 dependencies: ['1.1'] },
             { id: '1.3', phaseId: 'p1', name: 'Бурение разведочных скважин', startDate: '2026-08-16',
-                endDate: '2026-08-25', pct: 100, description: 'Бурение нескольких разведочных стволов...',
-                characteristics: '3 скважины глубиной 3 000–4 500 м...', dependencies: ['1.2'] },
+                endDate: '2026-08-25', pct: 100,
+                description: 'Бурение нескольких разведочных стволов в точках, определённых сейсморазведкой. Извлекаются керны (образцы пород) для анализа наличия углеводородов.',
+                characteristics: '3 скважины глубиной 3 000–4 500 м, отбор керна через каждые 10 м, объём образцов ~100 кг на скважину.',
+                dependencies: ['1.2'] },
             { id: '1.4', phaseId: 'p1', name: 'Анализ керна', startDate: null, endDate: null, pct: 0,
-                description: 'Лабораторные исследования кернов...', characteristics: 'Полный петрофизический анализ...',
+                description: 'Лабораторные исследования кернов: измерение пористости, проницаемости, насыщенности, состава углеводородов. Оценка запасов (геологические и извлекаемые). Подготовка отчёта для инвестиционного решения.',
+                characteristics: 'Полный петрофизический анализ, оценка запасов по категории C1+C2, точность ±15%.',
                 dependencies: ['1.3'] },
             { id: '1.5', phaseId: 'p1', name: 'Выбор площадки ЦПС/НПЗ', startDate: null, endDate: null, pct: 0,
-                description: 'Геодезические и инженерно-геологические изыскания...',
-                characteristics: 'Изучаются 3–5 альтернативных участков...', dependencies: ['1.4'] },
+                description: 'Геодезические и инженерно-геологические изыскания на суше. Определяются оптимальные места для Центрального пункта сбора (вблизи скважин) и будущего НПЗ (на берегу моря) с учётом рельефа, грунтов, логистики.',
+                characteristics: 'Изучаются 3–5 альтернативных участков, оценивается необходимость выравнивания площадок, подводящих дорог.',
+                dependencies: ['1.4'] },
             { id: '2.1', phaseId: 'p2', name: 'Бурение эксплуатационных скважин', startDate: null, endDate: null, pct: 0,
-                description: 'Бурение основных добывающих скважин...', characteristics: '8–12 скважин, глубина 3 000–5 000 м...',
+                description: 'Бурение основных добывающих скважин на месторождении. Используются буровые установки большего размера, чем разведочные. Стволы оборудуются обсадными трубами и цементируются.',
+                characteristics: '8–12 скважин, глубина 3 000–5 000 м, дебит планируется ~1 000–1 500 т/сут каждая.',
                 dependencies: ['1.4'] },
             { id: '2.2', phaseId: 'p2', name: 'Монтаж арматуры и фонтанной системы', startDate: null, endDate: null,
-                pct: 0, description: 'Установка на устьях скважин фонтанной арматуры...',
-                characteristics: 'Рабочее давление до 70 МПа...', dependencies: ['2.1'] },
+                pct: 0,
+                description: 'Установка на устьях скважин фонтанной арматуры (запорная и регулирующая аппаратура), систем контроля давления, штуцеров для регулирования режима добычи.',
+                characteristics: 'Рабочее давление до 70 МПа, диаметр проходов 80–150 мм, система аварийной остановки.',
+                dependencies: ['2.1'] },
             { id: '2.3', phaseId: 'p2', name: 'Строительство ЦПС', startDate: null, endDate: null, pct: 0,
-                description: 'Возведение центрального пункта сбора...',
-                characteristics: 'Производительность по нефти 50 000 т/сут...', dependencies: ['2.1'] },
+                description: 'Возведение центрального пункта сбора – площадки с сепараторами для разделения нефти, газа и воды, трубчатыми печами подогрева для улучшения разделения, отстойниками. Включает монтаж ёмкостей, трубной обвязки и автоматики.',
+                characteristics: 'Производительность по нефти 50 000 т/сут, объём сепараторов 200 м³ каждый (6 шт.), печи мощностью 10 МВт.',
+                dependencies: ['2.1'] },
             { id: '2.4', phaseId: 'p2', name: 'Система ППД и водоочистка', startDate: null, endDate: null, pct: 0,
-                description: 'Строительство блока подготовки воды...',
-                characteristics: 'Производительность очистки 20 000 м³/сут...', dependencies: ['2.3'] },
+                description: 'Строительство блока подготовки воды, отделённой от нефти (очистка от механических примесей и углеводородов), и насосной станции для закачки очищенной воды обратно в пласт для поддержания давления.',
+                characteristics: 'Производительность очистки 20 000 м³/сут, насосы с давлением 25 МПа, резервуары для буферной воды.',
+                dependencies: ['2.3'] },
             { id: '2.5', phaseId: 'p2', name: 'Факельная система и газотрубы', startDate: null, endDate: null, pct: 0,
-                description: 'Установка факельной трубы...', characteristics: 'Факел высотой 50 м...',
+                description: 'Установка факельной трубы для аварийного сжигания газа, а также прокладка газопроводов от сепараторов к потребителям (электростанция, завод СПГ, собственные нужды). Включает сепараторы для газа, осушители, регуляторы давления.',
+                characteristics: 'Факел высотой 50 м, система автоматического поджига, газопроводы диаметром 300 мм.',
                 dependencies: ['2.3'] },
             { id: '2.6', phaseId: 'p2', name: 'Подъездные дороги промысла', startDate: null, endDate: null, pct: 0,
-                description: 'Создание сети грунтово-щебёночных дорог...',
-                characteristics: 'Протяжённость ~30 км, ширина 8 м...', dependencies: ['1.5'] },
+                description: 'Создание сети грунтово-щебёночных и бетонных дорог, соединяющих кусты скважин между собой, с ЦПС и с внешней магистральной трассой. Включает отсыпку болотистых участков, строительство небольших мостов через ручьи и установку дорожных знаков.',
+                characteristics: 'Протяжённость ~30 км, ширина проезжей части 8 м (для двух большегрузов), толщина щебёночного основания 40 см, расчётная нагрузка на ось 40 тонн (для буровых установок и насосов).',
+                dependencies: ['1.5'] },
             { id: '2.7', phaseId: 'p2', name: 'Вахтовый городок и бытовой комплекс', startDate: null, endDate: null,
-                pct: 0, description: 'Модульный жилой городок на 200–300 человек...',
-                characteristics: 'Площадь застройки 2 га...', dependencies: ['2.6'] },
+                pct: 0,
+                description: 'Строительство модульного жилого городка на 200–300 человек (операторы, инженеры, охрана), столовой, бани/прачечной, административного здания с узлом связи и медпункта первой помощи. Полная автономия по электричеству (дизель-генераторы) и воде (привозная или скважина).',
+                characteristics: 'Площадь застройки 2 га, 10 двухэтажных жилых модулей, столовая на 100 посадочных мест, очистка стоков (септики), резервный дизель-генератор на 1 МВт.',
+                dependencies: ['2.6'] },
             { id: '3.1', phaseId: 'p3', name: 'Нефтепровод до моря', startDate: null, endDate: null, pct: 0,
-                description: 'Прокладка магистрального трубопровода...', characteristics: 'Длина 200 км, диаметр 1 000 мм...',
+                description: 'Прокладка магистрального трубопровода от ЦПС к побережью. Включает расчистку трассы, сварку секций, укладку в траншею, изоляцию и защиту от коррозии.',
+                characteristics: 'Длина 200 км, диаметр 1 000 мм, рабочее давление 6 МПа, пропускная способность до 500 000 т/сут.',
                 dependencies: ['2.3'] },
             { id: '3.2', phaseId: 'p3', name: 'Промежуточные НПС', startDate: null, endDate: null, pct: 0,
-                description: 'Строительство вдоль трубопровода 4–5 станций...',
-                characteristics: 'Мощность насосов 5 МВт каждая...', dependencies: ['3.1'] },
+                description: 'Строительство вдоль трубопровода 4–5 станций с центробежными насосами для поддержания давления и скорости потока. Каждая включает резервуарный парк, электродвигатели, системы управления.',
+                characteristics: 'Мощность насосов 5 МВт каждая, интервал между НПС 40–50 км.',
+                dependencies: ['3.1'] },
             { id: '3.3', phaseId: 'p3', name: 'Головная НПС у НПЗ', startDate: null, endDate: null, pct: 0,
-                description: 'Станция на конечной точке трубопровода...',
-                characteristics: 'Производительность 500 000 т/сут...', dependencies: ['3.1'] },
+                description: 'Станция на конечной точке трубопровода перед входом на завод. Обеспечивает приём нефти, её буферизацию и подачу в технологические установки НПЗ с нужным давлением. Имеет резервные насосы (2 рабочих + 1 резервный).',
+                characteristics: 'Производительность 500 000 т/сут, насосы с давлением 7 МПа, резервуары-отстойники на 10 000 м³.',
+                dependencies: ['3.1'] },
             { id: '3.4', phaseId: 'p3', name: 'Строительство НПЗ', startDate: null, endDate: null, pct: 0,
-                description: 'Возведение комплекса переработки...', characteristics: 'Мощность по сырью 10 млн т/год...',
+                description: 'Возведение комплекса переработки – ректификационные колонны (атмосферная и вакуумная), установки крекинга для увеличения выхода лёгких фракций, реакторы гидроочистки для удаления серы. Включает печи, теплообменники, системы управления.',
+                characteristics: 'Мощность по сырью 10 млн т/год, колонны высотой 50 м, крекинг-установка с производительностью 3 млн т/год.',
                 dependencies: ['3.3'] },
             { id: '3.5', phaseId: 'p3', name: 'Резервуарный парк РВС', startDate: null, endDate: null, pct: 0,
-                description: 'Сооружение 10 стальных резервуаров...', characteristics: 'Объём каждого 100 000 м³...',
+                description: 'Сооружение 10 стальных вертикальных цилиндрических резервуаров (РВС) для хранения готовых продуктов (бензин, дизель, мазут). Каждый оборудован плавающей крышей и системой обваловки.',
+                characteristics: 'Объём каждого 100 000 м³, высота ~20 м, диаметр ~80 м, общая ёмкость 1 млн м³.',
                 dependencies: ['3.4'] },
             { id: '3.6', phaseId: 'p3', name: 'Обваловка и системы безопасности', startDate: null, endDate: null,
-                pct: 0, description: 'Строительство земляных валов...', characteristics: 'Высота вала 2 м...',
+                pct: 0,
+                description: 'Строительство земляных валов вокруг каждого резервуара для локализации разливов, монтаж систем пожаротушения, дренажных каналов, датчиков утечек.',
+                characteristics: 'Высота вала 2 м, ширина основания 6 м, система пенотушения с расходом 100 л/мин.',
                 dependencies: ['3.5'] },
             { id: '3.7', phaseId: 'p3', name: 'Дороги и мосты вдоль трубопровода', startDate: null, endDate: null,
-                pct: 0, description: 'Техническая дорога-дублёр...', characteristics: 'Протяжённость 210 км...',
+                pct: 0,
+                description: 'Прокладка технической дороги-дублёра вдоль всего магистрального нефтепровода для его обслуживания, ремонта и аварийного проезда спецтехники. Строительство капитальных мостов через крупные реки и овраги, попадающиеся на 200-километровой трассе.',
+                characteristics: 'Протяжённость 210 км (включая подъезды), ширина 6 м, гравийно-песчаное покрытие. 3 моста длиной до 80 м каждый (железобетонные).',
                 dependencies: ['3.1'] },
             { id: '3.8', phaseId: 'p3', name: 'Инженерные сети НПЗ', startDate: null, endDate: null, pct: 0,
-                description: 'Водозабор, канализация, ливнёвка...',
-                characteristics: 'Производительность водозабора 10 000 м³/сут...', dependencies: ['3.4'] },
+                description: 'Строительство внешних инженерных систем для НПЗ: водозаборного узла из моря/реки для технической воды, промышленной канализации с локальными очистными сооружениями, системы сбора и очистки ливневых стоков с территории завода (обязательное требование экологии).',
+                characteristics: 'Производительность водозабора 10 000 м³/сут, очистные сооружения стоков по нормативам ПДК, система оборотного водоснабжения (градирни).',
+                dependencies: ['3.4'] },
             { id: '3.9', phaseId: 'p3', name: 'Оптоволокно вдоль маршрута', startDate: null, endDate: null, pct: 0,
-                description: 'Прокладка подземного оптоволоконного кабеля...',
-                characteristics: 'Длина 200 км, 24-волоконный кабель...', dependencies: ['3.1'] },
+                description: 'Прокладка подземного оптоволоконного кабеля в одной траншее с нефтепроводом (или отдельно) для передачи телеметрии, данных АСУ ТП, видеонаблюдения и связи между ЦПС, НПС и НПЗ. Установка ретрансляторов и усилителей сигнала.',
+                characteristics: 'Длина 200 км, 24-волоконный кабель, герметичное металлопластиковое покрытие, система мониторинга целостности кабеля.',
+                dependencies: ['3.1'] },
             { id: '4.1', phaseId: 'p4', name: 'Завод СПГ (линии сжижения)', startDate: null, endDate: null, pct: 0,
-                description: 'Комплекс по сжижению природного газа...',
-                characteristics: 'Производительность 5 млн т СПГ/год...', dependencies: ['2.5'] },
+                description: 'Строительство комплекса по сжижению природного газа до температуры -162°C. Включает блоки предварительной очистки, турбодетандеры, теплообменники и компрессоры, а также хранилища для сжиженного газа.',
+                characteristics: 'Производительность 5 млн т СПГ в год, технология смешанного охлаждения, энергопотребление 500 МВт.',
+                dependencies: ['2.5'] },
             { id: '4.2', phaseId: 'p4', name: 'Изотермические резервуары СПГ', startDate: null, endDate: null, pct: 0,
-                description: 'Двухстенные резервуары для хранения...', characteristics: 'Объём каждого 200 000 м³...',
+                description: 'Строительство специальных двухстенных резервуаров для хранения сжиженного газа при сверхнизкой температуре. Внутренняя ёмкость из стали, устойчивой к холоду, между стенками – теплоизоляция и азотная подушка.',
+                characteristics: 'Объём каждого 200 000 м³, количество 2 шт., срок хранения без испарения (BOG) до 30 суток.',
                 dependencies: ['4.1'] },
             { id: '4.3', phaseId: 'p4', name: 'Глубоководный порт', startDate: null, endDate: null, pct: 0,
-                description: 'Портовая инфраструктура: причалы, волнолом...',
-                characteristics: 'Длина причальной стенки 500 м...', dependencies: ['3.1', '3.4'] },
+                description: 'Строительство портовой инфраструктуры на берегу моря: глубоководные причалы для танкеров (осадка до 20 м), волнолом для защиты от штормов, береговые коллекторы для перекачки нефти и СПГ.',
+                characteristics: 'Длина причальной стенки 500 м, глубина у причала 25 м, волнолом длиной 1,5 км.',
+                dependencies: ['3.1', '3.4'] },
             { id: '4.4', phaseId: 'p4', name: 'Криогенный терминал и шланги', startDate: null, endDate: null, pct: 0,
-                description: 'Вакуумные шланги для перегрузки СПГ...',
-                characteristics: 'Производительность загрузки 10 000 м³/час...', dependencies: ['4.3', '4.2'] },
+                description: 'Оснащение причала специальными вакуумными шлангами для перегрузки сжиженного газа на газовозы. Монтаж береговых коллекторов, систем сброса паров, аварийной остановки.',
+                characteristics: 'Производительность загрузки 10 000 м³/час, шланги длиной 30 м, рабочее давление 1 МПа, температура -162°C.',
+                dependencies: ['4.3', '4.2'] },
             { id: '4.5', phaseId: 'p4', name: 'Газотурбинная электростанция (ГТЭС)', startDate: null, endDate: null,
-                pct: 0, description: 'Электростанция на попутном газе...',
-                characteristics: 'Установленная мощность 200 МВт...', dependencies: ['2.5'] },
+                pct: 0,
+                description: 'Возведение электростанции, работающей на попутном или природном газе. Состоит из нескольких газовых турбин, генераторов, систем охлаждения и редукции. Обеспечивает энергией все объекты Arion.',
+                characteristics: 'Установленная мощность 200 МВт (4 турбины по 50 МВт), КПД ~40%, расход газа 200 м³/час на МВт.',
+                dependencies: ['2.5'] },
             { id: '4.6', phaseId: 'p4', name: 'ЛЭП и трансформаторные подстанции', startDate: null, endDate: null,
-                pct: 0, description: 'Высоковольтные линии от ГТЭС...',
-                characteristics: 'Общая протяжённость линий 300 км...', dependencies: ['4.5'] },
+                pct: 0,
+                description: 'Прокладка высоковольтных линий электропередачи от ГТЭС к НПЗ, порту, насосным станциям и ЦПС. Сооружение распределительных подстанций и трансформаторов.',
+                characteristics: 'Общая протяжённость линий 300 км, напряжение 110 кВ, мощность подстанций 50–100 МВА каждая.',
+                dependencies: ['4.5'] },
             { id: '4.7', phaseId: 'p4', name: 'Танкеры и газовозы', startDate: null, endDate: null, pct: 0,
-                description: 'Постройка на верфях танкеров и газовозов...',
-                characteristics: 'Танкеры дедвейтом 100 000 т...', dependencies: [] },
+                description: 'Заключение контрактов и контроль постройки на верфях двух нефтяных танкеров класса Aframax и двух газовозов для СПГ. Это отдельный логистический трек, не привязанный к объектам на суше, но критичный для вывоза продукции.',
+                characteristics: 'Танкеры дедвейтом 100 000 т, газовозы вместимостью 170 000 м³, срок постройки 24–30 месяцев.',
+                dependencies: [] },
             { id: '4.8', phaseId: 'p4', name: 'Береговая оборона (Sentinel)', startDate: null, endDate: null, pct: 0,
-                description: 'Средства ПВО, РЛС, береговые ракетные комплексы...',
-                characteristics: 'ЗРК С-400 (2 дивизиона)...', dependencies: ['4.3'] },
+                description: 'Развёртывание средств ПВО, радиолокационных станций, береговых ракетных комплексов и патрульных катеров для защиты прибрежных объектов Arion от возможных угроз.',
+                characteristics: 'ЗРК С-400 (2 дивизиона), береговые комплексы «Бастион» (3 установки), гидроакустические станции.',
+                dependencies: ['4.3'] },
             { id: '4.9', phaseId: 'p4', name: 'Берегоукрепление и портовая логистика', startDate: null, endDate: null,
-                pct: 0, description: 'Подпорные стенки, складские площади...',
-                characteristics: 'Берегоукрепление на 600 м...', dependencies: ['4.3'] },
+                pct: 0,
+                description: 'Строительство подпорных стенок, бетонирование прилегающей территории порта для складирования контейнеров и тяжелой техники. Создание крытых складов для хранения расходных материалов (фильтры, катализаторы, химреагенты) для НПЗ и завода СПГ.',
+                characteristics: 'Берегоукрепление на 600 м, складская крытая площадь 5 000 м², открытая площадка 20 000 м² (под краны и контейнеры), железнодорожная ветка-подъезд (опционально, если есть рельсы).',
+                dependencies: ['4.3'] },
             { id: '4.10', phaseId: 'p4', name: 'Административно-диспетчерский центр и КПП', startDate: null,
-                endDate: null, pct: 0, description: 'Ситуационный центр, КПП с системой распознавания лиц...',
-                characteristics: '3-этажное здание площадью 1 500 м²...', dependencies: ['3.4', '4.3'] }
+                endDate: null, pct: 0,
+                description: 'Возведение капитального здания для управления всеми объектами Arion (единый ситуационный центр), включая комнаты для совещаний, серверную и комнаты отдыха для сменных бригад. Установка усиленных КПП (контрольно-пропускных пунктов) со шлагбаумами, системой распознавания лиц и досмотровыми зонами на въездах в НПЗ, порт и на ЦПС.',
+                characteristics: '3-этажное здание площадью 1 500 м², бомбоубежище на 100 чел. в подвале (интеграция с системой Sentinel), 5 КПП с турникетами и шлюзовыми камерами.',
+                dependencies: ['3.4', '4.3'] }
         ];
 
         // ============================================================
-        //  ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ДЛЯ АНАЛИТИКИ (редактируйте)
+        //  ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ДЛЯ АНАЛИТИКИ
         // ============================================================
 
         const extraData = {
             totalBudget: 500, // $500 млн
-            spentBudget: 100, // $100 млн потрачено
-            // Плановый прогресс по фазам (для сравнения факт vs план)
-            plannedProgress: { p1: 60, p2: 0, p3: 0, p4: 0 },
-            // Скорость (прогресс в неделю) по фазам (можно рассчитать автоматически, но для примера зададим)
-            // Будем вычислять на основе фактического прогресса и времени
+            spentBudget: 100, // $100 млн
             risks: [
                 { name: 'Задержка поставок', probability: 0.30, impact: 0.40 },
                 { name: 'Погодные условия', probability: 0.20, impact: 0.50 },
@@ -1044,6 +1113,248 @@
                 { name: 'Технические сбои', probability: 0.25, impact: 0.30 }
             ]
         };
+
+        // ============================================================
+        //  ПЕРЕВОДЫ (i18n)
+        // ============================================================
+
+        const translations = {
+            ru: {
+                totalProgress: 'Общий прогресс',
+                completed: 'Завершено',
+                currentTime: 'Текущее время:',
+                clickHint: 'Нажмите на кружок этапа, чтобы увидеть информацию',
+                theme: '🎨 Тема',
+                lang: '🌐 Язык',
+                overdueBadge: 'Превышение прогноза',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Аналитика проекта',
+                budgetChart: 'Бюджет проекта',
+                risks: 'Оценка рисков',
+                close: 'Закрыть',
+                chooseTheme: 'Выберите тему',
+                chooseLanguage: 'Выберите язык',
+                phase: 'Фаза',
+                subtasks: 'Подэтапов',
+                start: 'Начало',
+                end: 'Окончание',
+                budget: 'Бюджет',
+                forecast: 'Прогноз завершения',
+                overdue: 'Превышение прогноза',
+                description: 'Описание',
+                characteristics: 'Характеристики',
+                dependencies: 'Зависимости',
+                status: 'Статус',
+                progress: 'Прогресс',
+                no: 'Нет',
+                yes: 'Да'
+            },
+            en: {
+                totalProgress: 'Total Progress',
+                completed: 'Completed',
+                currentTime: 'Current time:',
+                clickHint: 'Click on the stage circle to see information',
+                theme: '🎨 Theme',
+                lang: '🌐 Language',
+                overdueBadge: 'Forecast exceeded',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Project Analytics',
+                budgetChart: 'Project Budget',
+                risks: 'Risk Assessment',
+                close: 'Close',
+                chooseTheme: 'Choose Theme',
+                chooseLanguage: 'Choose Language',
+                phase: 'Phase',
+                subtasks: 'Subtasks',
+                start: 'Start',
+                end: 'End',
+                budget: 'Budget',
+                forecast: 'Forecast completion',
+                overdue: 'Forecast exceeded',
+                description: 'Description',
+                characteristics: 'Characteristics',
+                dependencies: 'Dependencies',
+                status: 'Status',
+                progress: 'Progress',
+                no: 'No',
+                yes: 'Yes'
+            },
+            es: {
+                totalProgress: 'Progreso total',
+                completed: 'Completado',
+                currentTime: 'Hora actual:',
+                clickHint: 'Haga clic en el círculo de la etapa para ver la información',
+                theme: '🎨 Tema',
+                lang: '🌐 Idioma',
+                overdueBadge: 'Previsión superada',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Análisis del proyecto',
+                budgetChart: 'Presupuesto del proyecto',
+                risks: 'Evaluación de riesgos',
+                close: 'Cerrar',
+                chooseTheme: 'Elegir tema',
+                chooseLanguage: 'Elegir idioma',
+                phase: 'Fase',
+                subtasks: 'Subtareas',
+                start: 'Inicio',
+                end: 'Fin',
+                budget: 'Presupuesto',
+                forecast: 'Finalización prevista',
+                overdue: 'Previsión superada',
+                description: 'Descripción',
+                characteristics: 'Características',
+                dependencies: 'Dependencias',
+                status: 'Estado',
+                progress: 'Progreso',
+                no: 'No',
+                yes: 'Sí'
+            },
+            fr: {
+                totalProgress: 'Progrès total',
+                completed: 'Terminé',
+                currentTime: 'Heure actuelle:',
+                clickHint: 'Cliquez sur le cercle de l\'étape pour voir les informations',
+                theme: '🎨 Thème',
+                lang: '🌐 Langue',
+                overdueBadge: 'Prévision dépassée',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Analyse du projet',
+                budgetChart: 'Budget du projet',
+                risks: 'Évaluation des risques',
+                close: 'Fermer',
+                chooseTheme: 'Choisir le thème',
+                chooseLanguage: 'Choisir la langue',
+                phase: 'Phase',
+                subtasks: 'Sous-tâches',
+                start: 'Début',
+                end: 'Fin',
+                budget: 'Budget',
+                forecast: 'Achèvement prévu',
+                overdue: 'Prévision dépassée',
+                description: 'Description',
+                characteristics: 'Caractéristiques',
+                dependencies: 'Dépendances',
+                status: 'Statut',
+                progress: 'Progrès',
+                no: 'Non',
+                yes: 'Oui'
+            },
+            de: {
+                totalProgress: 'Gesamtfortschritt',
+                completed: 'Abgeschlossen',
+                currentTime: 'Aktuelle Zeit:',
+                clickHint: 'Klicken Sie auf den Phasenkreis, um Informationen zu sehen',
+                theme: '🎨 Thema',
+                lang: '🌐 Sprache',
+                overdueBadge: 'Prognose überschritten',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Projektanalyse',
+                budgetChart: 'Projektbudget',
+                risks: 'Risikobewertung',
+                close: 'Schließen',
+                chooseTheme: 'Thema wählen',
+                chooseLanguage: 'Sprache wählen',
+                phase: 'Phase',
+                subtasks: 'Unteraufgaben',
+                start: 'Beginn',
+                end: 'Ende',
+                budget: 'Budget',
+                forecast: 'Voraussichtlicher Abschluss',
+                overdue: 'Prognose überschritten',
+                description: 'Beschreibung',
+                characteristics: 'Eigenschaften',
+                dependencies: 'Abhängigkeiten',
+                status: 'Status',
+                progress: 'Fortschritt',
+                no: 'Nein',
+                yes: 'Ja'
+            },
+            ru_old: {
+                totalProgress: 'Общій прогрессъ',
+                completed: 'Завершено',
+                currentTime: 'Текущее время:',
+                clickHint: 'Нажмите на кружокъ этапа, чтобы увидеть информацию',
+                theme: '🎨 Тема',
+                lang: '🌐 Языкъ',
+                overdueBadge: 'Превышеніе прогноза',
+                exportPDF: '📄 PDF',
+                exportPNG: '🖼️ PNG',
+                exportCSV: '📊 CSV',
+                analytics: '📊 Аналитика проекта',
+                budgetChart: 'Бюджетъ проекта',
+                risks: 'Оценка рисковъ',
+                close: 'Закрыть',
+                chooseTheme: 'Выберите тему',
+                chooseLanguage: 'Выберите языкъ',
+                phase: 'Фаза',
+                subtasks: 'Подэтаповъ',
+                start: 'Начало',
+                end: 'Окончаніе',
+                budget: 'Бюджетъ',
+                forecast: 'Прогнозъ завершенія',
+                overdue: 'Превышеніе прогноза',
+                description: 'Описание',
+                characteristics: 'Характеристики',
+                dependencies: 'Зависимости',
+                status: 'Статусъ',
+                progress: 'Прогрессъ',
+                no: 'Нетъ',
+                yes: 'Да'
+            },
+            pirate: {
+                totalProgress: 'Общая добыча',
+                completed: 'На абордаж!',
+                currentTime: 'Время по песочным часам:',
+                clickHint: 'Йо-хо-хо! Нажми на кружок, чтобы узнать тайны',
+                theme: '🎨 Пиратская тема',
+                lang: '🌐 Язык морского волка',
+                overdueBadge: 'Корабль отстаёт от графика',
+                exportPDF: '📄 Карта сокровищ (PDF)',
+                exportPNG: '🖼️ Рисунок (PNG)',
+                exportCSV: '📊 Судовой журнал (CSV)',
+                analytics: '📊 Аналитика капера',
+                budgetChart: 'Сундук с золотом',
+                risks: 'Оценка штормов',
+                close: 'Закрыть люк',
+                chooseTheme: 'Выбери флаг',
+                chooseLanguage: 'Язык болтовни',
+                phase: 'Этап плавания',
+                subtasks: 'Заданий',
+                start: 'Отплытие',
+                end: 'Прибытие',
+                budget: 'Золото',
+                forecast: 'Прогноз погоды',
+                overdue: 'Отставание',
+                description: 'Описание',
+                characteristics: 'Характеристики',
+                dependencies: 'Зависимости',
+                status: 'Статус',
+                progress: 'Прогресс',
+                no: 'Нет',
+                yes: 'Ага'
+            }
+        };
+
+        // Список языков для выбора
+        const langList = [
+            { id: 'ru', label: 'Русский' },
+            { id: 'en', label: 'English' },
+            { id: 'es', label: 'Español' },
+            { id: 'fr', label: 'Français' },
+            { id: 'de', label: 'Deutsch' },
+            { id: 'ru_old', label: 'Русский дореформенный' },
+            { id: 'pirate', label: 'Пиратский' }
+        ];
 
         // ============================================================
         //  ТЕМЫ
@@ -1057,7 +1368,11 @@
             { id: 'green', label: 'Зелёная', color: '#0a1a12' },
             { id: 'purple', label: 'Фиолетовая', color: '#1a0a2a' },
             { id: 'red', label: 'Красная', color: '#2a0a0a' },
-            { id: 'eyecare', label: 'Защита глаз', color: '#1a2a1a' }
+            { id: 'eyecare', label: 'Защита глаз', color: '#e8e8e8' },
+            { id: 'cyberpunk', label: 'Киберпанк', color: '#0a0a1a' },
+            { id: 'graphical', label: 'Графическая', color: '#ffffff' },
+            { id: 'retro', label: 'Ретро-монитор', color: '#0a1a0a' },
+            { id: 'vaporwave', label: 'Vaporwave', color: '#1a0a2a' }
         ];
 
         // ============================================================
@@ -1065,49 +1380,41 @@
         // ============================================================
 
         let currentTheme = localStorage.getItem('arion-theme') || 'dark';
+        let currentLang = localStorage.getItem('arion-lang') || 'ru';
 
         // ============================================================
         //  HELPERS
         // ============================================================
 
         function getPhaseById(id) { return phases.find(p => p.id === id); }
-
         function getSubsByPhase(phaseId) { return subPhases.filter(s => s.phaseId === phaseId); }
-
         function getPhaseProgress(phaseId) {
             const subs = getSubsByPhase(phaseId);
             if (!subs.length) return 0;
             const sum = subs.reduce((acc, s) => acc + s.pct, 0);
             return Math.round(sum / subs.length);
         }
-
         function getOverallProgress() {
             if (!subPhases.length) return 0;
             const sum = subPhases.reduce((acc, s) => acc + s.pct, 0);
             return Math.round(sum / subPhases.length);
         }
-
         function getCompletedCount() { return subPhases.filter(s => s.pct >= 100).length; }
-
         function getStatusInfo(pct) {
             if (pct >= 100) return { status: 'done', label: 'Завершён' };
             if (pct > 0) return { status: 'active', label: 'В процессе' };
             return { status: 'pending', label: 'Не начат' };
         }
-
         function formatDate(dateStr) {
             if (!dateStr) return '—';
             const d = new Date(dateStr);
             if (isNaN(d.getTime())) return dateStr;
             return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
-
         function getSubName(id) {
             const sub = subPhases.find(s => s.id === id);
             return sub ? sub.name : id;
         }
-
-        // Получить последний понедельник
         function getLastMonday() {
             const now = new Date();
             const day = now.getDay();
@@ -1117,8 +1424,6 @@
             monday.setHours(0,0,0,0);
             return monday;
         }
-
-        // Прогноз завершения подэтапа (на основе данных с последнего понедельника)
         function calculateForecast(sub) {
             if (!sub.startDate || sub.pct <= 0 || sub.pct >= 100) return null;
             const start = new Date(sub.startDate);
@@ -1130,19 +1435,20 @@
             const daysLeft = (100 - sub.pct) / rate;
             return new Date(refDate.getTime() + daysLeft * 86400000);
         }
-
         function formatForecast(sub) {
             const fc = calculateForecast(sub);
             if (!fc) return '—';
             return fc.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
         }
-
         function isOverdue(sub) {
             if (sub.pct >= 100) return false;
             const fc = calculateForecast(sub);
             if (!fc) return false;
             const now = new Date();
             return fc < now;
+        }
+        function t(key) {
+            return translations[currentLang]?.[key] || translations.ru[key] || key;
         }
 
         // ============================================================
@@ -1242,12 +1548,12 @@
             const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
 
             detailsEl.innerHTML = `
-                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
-                <div class="detail-item"><span class="label">Подэтапов:</span> ${subs.length}</div>
-                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
-                <div class="detail-item"><span class="label">Окончание:</span> ${end}</div>
-                <div class="detail-item"><span class="label">Бюджет:</span> ${budget}</div>
+                <div class="detail-item"><span class="label">${t('progress')}:</span> ${progress}%</div>
+                <div class="detail-item"><span class="label">${t('subtasks')}:</span> ${subs.length}</div>
+                <div class="detail-item"><span class="label">${t('completed')}:</span> ${completed}</div>
+                <div class="detail-item"><span class="label">${t('start')}:</span> ${start}</div>
+                <div class="detail-item"><span class="label">${t('end')}:</span> ${end}</div>
+                <div class="detail-item"><span class="label">${t('budget')}:</span> ${budget}</div>
             `;
         }
 
@@ -1271,9 +1577,9 @@
                 header.innerHTML = `
                     <span class="phase-title">${phase.label}</span>
                     <div class="phase-meta">
-                        <span>Начало: ${start}</span>
-                        <span>Окончание: ${end}</span>
-                        <span>Бюджет: ${budget}</span>
+                        <span>${t('start')}: ${start}</span>
+                        <span>${t('end')}: ${end}</span>
+                        <span>${t('budget')}: ${budget}</span>
                     </div>
                     <span class="phase-progress">${progress}%</span>
                 `;
@@ -1331,15 +1637,15 @@
             const meta = document.createElement('div');
             meta.className = 'card-meta';
             if (sub.startDate) {
-                meta.innerHTML += `<span>Старт: ${formatDate(sub.startDate)}</span>`;
+                meta.innerHTML += `<span>${t('start')}: ${formatDate(sub.startDate)}</span>`;
             }
             if (sub.endDate) {
-                meta.innerHTML += `<span>Финиш: ${formatDate(sub.endDate)}</span>`;
+                meta.innerHTML += `<span>${t('end')}: ${formatDate(sub.endDate)}</span>`;
             }
             if (sub.pct > 0 && sub.pct < 100) {
                 const forecast = formatForecast(sub);
                 if (forecast !== '—') {
-                    meta.innerHTML += `<span class="eta">Прогноз: ${forecast}</span>`;
+                    meta.innerHTML += `<span class="eta">${t('forecast')}: ${forecast}</span>`;
                 }
             }
             card.appendChild(meta);
@@ -1356,7 +1662,7 @@
         }
 
         // ============================================================
-        //  MODAL (основной)
+        //  MODAL
         // ============================================================
 
         function openModal(sub) {
@@ -1371,19 +1677,19 @@
 
             const phase = getPhaseById(sub.phaseId);
             const fields = [
-                { key: 'Фаза', value: phase ? phase.label : '—' },
-                { key: 'Статус', value: status.label },
-                { key: 'Прогресс', value: sub.pct + '%' },
-                { key: 'Начало', value: formatDate(sub.startDate) },
-                { key: 'Окончание', value: formatDate(sub.endDate) },
-                { key: 'Прогноз завершения', value: (sub.pct > 0 && sub.pct < 100) ? formatForecast(sub) : '—' },
-                { key: 'Превышение прогноза', value: isOverdue(sub) ? 'Да' : 'Нет' },
-                { key: 'Описание', value: sub.description || '—' },
-                { key: 'Характеристики', value: sub.characteristics || '—' },
+                { key: t('phase'), value: phase ? phase.label : '—' },
+                { key: t('status'), value: status.label },
+                { key: t('progress'), value: sub.pct + '%' },
+                { key: t('start'), value: formatDate(sub.startDate) },
+                { key: t('end'), value: formatDate(sub.endDate) },
+                { key: t('forecast'), value: (sub.pct > 0 && sub.pct < 100) ? formatForecast(sub) : '—' },
+                { key: t('overdue'), value: isOverdue(sub) ? t('yes') : t('no') },
+                { key: t('description'), value: sub.description || '—' },
+                { key: t('characteristics'), value: sub.characteristics || '—' },
             ];
             if (sub.dependencies && sub.dependencies.length) {
                 const depNames = sub.dependencies.map(id => getSubName(id)).join(', ');
-                fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
+                fields.push({ key: t('dependencies'), value: depNames, extraClass: 'dependencies' });
             }
             fields.forEach(f => {
                 const row = document.createElement('div');
@@ -1415,102 +1721,23 @@
         }
 
         // ============================================================
-        //  ANALYTICS (графики и расчёты)
+        //  ANALYTICS (только бюджет и риски)
         // ============================================================
 
         function renderAnalytics() {
-            const ctxVelocity = document.getElementById('velocityChart').getContext('2d');
-            const ctxDeviation = document.getElementById('deviationChart').getContext('2d');
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
-
-            // ---- Данные для графиков ----
-            const phaseIds = phases.map(p => p.id);
-            const phaseLabels = phases.map(p => p.label.split(' ')[0]);
-            const actualProgress = phaseIds.map(id => getPhaseProgress(id));
-            const plannedProgress = phaseIds.map(id => extraData.plannedProgress[id] || 0);
-
-            // Скорость: прогресс в неделю (фактический) — используем данные с последнего понедельника
-            const lastMonday = getLastMonday();
-            const startDates = phases.map(p => p.startDate ? new Date(p.startDate) : null);
-            const velocities = phaseIds.map((id, idx) => {
-                const pct = actualProgress[idx];
-                const start = startDates[idx];
-                if (!start || pct <= 0) return 0;
-                const elapsed = (lastMonday - start) / (1000 * 60 * 60 * 24 * 7); // недели
-                if (elapsed <= 0) return 0;
-                return pct / elapsed;
-            });
-
-            // Отклонение: факт - план
-            const deviation = actualProgress.map((a, i) => a - plannedProgress[i]);
-
-            // ---- График скорости (столбцы) ----
-            const w1 = ctxVelocity.canvas.width;
-            const h1 = ctxVelocity.canvas.height;
-            ctxVelocity.clearRect(0, 0, w1, h1);
-            const pad = { top: 20, bottom: 30, left: 30, right: 20 };
-            const chartW = w1 - pad.left - pad.right;
-            const chartH = h1 - pad.top - pad.bottom;
-            const maxVel = Math.max(...velocities, 1);
-            const barW = chartW / velocities.length * 0.6;
-            const gap = chartW / velocities.length * 0.4;
-            ctxVelocity.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxVelocity.font = '11px Inter, sans-serif';
-            ctxVelocity.textAlign = 'center';
-            velocities.forEach((v, i) => {
-                const x = pad.left + i * (chartW / velocities.length) + gap/2;
-                const barH = (v / maxVel) * chartH;
-                const y = pad.top + chartH - barH;
-                ctxVelocity.fillStyle = v > 0 ? getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim() : getComputedStyle(document.documentElement).getPropertyValue('--dot-pending').trim();
-                ctxVelocity.shadowColor = 'rgba(0,0,0,0.2)';
-                ctxVelocity.shadowBlur = 6;
-                ctxVelocity.fillRect(x, y, barW, barH);
-                ctxVelocity.shadowBlur = 0;
-                ctxVelocity.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-                ctxVelocity.fillText(v.toFixed(1) + '%/нед', x + barW/2, y - 4);
-                ctxVelocity.fillText(phaseLabels[i], x + barW/2, pad.top + chartH + 18);
-            });
-
-            // ---- График отклонения (столбцы) ----
-            const w2 = ctxDeviation.canvas.width;
-            const h2 = ctxDeviation.canvas.height;
-            ctxDeviation.clearRect(0, 0, w2, h2);
-            const pad2 = { top: 20, bottom: 30, left: 30, right: 20 };
-            const chartW2 = w2 - pad2.left - pad2.right;
-            const chartH2 = h2 - pad2.top - pad2.bottom;
-            const maxDev = Math.max(Math.abs(Math.min(...deviation)), Math.abs(Math.max(...deviation)), 1);
-            const barW2 = chartW2 / deviation.length * 0.6;
-            const gap2 = chartW2 / deviation.length * 0.4;
-            ctxDeviation.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxDeviation.font = '11px Inter, sans-serif';
-            ctxDeviation.textAlign = 'center';
-            deviation.forEach((d, i) => {
-                const x = pad2.left + i * (chartW2 / deviation.length) + gap2/2;
-                const barH = (Math.abs(d) / maxDev) * chartH2;
-                const y = d >= 0 ? pad2.top + chartH2 - barH : pad2.top + chartH2;
-                ctxDeviation.fillStyle = d >= 0 ? getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() : getComputedStyle(document.documentElement).getPropertyValue('--dot-active').trim();
-                ctxDeviation.shadowColor = 'rgba(0,0,0,0.2)';
-                ctxDeviation.shadowBlur = 6;
-                ctxDeviation.fillRect(x, y, barW2, barH);
-                ctxDeviation.shadowBlur = 0;
-                ctxDeviation.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-                ctxDeviation.fillText((d > 0 ? '+' : '') + d.toFixed(0) + '%', x + barW2/2, d >= 0 ? y - 4 : y + 16);
-                ctxDeviation.fillText(phaseLabels[i], x + barW2/2, pad2.top + chartH2 + 18);
-            });
-
-            // ---- Бюджет (круговая диаграмма) ----
             const totalBudget = extraData.totalBudget;
             const spent = extraData.spentBudget;
             const remaining = totalBudget - spent;
             const data = [spent, remaining];
             const colors = [
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-active').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim()
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-active').trim() || '#e74c3c',
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0'
             ];
-            const w3 = ctxBudget.canvas.width;
-            const h3 = ctxBudget.canvas.height;
-            ctxBudget.clearRect(0, 0, w3, h3);
-            const cx = w3/2, cy = h3/2, r = Math.min(w3, h3) * 0.35;
+            const w = ctxBudget.canvas.width;
+            const h = ctxBudget.canvas.height;
+            ctxBudget.clearRect(0, 0, w, h);
+            const cx = w/2, cy = h/2, r = Math.min(w, h) * 0.35;
             let startAngle = -Math.PI/2;
             const total = data.reduce((a,b) => a+b, 0);
             if (total > 0) {
@@ -1528,7 +1755,6 @@
                     startAngle += slice;
                 });
             }
-            // Легенда
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
             ctxBudget.font = '12px Inter, sans-serif';
             ctxBudget.textAlign = 'left';
@@ -1536,63 +1762,28 @@
             ctxBudget.fillStyle = colors[0];
             ctxBudget.fillRect(legendX, legendY, 12, 12);
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxBudget.fillText('Потрачено $' + spent + ' млн', legendX + 16, legendY + 10);
+            ctxBudget.fillText(t('overdue') + ' $' + spent + ' млн', legendX + 16, legendY + 10);
             ctxBudget.fillStyle = colors[1];
             ctxBudget.fillRect(legendX, legendY + 22, 12, 12);
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxBudget.fillText('Остаток $' + remaining + ' млн', legendX + 16, legendY + 32);
+            ctxBudget.fillText(t('completed') + ' $' + remaining + ' млн', legendX + 16, legendY + 32);
 
-            // ---- Прогноз завершения подэтапов (список) ----
-            const forecastList = document.getElementById('forecastList');
-            const activeSubs = subPhases.filter(s => s.pct > 0 && s.pct < 100);
-            const sorted = activeSubs.sort((a, b) => {
-                const fa = calculateForecast(a);
-                const fb = calculateForecast(b);
-                if (!fa && !fb) return 0;
-                if (!fa) return 1;
-                if (!fb) return -1;
-                return fa - fb;
-            });
-            if (sorted.length === 0) {
-                forecastList.innerHTML = '<div style="color:var(--text-muted);">Нет подэтапов в процессе</div>';
-            } else {
-                forecastList.innerHTML = sorted.map(s => `
-                    <div class="forecast-item">
-                        <span class="name">${s.name}</span>
-                        <span class="date">${formatForecast(s)}</span>
-                    </div>
-                `).join('');
-            }
-
-            // ---- Прогноз завершения проекта (экстраполяция) ----
-            const overall = getOverallProgress();
-            const projectStart = new Date('2026-08-16');
-            const elapsedWeeks = (lastMonday - projectStart) / (1000 * 60 * 60 * 24 * 7);
-            if (elapsedWeeks > 0 && overall > 0) {
-                const rate = overall / elapsedWeeks; // % в неделю
-                const weeksLeft = (100 - overall) / rate;
-                const forecastDate = new Date(lastMonday.getTime() + weeksLeft * 7 * 86400000);
-                document.getElementById('projectForecast').textContent = forecastDate.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-            } else {
-                document.getElementById('projectForecast').textContent = '—';
-            }
-
-            // ---- Риски ----
+            // Риски
             const riskList = document.getElementById('riskList');
             riskList.innerHTML = extraData.risks.map(r => {
                 const score = (r.probability * r.impact * 100).toFixed(0);
                 let cls = 'low';
                 if (score > 30) cls = 'medium';
                 if (score > 60) cls = 'high';
-                return `<div class="risk-item" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);font-size:13px;">
-                    <span style="color:var(--text-secondary);">${r.name}</span>
-                    <span style="font-weight:500;color:${cls === 'high' ? 'var(--dot-active)' : cls === 'medium' ? 'var(--accent-gold)' : 'var(--dot-done)'};">${score}%</span>
+                return `<div class="risk-item">
+                    <span class="risk-name">${r.name}</span>
+                    <span class="risk-score ${cls}">${score}%</span>
                 </div>`;
             }).join('');
         }
 
         // ============================================================
-        //  STATS & TIME
+        //  STATS & I18N
         // ============================================================
 
         function updateStats() {
@@ -1621,6 +1812,34 @@
             }
 
             renderAnalytics();
+            updateI18n();
+        }
+
+        // ============================================================
+        //  I18N
+        // ============================================================
+
+        function updateI18n() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    // Если внутри есть вложенные элементы (например, span), сохраняем их
+                    const childSpan = el.querySelector('span');
+                    if (childSpan && key === 'currentTime') {
+                        // Особый случай: время
+                        el.innerHTML = t('currentTime') + ' <span id="lastUpdate">' + document.getElementById('lastUpdate').textContent + '</span>';
+                    } else {
+                        el.textContent = t(key);
+                    }
+                }
+            });
+            // Обновляем текст в модальных заголовках
+            document.querySelectorAll('.modal-title[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.textContent = t(key);
+                }
+            });
         }
 
         // ============================================================
@@ -1677,15 +1896,8 @@
         }
 
         // ============================================================
-        //  THEME
+        //  THEME & LANG MODALS
         // ============================================================
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('arion-theme', theme);
-            currentTheme = theme;
-            renderAnalytics();
-        }
 
         function openThemeModal() {
             const overlay = document.getElementById('themeModalOverlay');
@@ -1709,12 +1921,49 @@
             document.getElementById('themeModalClose').focus();
         }
 
+        function openLangModal() {
+            const overlay = document.getElementById('langModalOverlay');
+            const optionsContainer = document.getElementById('langOptions');
+            optionsContainer.innerHTML = '';
+            langList.forEach(l => {
+                const div = document.createElement('div');
+                div.className = 'theme-option' + (l.id === currentLang ? ' active' : '');
+                div.textContent = l.label;
+                div.addEventListener('click', () => {
+                    applyLang(l.id);
+                    overlay.classList.remove('active');
+                    showToast(`Язык: ${l.label}`, 'success');
+                });
+                optionsContainer.appendChild(div);
+            });
+            overlay.classList.add('active');
+            document.getElementById('langModalClose').focus();
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('arion-theme', theme);
+            currentTheme = theme;
+            renderAnalytics();
+        }
+
+        function applyLang(lang) {
+            currentLang = lang;
+            localStorage.setItem('arion-lang', lang);
+            updateI18n();
+            // Обновить тексты в модалках и карточках (перерисовка)
+            renderPhases();
+            renderTimeline();
+            updateStats();
+        }
+
         // ============================================================
         //  INIT
         // ============================================================
 
         function init() {
             applyTheme(currentTheme);
+            applyLang(currentLang);
 
             renderTimeline();
             renderPhases();
@@ -1738,6 +1987,13 @@
             document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
+            document.getElementById('langToggle').addEventListener('click', openLangModal);
+            document.getElementById('langModalClose').addEventListener('click', function() {
+                document.getElementById('langModalOverlay').classList.remove('active');
+            });
+            document.getElementById('langModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
+            });
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('exportPNG').addEventListener('click', exportPNG);
             document.getElementById('exportCSV').addEventListener('click', exportCSV);
@@ -1746,6 +2002,7 @@
                 if (e.key === 'Escape') {
                     document.getElementById('modalOverlay').classList.remove('active');
                     document.getElementById('themeModalOverlay').classList.remove('active');
+                    document.getElementById('langModalOverlay').classList.remove('active');
                 }
             });
 
