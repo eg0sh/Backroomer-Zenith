@@ -411,13 +411,30 @@
         .phase-card .card-meta .eta { color:var(--accent); }
 
         /* modal */
-        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:1000; justify-content:center; align-items:center; padding:20px; }
-        .modal-overlay.active { display:flex; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
         .modal {
-            background:var(--bg-panel); backdrop-filter:blur(12px); border-radius:24px; padding:32px 36px;
-            max-width:560px; width:100%; border:1px solid var(--border-color);
-            box-shadow:0 24px 80px rgba(0,0,0,0.8); animation:modal-in 0.4s cubic-bezier(0.4,0,0.2,1);
-            max-height:80vh; overflow-y:auto;
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 32px 36px;
+            max-width: 560px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+            animation: modal-in 0.4s cubic-bezier(0.4,0,0.2,1);
+            max-height: 80vh;
+            overflow-y: auto;
         }
         .modal .modal-title { font-size:24px; font-weight:600; margin-bottom:16px; transition:color 0.3s; }
         .modal .modal-title.status-done { color:var(--dot-done); text-shadow:0 0 30px rgba(76,217,160,0.3); }
@@ -429,7 +446,11 @@
         .modal .modal-body .row .value { font-weight:500; color:var(--text-primary); text-align:right; word-break:break-word; white-space:normal; }
         .modal .modal-body .row .value.dependencies { font-weight:400; color:var(--text-muted); font-size:13px; }
         .modal .modal-body .row .value.full-text { white-space:normal; word-break:break-word; }
-        .modal .modal-close { margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-secondary); padding:10px 24px; border-radius:40px; font-size:14px; cursor:pointer; transition:all 0.2s; width:100%; }
+        .modal .modal-close {
+            margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color);
+            color:var(--text-secondary); padding:10px 24px; border-radius:40px; font-size:14px;
+            cursor:pointer; transition:all 0.2s; width:100%;
+        }
         .modal .modal-close:hover { border-color:var(--accent); box-shadow:0 0 20px var(--accent-glow); }
         .modal .modal-close:focus-visible { outline:2px solid var(--accent); }
 
@@ -609,7 +630,7 @@
             <div class="modal">
                 <div class="modal-title" id="modalTitle">Название</div>
                 <div class="modal-body" id="modalBody"></div>
-                <button class="modal-close" id="modalClose" data-i18n="closeBtn">Закрыть</button>
+                <button class="modal-close" id="modalCloseBtn" data-i18n="closeBtn">Закрыть</button>
             </div>
         </div>
 
@@ -618,7 +639,7 @@
             <div class="modal theme-modal">
                 <div class="modal-title" style="color:var(--text-primary);" data-i18n="chooseTheme">Выберите тему</div>
                 <div class="theme-options" id="themeOptions"></div>
-                <button class="modal-close" id="themeModalClose" data-i18n="closeBtn">Закрыть</button>
+                <button class="modal-close" id="themeModalCloseBtn" data-i18n="closeBtn">Закрыть</button>
             </div>
         </div>
 
@@ -627,7 +648,7 @@
             <div class="modal lang-modal">
                 <div class="modal-title" style="color:var(--text-primary);" data-i18n="chooseLang">Выберите язык</div>
                 <div class="lang-options" id="langOptions"></div>
-                <button class="modal-close" id="langModalClose" data-i18n="closeBtn">Закрыть</button>
+                <button class="modal-close" id="langModalCloseBtn" data-i18n="closeBtn">Закрыть</button>
             </div>
         </div>
 
@@ -819,7 +840,7 @@
         ];
 
         // ============================================================
-        //  ЯЗЫКИ (с шуточными)
+        //  ЯЗЫКИ
         // ============================================================
 
         const languages = [
@@ -840,292 +861,130 @@
 
         const translations = {
             ru: {
-                themeBtn: '🎨 Тема',
-                langBtn: '🌐 Язык',
-                totalProgress: 'Общий прогресс',
-                completedLabel: 'Завершено',
-                exceededLabel: 'Превышение прогноза',
-                currentTime: 'Текущее время: ',
-                clickHint: 'Нажмите на кружок этапа, чтобы увидеть информацию',
-                analyticsTitle: '📊 Аналитика проекта',
-                budgetTitle: 'Бюджет проекта',
-                risksTitle: 'Оценка рисков',
-                chooseTheme: 'Выберите тему',
-                chooseLang: 'Выберите язык',
-                closeBtn: 'Закрыть',
-                used: 'Использовано',
-                unused: 'Не использовано',
-                status: 'Статус',
-                progress: 'Прогресс',
-                subPhases: 'Подэтапов',
-                completed: 'Завершено',
-                start: 'Начало',
-                end: 'Окончание',
-                forecast: 'Прогноз завершения',
-                exceeded: 'Превышение прогноза',
-                description: 'Описание',
-                characteristics: 'Характеристики',
-                dependencies: 'Зависимости',
-                phase: 'Фаза',
-                pending: 'Не начат',
-                active: 'В процессе',
-                done: 'Завершён'
+                themeBtn: '🎨 Тема', langBtn: '🌐 Язык', totalProgress: 'Общий прогресс',
+                completedLabel: 'Завершено', exceededLabel: 'Превышение прогноза',
+                currentTime: 'Текущее время: ', clickHint: 'Нажмите на кружок этапа, чтобы увидеть информацию',
+                analyticsTitle: '📊 Аналитика проекта', budgetTitle: 'Бюджет проекта',
+                risksTitle: 'Оценка рисков', chooseTheme: 'Выберите тему', chooseLang: 'Выберите язык',
+                closeBtn: 'Закрыть', used: 'Использовано', unused: 'Не использовано',
+                status: 'Статус', progress: 'Прогресс', subPhases: 'Подэтапов',
+                completed: 'Завершено', start: 'Начало', end: 'Окончание',
+                forecast: 'Прогноз завершения', exceeded: 'Превышение прогноза',
+                description: 'Описание', characteristics: 'Характеристики',
+                dependencies: 'Зависимости', phase: 'Фаза',
+                pending: 'Не начат', active: 'В процессе', done: 'Завершён'
             },
             en: {
-                themeBtn: '🎨 Theme',
-                langBtn: '🌐 Language',
-                totalProgress: 'Total Progress',
-                completedLabel: 'Completed',
-                exceededLabel: 'Exceeded Forecast',
-                currentTime: 'Current Time: ',
-                clickHint: 'Click on a phase circle to see information',
-                analyticsTitle: '📊 Project Analytics',
-                budgetTitle: 'Project Budget',
-                risksTitle: 'Risk Assessment',
-                chooseTheme: 'Choose Theme',
-                chooseLang: 'Choose Language',
-                closeBtn: 'Close',
-                used: 'Used',
-                unused: 'Unused',
-                status: 'Status',
-                progress: 'Progress',
-                subPhases: 'Sub-phases',
-                completed: 'Completed',
-                start: 'Start',
-                end: 'End',
-                forecast: 'Forecast completion',
-                exceeded: 'Exceeded forecast',
-                description: 'Description',
-                characteristics: 'Characteristics',
-                dependencies: 'Dependencies',
-                phase: 'Phase',
-                pending: 'Not started',
-                active: 'In progress',
-                done: 'Completed'
+                themeBtn: '🎨 Theme', langBtn: '🌐 Language', totalProgress: 'Total Progress',
+                completedLabel: 'Completed', exceededLabel: 'Exceeded Forecast',
+                currentTime: 'Current Time: ', clickHint: 'Click on a phase circle to see information',
+                analyticsTitle: '📊 Project Analytics', budgetTitle: 'Project Budget',
+                risksTitle: 'Risk Assessment', chooseTheme: 'Choose Theme', chooseLang: 'Choose Language',
+                closeBtn: 'Close', used: 'Used', unused: 'Unused',
+                status: 'Status', progress: 'Progress', subPhases: 'Sub-phases',
+                completed: 'Completed', start: 'Start', end: 'End',
+                forecast: 'Forecast completion', exceeded: 'Exceeded forecast',
+                description: 'Description', characteristics: 'Characteristics',
+                dependencies: 'Dependencies', phase: 'Phase',
+                pending: 'Not started', active: 'In progress', done: 'Completed'
             },
             es: {
-                themeBtn: '🎨 Tema',
-                langBtn: '🌐 Idioma',
-                totalProgress: 'Progreso total',
-                completedLabel: 'Completado',
-                exceededLabel: 'Excedió pronóstico',
-                currentTime: 'Hora actual: ',
-                clickHint: 'Haga clic en un círculo de fase para ver información',
-                analyticsTitle: '📊 Analítica del proyecto',
-                budgetTitle: 'Presupuesto del proyecto',
-                risksTitle: 'Evaluación de riesgos',
-                chooseTheme: 'Elegir tema',
-                chooseLang: 'Elegir idioma',
-                closeBtn: 'Cerrar',
-                used: 'Usado',
-                unused: 'No usado',
-                status: 'Estado',
-                progress: 'Progreso',
-                subPhases: 'Sub-fases',
-                completed: 'Completado',
-                start: 'Inicio',
-                end: 'Fin',
-                forecast: 'Pronóstico de finalización',
-                exceeded: 'Excedió pronóstico',
-                description: 'Descripción',
-                characteristics: 'Características',
-                dependencies: 'Dependencias',
-                phase: 'Fase',
-                pending: 'No iniciado',
-                active: 'En proceso',
-                done: 'Completado'
+                themeBtn: '🎨 Tema', langBtn: '🌐 Idioma', totalProgress: 'Progreso total',
+                completedLabel: 'Completado', exceededLabel: 'Excedió pronóstico',
+                currentTime: 'Hora actual: ', clickHint: 'Haga clic en un círculo de fase para ver información',
+                analyticsTitle: '📊 Analítica del proyecto', budgetTitle: 'Presupuesto del proyecto',
+                risksTitle: 'Evaluación de riesgos', chooseTheme: 'Elegir tema', chooseLang: 'Elegir idioma',
+                closeBtn: 'Cerrar', used: 'Usado', unused: 'No usado',
+                status: 'Estado', progress: 'Progreso', subPhases: 'Sub-fases',
+                completed: 'Completado', start: 'Inicio', end: 'Fin',
+                forecast: 'Pronóstico de finalización', exceeded: 'Excedió pronóstico',
+                description: 'Descripción', characteristics: 'Características',
+                dependencies: 'Dependencias', phase: 'Fase',
+                pending: 'No iniciado', active: 'En proceso', done: 'Completado'
             },
             fr: {
-                themeBtn: '🎨 Thème',
-                langBtn: '🌐 Langue',
-                totalProgress: 'Progrès total',
-                completedLabel: 'Terminé',
-                exceededLabel: 'Dépassement prévu',
-                currentTime: 'Heure actuelle: ',
-                clickHint: 'Cliquez sur un cercle de phase pour voir les informations',
-                analyticsTitle: '📊 Analytique du projet',
-                budgetTitle: 'Budget du projet',
-                risksTitle: 'Évaluation des risques',
-                chooseTheme: 'Choisir le thème',
-                chooseLang: 'Choisir la langue',
-                closeBtn: 'Fermer',
-                used: 'Utilisé',
-                unused: 'Non utilisé',
-                status: 'Statut',
-                progress: 'Progrès',
-                subPhases: 'Sous-phases',
-                completed: 'Terminé',
-                start: 'Début',
-                end: 'Fin',
-                forecast: 'Prévision de fin',
-                exceeded: 'Dépassement prévu',
-                description: 'Description',
-                characteristics: 'Caractéristiques',
-                dependencies: 'Dépendances',
-                phase: 'Phase',
-                pending: 'Non commencé',
-                active: 'En cours',
-                done: 'Terminé'
+                themeBtn: '🎨 Thème', langBtn: '🌐 Langue', totalProgress: 'Progrès total',
+                completedLabel: 'Terminé', exceededLabel: 'Dépassement prévu',
+                currentTime: 'Heure actuelle: ', clickHint: 'Cliquez sur un cercle de phase pour voir les informations',
+                analyticsTitle: '📊 Analytique du projet', budgetTitle: 'Budget du projet',
+                risksTitle: 'Évaluation des risques', chooseTheme: 'Choisir le thème', chooseLang: 'Choisir la langue',
+                closeBtn: 'Fermer', used: 'Utilisé', unused: 'Non utilisé',
+                status: 'Statut', progress: 'Progrès', subPhases: 'Sous-phases',
+                completed: 'Terminé', start: 'Début', end: 'Fin',
+                forecast: 'Prévision de fin', exceeded: 'Dépassement prévu',
+                description: 'Description', characteristics: 'Caractéristiques',
+                dependencies: 'Dépendances', phase: 'Phase',
+                pending: 'Non commencé', active: 'En cours', done: 'Terminé'
             },
             de: {
-                themeBtn: '🎨 Thema',
-                langBtn: '🌐 Sprache',
-                totalProgress: 'Gesamtfortschritt',
-                completedLabel: 'Abgeschlossen',
-                exceededLabel: 'Prognose überschritten',
-                currentTime: 'Aktuelle Zeit: ',
-                clickHint: 'Klicken Sie auf einen Phasenkreis, um Informationen zu sehen',
-                analyticsTitle: '📊 Projektanalyse',
-                budgetTitle: 'Projektbudget',
-                risksTitle: 'Risikobewertung',
-                chooseTheme: 'Thema wählen',
-                chooseLang: 'Sprache wählen',
-                closeBtn: 'Schließen',
-                used: 'Verwendet',
-                unused: 'Nicht verwendet',
-                status: 'Status',
-                progress: 'Fortschritt',
-                subPhases: 'Unterphasen',
-                completed: 'Abgeschlossen',
-                start: 'Start',
-                end: 'Ende',
-                forecast: 'Voraussichtliche Fertigstellung',
-                exceeded: 'Prognose überschritten',
-                description: 'Beschreibung',
-                characteristics: 'Eigenschaften',
-                dependencies: 'Abhängigkeiten',
-                phase: 'Phase',
-                pending: 'Nicht begonnen',
-                active: 'In Bearbeitung',
-                done: 'Abgeschlossen'
+                themeBtn: '🎨 Thema', langBtn: '🌐 Sprache', totalProgress: 'Gesamtfortschritt',
+                completedLabel: 'Abgeschlossen', exceededLabel: 'Prognose überschritten',
+                currentTime: 'Aktuelle Zeit: ', clickHint: 'Klicken Sie auf einen Phasenkreis, um Informationen zu sehen',
+                analyticsTitle: '📊 Projektanalyse', budgetTitle: 'Projektbudget',
+                risksTitle: 'Risikobewertung', chooseTheme: 'Thema wählen', chooseLang: 'Sprache wählen',
+                closeBtn: 'Schließen', used: 'Verwendet', unused: 'Nicht verwendet',
+                status: 'Status', progress: 'Fortschritt', subPhases: 'Unterphasen',
+                completed: 'Abgeschlossen', start: 'Start', end: 'Ende',
+                forecast: 'Voraussichtliche Fertigstellung', exceeded: 'Prognose überschritten',
+                description: 'Beschreibung', characteristics: 'Eigenschaften',
+                dependencies: 'Abhängigkeiten', phase: 'Phase',
+                pending: 'Nicht begonnen', active: 'In Bearbeitung', done: 'Abgeschlossen'
             },
             zh: {
-                themeBtn: '🎨 主题',
-                langBtn: '🌐 语言',
-                totalProgress: '总进度',
-                completedLabel: '已完成',
-                exceededLabel: '超出预测',
-                currentTime: '当前时间: ',
-                clickHint: '点击阶段圆圈查看信息',
-                analyticsTitle: '📊 项目分析',
-                budgetTitle: '项目预算',
-                risksTitle: '风险评估',
-                chooseTheme: '选择主题',
-                chooseLang: '选择语言',
-                closeBtn: '关闭',
-                used: '已使用',
-                unused: '未使用',
-                status: '状态',
-                progress: '进度',
-                subPhases: '子阶段',
-                completed: '已完成',
-                start: '开始',
-                end: '结束',
-                forecast: '预计完成',
-                exceeded: '超出预测',
-                description: '描述',
-                characteristics: '特点',
-                dependencies: '依赖关系',
-                phase: '阶段',
-                pending: '未开始',
-                active: '进行中',
-                done: '已完成'
+                themeBtn: '🎨 主题', langBtn: '🌐 语言', totalProgress: '总进度',
+                completedLabel: '已完成', exceededLabel: '超出预测',
+                currentTime: '当前时间: ', clickHint: '点击阶段圆圈查看信息',
+                analyticsTitle: '📊 项目分析', budgetTitle: '项目预算',
+                risksTitle: '风险评估', chooseTheme: '选择主题', chooseLang: '选择语言',
+                closeBtn: '关闭', used: '已使用', unused: '未使用',
+                status: '状态', progress: '进度', subPhases: '子阶段',
+                completed: '已完成', start: '开始', end: '结束',
+                forecast: '预计完成', exceeded: '超出预测',
+                description: '描述', characteristics: '特点',
+                dependencies: '依赖关系', phase: '阶段',
+                pending: '未开始', active: '进行中', done: '已完成'
             },
             ja: {
-                themeBtn: '🎨 テーマ',
-                langBtn: '🌐 言語',
-                totalProgress: '全体の進捗',
-                completedLabel: '完了',
-                exceededLabel: '予測超過',
-                currentTime: '現在時刻: ',
-                clickHint: 'フェーズサークルをクリックして情報を表示',
-                analyticsTitle: '📊 プロジェクト分析',
-                budgetTitle: 'プロジェクト予算',
-                risksTitle: 'リスク評価',
-                chooseTheme: 'テーマを選択',
-                chooseLang: '言語を選択',
-                closeBtn: '閉じる',
-                used: '使用済み',
-                unused: '未使用',
-                status: 'ステータス',
-                progress: '進捗',
-                subPhases: 'サブフェーズ',
-                completed: '完了',
-                start: '開始',
-                end: '終了',
-                forecast: '完了予測',
-                exceeded: '予測超過',
-                description: '説明',
-                characteristics: '特徴',
-                dependencies: '依存関係',
-                phase: 'フェーズ',
-                pending: '未開始',
-                active: '進行中',
-                done: '完了'
+                themeBtn: '🎨 テーマ', langBtn: '🌐 言語', totalProgress: '全体の進捗',
+                completedLabel: '完了', exceededLabel: '予測超過',
+                currentTime: '現在時刻: ', clickHint: 'フェーズサークルをクリックして情報を表示',
+                analyticsTitle: '📊 プロジェクト分析', budgetTitle: 'プロジェクト予算',
+                risksTitle: 'リスク評価', chooseTheme: 'テーマを選択', chooseLang: '言語を選択',
+                closeBtn: '閉じる', used: '使用済み', unused: '未使用',
+                status: 'ステータス', progress: '進捗', subPhases: 'サブフェーズ',
+                completed: '完了', start: '開始', end: '終了',
+                forecast: '完了予測', exceeded: '予測超過',
+                description: '説明', characteristics: '特徴',
+                dependencies: '依存関係', phase: 'フェーズ',
+                pending: '未開始', active: '進行中', done: '完了'
             },
             ru_old: {
-                themeBtn: '🎨 Тема',
-                langBtn: '🌐 Языкъ',
-                totalProgress: 'Общій прогрессъ',
-                completedLabel: 'Завершено',
-                exceededLabel: 'Превышеніе прогноза',
-                currentTime: 'Текущее время: ',
-                clickHint: 'Нажмите на кружокъ этапа, чтобы увидеть информацию',
-                analyticsTitle: '📊 Аналитика проекта',
-                budgetTitle: 'Бюджетъ проекта',
-                risksTitle: 'Оценка рисковъ',
-                chooseTheme: 'Выберите тему',
-                chooseLang: 'Выберите языкъ',
-                closeBtn: 'Закрыть',
-                used: 'Использовано',
-                unused: 'Не использовано',
-                status: 'Статусъ',
-                progress: 'Прогрессъ',
-                subPhases: 'Подэтаповъ',
-                completed: 'Завершено',
-                start: 'Начало',
-                end: 'Окончание',
-                forecast: 'Прогнозъ завершенія',
-                exceeded: 'Превышеніе прогноза',
-                description: 'Описание',
-                characteristics: 'Характеристики',
-                dependencies: 'Зависимости',
-                phase: 'Фаза',
-                pending: 'Не начатъ',
-                active: 'Въ процессѣ',
-                done: 'Завершёнъ'
+                themeBtn: '🎨 Тема', langBtn: '🌐 Языкъ', totalProgress: 'Общій прогрессъ',
+                completedLabel: 'Завершено', exceededLabel: 'Превышеніе прогноза',
+                currentTime: 'Текущее время: ', clickHint: 'Нажмите на кружокъ этапа, чтобы увидеть информацию',
+                analyticsTitle: '📊 Аналитика проекта', budgetTitle: 'Бюджетъ проекта',
+                risksTitle: 'Оценка рисковъ', chooseTheme: 'Выберите тему', chooseLang: 'Выберите языкъ',
+                closeBtn: 'Закрыть', used: 'Использовано', unused: 'Не использовано',
+                status: 'Статусъ', progress: 'Прогрессъ', subPhases: 'Подэтаповъ',
+                completed: 'Завершено', start: 'Начало', end: 'Окончание',
+                forecast: 'Прогнозъ завершенія', exceeded: 'Превышеніе прогноза',
+                description: 'Описание', characteristics: 'Характеристики',
+                dependencies: 'Зависимости', phase: 'Фаза',
+                pending: 'Не начатъ', active: 'Въ процессѣ', done: 'Завершёнъ'
             },
             pirate: {
-                themeBtn: '🎨 Theme',
-                langBtn: '🌐 Tongue',
-                totalProgress: 'Total Progress',
-                completedLabel: 'Plundered',
-                exceededLabel: 'Over the Horizon',
-                currentTime: 'Current Time: ',
-                clickHint: 'Click on a phase circle to see info, ye scurvy dog!',
-                analyticsTitle: '📊 Project Analytics',
-                budgetTitle: 'Project Booty',
-                risksTitle: 'Risk Assessment',
-                chooseTheme: 'Choose Theme',
-                chooseLang: 'Choose Tongue',
-                closeBtn: 'Close',
-                used: 'Spent',
-                unused: 'In the Chest',
-                status: 'Status',
-                progress: 'Progress',
-                subPhases: 'Sub-phases',
-                completed: 'Plundered',
-                start: 'Start',
-                end: 'End',
-                forecast: 'Forecast completion',
-                exceeded: 'Over the Horizon',
-                description: 'Description',
-                characteristics: 'Characteristics',
-                dependencies: 'Dependencies',
-                phase: 'Phase',
-                pending: 'Not started',
-                active: 'In progress',
-                done: 'Completed'
+                themeBtn: '🎨 Theme', langBtn: '🌐 Tongue', totalProgress: 'Total Progress',
+                completedLabel: 'Plundered', exceededLabel: 'Over the Horizon',
+                currentTime: 'Current Time: ', clickHint: 'Click on a phase circle to see info, ye scurvy dog!',
+                analyticsTitle: '📊 Project Analytics', budgetTitle: 'Project Booty',
+                risksTitle: 'Risk Assessment', chooseTheme: 'Choose Theme', chooseLang: 'Choose Tongue',
+                closeBtn: 'Close', used: 'Spent', unused: 'In the Chest',
+                status: 'Status', progress: 'Progress', subPhases: 'Sub-phases',
+                completed: 'Plundered', start: 'Start', end: 'End',
+                forecast: 'Forecast completion', exceeded: 'Over the Horizon',
+                description: 'Description', characteristics: 'Characteristics',
+                dependencies: 'Dependencies', phase: 'Phase',
+                pending: 'Not started', active: 'In progress', done: 'Completed'
             }
         };
 
@@ -1223,9 +1082,12 @@
         function applyTranslations() {
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
-                el.textContent = t(key);
+                if (el.id === 'lastUpdate' || el.tagName === 'SPAN' && el.parentElement?.classList?.contains('time-row')) {
+                    // пропускаем динамические элементы
+                } else {
+                    el.textContent = t(key);
+                }
             });
-            // Обновляем динамические тексты в модалках и панелях позже
         }
 
         // ============================================================
@@ -1437,7 +1299,7 @@
         }
 
         // ============================================================
-        //  MODAL
+        //  MODAL (основная)
         // ============================================================
 
         function openModal(sub) {
@@ -1475,7 +1337,7 @@
             });
 
             overlay.classList.add('active');
-            document.getElementById('modalClose').focus();
+            document.getElementById('modalCloseBtn').focus();
         }
 
         // ============================================================
@@ -1508,7 +1370,7 @@
             const w = ctxBudget.canvas.width;
             const h = ctxBudget.canvas.height;
             ctxBudget.clearRect(0, 0, w, h);
-            const cx = w/2, cy = h/2, r = Math.min(w, h) * 0.35;
+            const cx = w/2, cy = h/2 + 10, r = Math.min(w, h) * 0.32;
             const data = [spent, remaining];
             const colors = [
                 getComputedStyle(document.documentElement).getPropertyValue('--dot-active').trim() || '#e74c3c',
@@ -1532,19 +1394,20 @@
                 });
             }
 
-            // Легенда
+            // Легенда — поднимем выше, чтобы не наезжала
+            const legendY = 16;
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
             ctxBudget.font = '13px Inter, sans-serif';
             ctxBudget.textAlign = 'left';
-            const legendX = 14, legendY = 20;
+            const legX = 14;
             ctxBudget.fillStyle = colors[0];
-            ctxBudget.fillRect(legendX, legendY, 14, 14);
+            ctxBudget.fillRect(legX, legendY, 14, 14);
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
-            ctxBudget.fillText(t('used') + ' $' + spent + ' млн', legendX + 20, legendY + 11);
+            ctxBudget.fillText(t('used') + ' $' + spent + ' млн', legX + 20, legendY + 11);
             ctxBudget.fillStyle = colors[1];
-            ctxBudget.fillRect(legendX, legendY + 24, 14, 14);
+            ctxBudget.fillRect(legX, legendY + 22, 14, 14);
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
-            ctxBudget.fillText(t('unused') + ' $' + remaining + ' млн', legendX + 20, legendY + 35);
+            ctxBudget.fillText(t('unused') + ' $' + remaining + ' млн', legX + 20, legendY + 33);
 
             // Риски
             const riskList = document.getElementById('riskList');
@@ -1685,7 +1548,7 @@
                 optionsContainer.appendChild(div);
             });
             overlay.classList.add('active');
-            document.getElementById('themeModalClose').focus();
+            document.getElementById('themeModalCloseBtn').focus();
         }
 
         // ============================================================
@@ -1696,12 +1559,6 @@
             currentLang = lang;
             localStorage.setItem('arion-lang', lang);
             applyTranslations();
-            // Перерисовываем модалки и панели с новыми переводами
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                el.textContent = t(key);
-            });
-            // Обновляем статусы в карточках и модалках
             renderPhases();
             renderTimeline();
             updateStats();
@@ -1723,7 +1580,7 @@
                 optionsContainer.appendChild(div);
             });
             overlay.classList.add('active');
-            document.getElementById('langModalClose').focus();
+            document.getElementById('langModalCloseBtn').focus();
         }
 
         // ============================================================
@@ -1743,30 +1600,40 @@
                 showToast(`⚠️ ${overdueCount} ${t('exceededLabel')}`, 'warning');
             }
 
-            document.getElementById('modalClose').addEventListener('click', function() {
+            // Закрытие основной модалки
+            document.getElementById('modalCloseBtn').addEventListener('click', function() {
                 document.getElementById('modalOverlay').classList.remove('active');
             });
             document.getElementById('modalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
-            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
-            document.getElementById('themeModalClose').addEventListener('click', function() {
+
+            // Закрытие модалки темы
+            document.getElementById('themeModalCloseBtn').addEventListener('click', function() {
                 document.getElementById('themeModalOverlay').classList.remove('active');
             });
             document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
-            document.getElementById('langToggle').addEventListener('click', openLangModal);
-            document.getElementById('langModalClose').addEventListener('click', function() {
+
+            // Закрытие модалки языка
+            document.getElementById('langModalCloseBtn').addEventListener('click', function() {
                 document.getElementById('langModalOverlay').classList.remove('active');
             });
             document.getElementById('langModalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
+
+            // Кнопки для открытия модалок
+            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
+            document.getElementById('langToggle').addEventListener('click', openLangModal);
+
+            // Экспорт
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
             document.getElementById('exportPNG').addEventListener('click', exportPNG);
             document.getElementById('exportCSV').addEventListener('click', exportCSV);
 
+            // ESC для всех модалок
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     document.getElementById('modalOverlay').classList.remove('active');
