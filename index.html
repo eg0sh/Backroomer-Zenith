@@ -21,6 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            overflow-x: hidden;
         }
 
         .dashboard {
@@ -43,6 +44,77 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #6b7a8f;
+        }
+
+        /* ----- animations & glow ----- */
+        @keyframes glow-title {
+            0% {
+                text-shadow: 0 0 40px rgba(245, 176, 65, 0.2), 0 0 80px rgba(245, 176, 65, 0.05);
+            }
+            100% {
+                text-shadow: 0 0 70px rgba(245, 176, 65, 0.5), 0 0 140px rgba(245, 176, 65, 0.2);
+            }
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
+        }
+
+        @keyframes pulse-red {
+            0%,
+            100% {
+                box-shadow: 0 0 30px rgba(231, 76, 60, 0.4), 0 0 60px rgba(231, 76, 60, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 80px rgba(231, 76, 60, 0.8), 0 0 150px rgba(231, 76, 60, 0.3);
+            }
+        }
+
+        @keyframes ring-pulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.6);
+                opacity: 0;
+            }
+        }
+
+        @keyframes modal-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .phase-card {
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: calc(0.05s * var(--i, 1));
         }
 
         /* ----- header ----- */
@@ -68,15 +140,6 @@
             animation: glow-title 3s ease-in-out infinite alternate;
             position: relative;
             display: inline-block;
-        }
-
-        @keyframes glow-title {
-            0% {
-                text-shadow: 0 0 40px rgba(245, 176, 65, 0.2), 0 0 80px rgba(245, 176, 65, 0.05);
-            }
-            100% {
-                text-shadow: 0 0 70px rgba(245, 176, 65, 0.4), 0 0 140px rgba(245, 176, 65, 0.15);
-            }
         }
 
         .header-left h1::after {
@@ -108,11 +171,12 @@
             border: 1px solid rgba(245, 176, 65, 0.15);
             font-size: 14px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .stat-badge:hover {
             border-color: rgba(245, 176, 65, 0.4);
+            box-shadow: 0 4px 30px rgba(245, 176, 65, 0.1);
         }
 
         .stat-badge .num {
@@ -158,18 +222,6 @@
             box-shadow: 0 0 12px rgba(76, 217, 160, 0.4);
         }
 
-        @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(0.7);
-            }
-        }
-
         /* ----- timeline ----- */
         .timeline-wrapper {
             background: rgba(17, 24, 34, 0.7);
@@ -210,8 +262,8 @@
             height: 100%;
             border-radius: 4px;
             background: linear-gradient(90deg, #f5b041, #e67e22);
-            box-shadow: 0 0 20px rgba(245, 176, 65, 0.5), 0 0 40px rgba(245, 176, 65, 0.2);
-            transition: width 0.6s ease, left 0.6s ease;
+            box-shadow: 0 0 30px rgba(245, 176, 65, 0.6), 0 0 60px rgba(245, 176, 65, 0.3);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1), left 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
             left: 0%;
         }
@@ -298,28 +350,6 @@
             z-index: 5;
         }
 
-        @keyframes pulse-red {
-            0%,
-            100% {
-                box-shadow: 0 0 30px rgba(231, 76, 60, 0.4), 0 0 60px rgba(231, 76, 60, 0.2);
-            }
-            50% {
-                box-shadow: 0 0 70px rgba(231, 76, 60, 0.7), 0 0 120px rgba(231, 76, 60, 0.3);
-            }
-        }
-
-        @keyframes ring-pulse {
-            0%,
-            100% {
-                transform: scale(1);
-                opacity: 0.6;
-            }
-            50% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-
         /* ----- info panel ----- */
         .info-panel {
             margin-top: 18px;
@@ -345,8 +375,19 @@
         .info-panel .info-name {
             font-size: 20px;
             font-weight: 600;
+            transition: color 0.3s;
+        }
+        .info-panel .info-name.status-done {
+            color: #4cd9a0;
+            text-shadow: 0 0 30px rgba(76, 217, 160, 0.3);
+        }
+        .info-panel .info-name.status-active {
             color: #f5b041;
-            text-shadow: 0 0 30px rgba(245, 176, 65, 0.15);
+            text-shadow: 0 0 30px rgba(245, 176, 65, 0.3);
+        }
+        .info-panel .info-name.status-pending {
+            color: #8a9bb5;
+            text-shadow: none;
         }
 
         .info-panel .info-details {
@@ -446,38 +487,57 @@
             border: 1px solid rgba(255, 255, 255, 0.04);
             flex: 0 1 auto;
             min-width: 180px;
-            max-width: 300px;
+            max-width: 320px;
             display: flex;
             flex-direction: column;
             gap: 4px;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
             position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
         }
+
+        .phase-card:nth-child(1) { animation-delay: 0.02s; }
+        .phase-card:nth-child(2) { animation-delay: 0.06s; }
+        .phase-card:nth-child(3) { animation-delay: 0.10s; }
+        .phase-card:nth-child(4) { animation-delay: 0.14s; }
+        .phase-card:nth-child(5) { animation-delay: 0.18s; }
+        .phase-card:nth-child(6) { animation-delay: 0.22s; }
+        .phase-card:nth-child(7) { animation-delay: 0.26s; }
+        .phase-card:nth-child(8) { animation-delay: 0.30s; }
+        .phase-card:nth-child(9) { animation-delay: 0.34s; }
+        .phase-card:nth-child(10) { animation-delay: 0.38s; }
 
         .phase-card:hover {
             border-color: rgba(245, 176, 65, 0.3);
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(245, 176, 65, 0.03);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(245, 176, 65, 0.05);
         }
 
         .phase-card .card-top {
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 10px;
         }
 
         .phase-card .card-name {
             font-size: 14px;
             font-weight: 500;
             color: #d0dcec;
+            flex: 1;
+            min-width: 0;
         }
 
         .phase-card .card-pct {
             font-size: 16px;
             font-weight: 700;
             color: #f5b041;
+            min-width: 48px;
+            text-align: right;
+            flex-shrink: 0;
         }
 
         .phase-card .card-pct.done {
@@ -492,8 +552,8 @@
             height: 10px;
             border-radius: 50%;
             flex-shrink: 0;
-            margin-left: 6px;
             box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+            transition: box-shadow 0.3s;
         }
 
         .phase-card .card-status-dot.done {
@@ -555,23 +615,23 @@
             overflow-y: auto;
         }
 
-        @keyframes modal-in {
-            from {
-                opacity: 0;
-                transform: scale(0.95) translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1) translateY(0);
-            }
-        }
-
         .modal .modal-title {
             font-size: 24px;
             font-weight: 600;
-            color: #f5b041;
             margin-bottom: 16px;
-            text-shadow: 0 0 40px rgba(245, 176, 65, 0.1);
+            transition: color 0.3s;
+        }
+        .modal .modal-title.status-done {
+            color: #4cd9a0;
+            text-shadow: 0 0 30px rgba(76, 217, 160, 0.3);
+        }
+        .modal .modal-title.status-active {
+            color: #f5b041;
+            text-shadow: 0 0 30px rgba(245, 176, 65, 0.3);
+        }
+        .modal .modal-title.status-pending {
+            color: #8a9bb5;
+            text-shadow: none;
         }
 
         .modal .modal-body {
@@ -624,6 +684,7 @@
         .modal .modal-close:hover {
             background: rgba(42, 58, 78, 0.8);
             border-color: rgba(245, 176, 65, 0.2);
+            box-shadow: 0 0 20px rgba(245, 176, 65, 0.05);
         }
 
         /* ----- responsive ----- */
@@ -1255,9 +1316,11 @@
             nameEl.style.display = 'block';
             detailsEl.style.display = 'flex';
 
-            nameEl.textContent = phase.label;
-
             const progress = getPhaseProgress(phaseId);
+            const status = getStatusInfo(progress);
+            nameEl.textContent = phase.label;
+            nameEl.className = 'info-name status-' + status.status;
+
             const subs = getSubsByPhase(phaseId);
             const completed = subs.filter(s => s.pct >= 100).length;
             const start = formatDate(phase.startDate);
@@ -1307,8 +1370,8 @@
                 cardsWrap.className = 'phase-cards';
 
                 const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id));
-                sorted.forEach(sub => {
-                    const card = createPhaseCard(sub);
+                sorted.forEach((sub, idx) => {
+                    const card = createPhaseCard(sub, idx);
                     cardsWrap.appendChild(card);
                 });
 
@@ -1317,11 +1380,12 @@
             });
         }
 
-        function createPhaseCard(sub) {
+        function createPhaseCard(sub, index) {
             const status = getStatusInfo(sub.pct);
             const card = document.createElement('div');
             card.className = 'phase-card';
             card.dataset.id = sub.id;
+            card.style.setProperty('--i', index + 1);
 
             const top = document.createElement('div');
             top.className = 'card-top';
@@ -1361,7 +1425,10 @@
 
         function openModal(sub) {
             const overlay = document.getElementById('modalOverlay');
-            document.getElementById('modalTitle').textContent = sub.name;
+            const title = document.getElementById('modalTitle');
+            const status = getStatusInfo(sub.pct);
+            title.textContent = sub.name;
+            title.className = 'modal-title status-' + status.status;
 
             const body = document.getElementById('modalBody');
             body.innerHTML = '';
@@ -1369,7 +1436,7 @@
             const phase = getPhaseById(sub.phaseId);
             const fields = [
                 { key: 'Фаза', value: phase ? phase.label : '—' },
-                { key: 'Статус', value: getStatusInfo(sub.pct).label },
+                { key: 'Статус', value: status.label },
                 { key: 'Прогресс', value: sub.pct + '%' },
                 { key: 'Начало', value: formatDate(sub.startDate) },
                 { key: 'Окончание', value: formatDate(sub.endDate) },
