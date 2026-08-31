@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arion · Статус проекта</title>
     <style>
-        /* ----- base ----- */
+        /* ----- reset & base ----- */
         * {
             margin: 0;
             padding: 0;
@@ -170,7 +170,7 @@
             }
         }
 
-        /* ----- timeline (шкала с кружками фаз) ----- */
+        /* ----- timeline ----- */
         .timeline-wrapper {
             background: rgba(17, 24, 34, 0.7);
             backdrop-filter: blur(10px);
@@ -220,8 +220,8 @@
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 56px;
-            height: 56px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -240,7 +240,7 @@
         }
 
         .timeline-dot .dot-pct {
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.1;
         }
 
@@ -251,6 +251,7 @@
             letter-spacing: 0.3px;
             opacity: 0.7;
             margin-top: 1px;
+            text-align: center;
         }
 
         .timeline-dot::after {
@@ -314,6 +315,7 @@
             }
         }
 
+        /* всплывающая подсказка (название) */
         .timeline-dot .tooltip {
             display: none;
             position: absolute;
@@ -332,6 +334,9 @@
             box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
             pointer-events: none;
             z-index: 10;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .timeline-dot:hover .tooltip {
@@ -413,6 +418,8 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .phase-header .phase-title {
@@ -421,6 +428,21 @@
             color: #d0dcec;
             letter-spacing: 0.2px;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
+        }
+
+        .phase-header .phase-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+            color: #8a9bb5;
+        }
+
+        .phase-header .phase-meta span {
+            background: rgba(20, 28, 40, 0.8);
+            padding: 2px 12px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .phase-header .phase-progress {
@@ -446,8 +468,8 @@
             padding: 12px 18px;
             border: 1px solid rgba(255, 255, 255, 0.04);
             flex: 0 1 auto;
-            min-width: 160px;
-            max-width: 280px;
+            min-width: 180px;
+            max-width: 300px;
             display: flex;
             flex-direction: column;
             gap: 4px;
@@ -547,11 +569,13 @@
             backdrop-filter: blur(12px);
             border-radius: 24px;
             padding: 32px 36px;
-            max-width: 520px;
+            max-width: 560px;
             width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.08);
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(245, 176, 65, 0.02);
             animation: modal-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         @keyframes modal-in {
@@ -577,7 +601,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            font-size: 15px;
+            font-size: 14px;
             color: #b0c4de;
         }
 
@@ -590,12 +614,21 @@
 
         .modal .modal-body .row .key {
             color: #5a6a7e;
+            flex-shrink: 0;
+            margin-right: 12px;
         }
 
         .modal .modal-body .row .value {
             font-weight: 500;
             color: #d0dcec;
             text-align: right;
+            word-break: break-word;
+        }
+
+        .modal .modal-body .row .value.dependencies {
+            font-weight: 400;
+            color: #8a9bb5;
+            font-size: 13px;
         }
 
         .modal .modal-close {
@@ -638,11 +671,11 @@
                 height: 80px;
             }
             .timeline-dot {
-                width: 44px;
-                height: 44px;
+                width: 48px;
+                height: 48px;
             }
             .timeline-dot .dot-pct {
-                font-size: 12px;
+                font-size: 13px;
             }
             .timeline-dot .dot-label {
                 font-size: 7px;
@@ -659,6 +692,11 @@
             }
             .phase-header .phase-title {
                 font-size: 16px;
+            }
+            .phase-header .phase-meta {
+                font-size: 12px;
+                gap: 8px;
+                flex-wrap: wrap;
             }
             .phase-cards {
                 flex-direction: column;
@@ -688,11 +726,11 @@
                 height: 70px;
             }
             .timeline-dot {
-                width: 38px;
-                height: 38px;
+                width: 40px;
+                height: 40px;
             }
             .timeline-dot .dot-pct {
-                font-size: 10px;
+                font-size: 11px;
             }
             .timeline-dot .dot-label {
                 font-size: 6px;
@@ -733,13 +771,13 @@
         <!-- ===== TIMELINE ===== -->
         <div class="timeline-wrapper">
             <div class="timeline-track" id="timelineTrack">
-                <div class="timeline-line" id="timelineLine">
+                <div class="timeline-line">
                     <div class="phase-fill" id="phaseFill"></div>
                 </div>
-                <!-- dots for phases rendered by JS -->
+                <!-- dots будут вставлены JS -->
             </div>
 
-            <!-- info panel (при клике на кружок фазы) -->
+            <!-- info panel (по клику на кружок фазы) -->
             <div class="info-panel" id="infoPanel">
                 <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть информацию</span>
                 <span class="info-name" id="infoName" style="display:none;"></span>
@@ -769,241 +807,281 @@
         //  DATA (редактируйте здесь)
         // ============================================================
 
-        // Фазы (теперь с начальным месяцем для позиционирования)
-        const phases = [
-            { id: 'p1', label: 'Разведка и бурение', startMonth: 0, endMonth: 6, color: '#1d4a7a' },
-            { id: 'p2', label: 'Промысел и ЦПС', startMonth: 6, endMonth: 14, color: '#1a5a3e' },
-            { id: 'p3', label: 'Магистраль и НПЗ', startMonth: 14, endMonth: 28, color: '#8a5f2a' },
-            { id: 'p4', label: 'СПГ, порт, энергетика', startMonth: 20, endMonth: 36, color: '#6a2a5a' }
-        ];
+        // Фазы (порядок определяет расстояние на шкале)
+        const phases = [{
+            id: 'p1',
+            label: 'Разведка и бурение',
+            startDate: '2026-08-16', // дата начала фазы (если есть)
+            endDate: null, // дата окончания (если есть)
+            budget: '$500 млн',
+        }, {
+            id: 'p2',
+            label: 'Промысел и ЦПС',
+            startDate: null,
+            endDate: null,
+            budget: null,
+        }, {
+            id: 'p3',
+            label: 'Магистраль и НПЗ',
+            startDate: null,
+            endDate: null,
+            budget: null,
+        }, {
+            id: 'p4',
+            label: 'СПГ, порт, энергетика',
+            startDate: null,
+            endDate: null,
+            budget: null,
+        }];
 
         // Подэтапы
+        // Поля: id, phaseId, name, startDate (строка YYYY-MM-DD или null), endDate (или null),
+        // pct (0-100), description, characteristics, dependencies (массив id)
         const subPhases = [{
             id: '1.1',
             phaseId: 'p1',
-            name: 'Сейсморазведочный корабль',
-            startMonth: 0,
-            endMonth: 5,
+            name: 'Постройка сейсморазведочного корабля',
+            startDate: '2026-08-16',
+            endDate: null,
             pct: 30,
-            description: 'Строительство судна для сейсморазведки',
-            responsible: 'Верфь №3',
-            characteristics: 'Водоизмещение 5000 т, экипаж 60 чел.'
+            description: 'Строительство специализированного судна для проведения морской сейсморазведки. Оснащается пневматическими источниками (пушки), буксируемой косой с гидрофонами и мобильной буровой установкой для взятия проб грунта.',
+            characteristics: 'Длина 90 м, водоизмещение 6 000 т, автономность 60 суток, оборудование для 3D-сейсмики, буровая вышка для керна до 1 000 м.',
+            dependencies: []
         }, {
             id: '1.2',
             phaseId: 'p1',
-            name: 'Сейсморазведка',
-            startMonth: 1,
-            endMonth: 3,
+            name: 'Сейсморазведка (поиск залежей)',
+            startDate: '2026-08-16',
+            endDate: '2026-08-25',
             pct: 100,
-            description: 'Поиск залежей методом 3D сейсмики',
-            responsible: 'Геофизическая партия',
-            characteristics: 'Площадь 200 км²'
+            description: 'Проведение сейсмических профилей в перспективном районе. Корабль или грузовики создают вибрационные волны, приёмники регистрируют отражения, строятся геологические разрезы для выявления структур-ловушек.',
+            characteristics: 'Площадь съёмки ~5 000 км², глубина исследования до 8 км, точность выявления аномалий ±10 м.',
+            dependencies: ['1.1']
         }, {
             id: '1.3',
             phaseId: 'p1',
-            name: 'Бурение разведочных скважин',
-            startMonth: 2,
-            endMonth: 5,
+            name: 'Бурение разведочных скважин (взятие керна)',
+            startDate: '2026-08-16',
+            endDate: '2026-08-25',
             pct: 100,
-            description: 'Бурение 3 скважин с отбором керна',
-            responsible: 'Буровая бригада',
-            characteristics: 'Глубина 2500 м'
+            description: 'Бурение нескольких разведочных стволов в точках, определённых сейсморазведкой. Извлекаются керны (образцы пород) для анализа наличия углеводородов.',
+            characteristics: '3 скважины глубиной 3 000–4 500 м, отбор керна через каждые 10 м, объём образцов ~100 кг на скважину.',
+            dependencies: ['1.2']
         }, {
             id: '1.4',
             phaseId: 'p1',
-            name: 'Анализ керна',
-            startMonth: 5,
-            endMonth: 7,
+            name: 'Анализ керна и подтверждение запасов',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Лабораторные исследования образцов',
-            responsible: 'Лаборатория'
+            description: 'Лабораторные исследования кернов: измерение пористости, проницаемости, насыщенности, состава углеводородов. Оценка запасов (геологические и извлекаемые). Подготовка отчёта для инвестиционного решения.',
+            characteristics: 'Полный петрофизический анализ, оценка запасов по категории C1+C2, точность ±15%.',
+            dependencies: ['1.3']
         }, {
             id: '1.5',
             phaseId: 'p1',
-            name: 'Выбор площадки ЦПС / НПЗ',
-            startMonth: 6,
-            endMonth: 8,
+            name: 'Выбор площадки под ЦПС и НПЗ',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Геодезические и инженерные изыскания',
-            responsible: 'Проектный институт'
+            description: 'Геодезические и инженерно-геологические изыскания на суше. Определяются оптимальные места для Центрального пункта сбора (вблизи скважин) и будущего НПЗ (на берегу моря) с учётом рельефа, грунтов, логистики.',
+            characteristics: 'Изучаются 3–5 альтернативных участков, оценивается необходимость выравнивания площадок, подводящих дорог.',
+            dependencies: ['1.4']
         }, {
             id: '2.1',
             phaseId: 'p2',
             name: 'Бурение эксплуатационных скважин',
-            startMonth: 7,
-            endMonth: 12,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Бурение 10 скважин на промысле',
-            responsible: 'Буровая компания'
+            description: 'Бурение основных добывающих скважин на месторождении. Используются буровые установки большего размера, чем разведочные. Стволы оборудуются обсадными трубами и цементируются.',
+            characteristics: '8–12 скважин, глубина 3 000–5 000 м, дебит планируется ~1 000–1 500 т/сут каждая.',
+            dependencies: ['1.4']
         }, {
             id: '2.2',
             phaseId: 'p2',
             name: 'Монтаж арматуры и фонтанной системы',
-            startMonth: 9,
-            endMonth: 14,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Установка устьевого оборудования',
-            responsible: 'Сервисная бригада'
+            description: 'Установка на устьях скважин фонтанной арматуры (запорная и регулирующая аппаратура), систем контроля давления, штуцеров для регулирования режима добычи.',
+            characteristics: 'Рабочее давление до 70 МПа, диаметр проходов 80–150 мм, система аварийной остановки.',
+            dependencies: ['2.1']
         }, {
             id: '2.3',
             phaseId: 'p2',
-            name: 'Строительство ЦПС',
-            startMonth: 8,
-            endMonth: 15,
+            name: 'Строительство ЦПС (сепараторы, печи)',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Центральный пункт сбора',
-            responsible: 'Строительный трест'
+            description: 'Возведение центрального пункта сбора – площадки с сепараторами для разделения нефти, газа и воды, трубчатыми печами подогрева для улучшения разделения, отстойниками. Включает монтаж ёмкостей, трубной обвязки и автоматики.',
+            characteristics: 'Производительность по нефти 50 000 т/сут, объём сепараторов 200 м³ каждый (6 шт.), печи мощностью 10 МВт.',
+            dependencies: ['2.1']
         }, {
             id: '2.4',
             phaseId: 'p2',
             name: 'Система ППД и водоочистка',
-            startMonth: 11,
-            endMonth: 16,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Поддержание пластового давления',
-            responsible: 'Инжиниринговая компания'
+            description: 'Строительство блока подготовки воды, отделённой от нефти (очистка от механических примесей и углеводородов), и насосной станции для закачки очищенной воды обратно в пласт для поддержания давления.',
+            characteristics: 'Производительность очистки 20 000 м³/сут, насосы с давлением 25 МПа, резервуары для буферной воды.',
+            dependencies: ['2.3']
         }, {
             id: '2.5',
             phaseId: 'p2',
-            name: 'Факельная система и газотрубы',
-            startMonth: 11,
-            endMonth: 16,
+            name: 'Факельная система и газотрубы на ЦПС',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Утилизация газа и трубопроводы',
-            responsible: 'Монтажное управление'
+            description: 'Установка факельной трубы для аварийного сжигания газа, а также прокладка газопроводов от сепараторов к потребителям (электростанция, завод СПГ, собственные нужды). Включает сепараторы для газа, осушители, регуляторы давления.',
+            characteristics: 'Факел высотой 50 м, система автоматического поджига, газопроводы диаметром 300 мм.',
+            dependencies: ['2.3']
         }, {
             id: '3.1',
             phaseId: 'p3',
-            name: 'Нефтепровод до моря',
-            startMonth: 15,
-            endMonth: 22,
+            name: 'Строительство нефтепровода до моря',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Трубопровод от ЦПС до порта',
-            responsible: 'Трубопроводная компания'
+            description: 'Прокладка магистрального трубопровода от ЦПС к побережью. Включает расчистку трассы, сварку секций, укладку в траншею, изоляцию и защиту от коррозии.',
+            characteristics: 'Длина 200 км, диаметр 1 000 мм, рабочее давление 6 МПа, пропускная способность до 500 000 т/сут.',
+            dependencies: ['2.3']
         }, {
             id: '3.2',
             phaseId: 'p3',
-            name: 'Промежуточные НПС',
-            startMonth: 17,
-            endMonth: 24,
+            name: 'Промежуточные насосные станции (НПС)',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Насосные станции на трассе',
-            responsible: 'Строительная организация'
+            description: 'Строительство вдоль трубопровода 4–5 станций с центробежными насосами для поддержания давления и скорости потока. Каждая включает резервуарный парк, электродвигатели, системы управления.',
+            characteristics: 'Мощность насосов 5 МВт каждая, интервал между НПС 40–50 км.',
+            dependencies: ['3.1']
         }, {
             id: '3.3',
             phaseId: 'p3',
-            name: 'Головная НПС у НПЗ',
-            startMonth: 19,
-            endMonth: 26,
+            name: 'Головная насосная станция (ГНПС) у НПЗ',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Насосная станция при НПЗ',
-            responsible: 'Монтажники'
+            description: 'Станция на конечной точке трубопровода перед входом на завод. Обеспечивает приём нефти, её буферизацию и подачу в технологические установки НПЗ с нужным давлением. Имеет резервные насосы (2 рабочих + 1 резервный).',
+            characteristics: 'Производительность 500 000 т/сут, насосы с давлением 7 МПа, резервуары-отстойники на 10 000 м³.',
+            dependencies: ['3.1']
         }, {
             id: '3.4',
             phaseId: 'p3',
-            name: 'Строительство НПЗ',
-            startMonth: 21,
-            endMonth: 30,
+            name: 'Строительство НПЗ (колонны, крекинг, гидроочистка)',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Нефтеперерабатывающий завод',
-            responsible: 'Генподрядчик'
+            description: 'Возведение комплекса переработки – ректификационные колонны (атмосферная и вакуумная), установки крекинга для увеличения выхода лёгких фракций, реакторы гидроочистки для удаления серы. Включает печи, теплообменники, системы управления.',
+            characteristics: 'Мощность по сырью 10 млн т/год, колонны высотой 50 м, крекинг-установка с производительностью 3 млн т/год.',
+            dependencies: ['3.3']
         }, {
             id: '3.5',
             phaseId: 'p3',
             name: 'Резервуарный парк РВС',
-            startMonth: 23,
-            endMonth: 28,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Резервуары для хранения нефти',
-            responsible: 'Строительная фирма'
+            description: 'Сооружение 10 стальных вертикальных цилиндрических резервуаров (РВС) для хранения готовых продуктов (бензин, дизель, мазут). Каждый оборудован плавающей крышей и системой обваловки.',
+            characteristics: 'Объём каждого 100 000 м³, высота ~20 м, диаметр ~80 м, общая ёмкость 1 млн м³.',
+            dependencies: ['3.4']
         }, {
             id: '3.6',
             phaseId: 'p3',
             name: 'Обваловка и системы безопасности',
-            startMonth: 25,
-            endMonth: 30,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Защитные сооружения и автоматика',
-            responsible: 'Специализированная организация'
+            description: 'Строительство земляных валов вокруг каждого резервуара для локализации разливов, монтаж систем пожаротушения, дренажных каналов, датчиков утечек.',
+            characteristics: 'Высота вала 2 м, ширина основания 6 м, система пенотушения с расходом 100 л/мин.',
+            dependencies: ['3.5']
         }, {
             id: '4.1',
             phaseId: 'p4',
             name: 'Завод СПГ (линии сжижения)',
-            startMonth: 22,
-            endMonth: 32,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Технологические линии сжижения',
-            responsible: 'Подрядчик по СПГ'
+            description: 'Строительство комплекса по сжижению природного газа до температуры -162°C. Включает блоки предварительной очистки, турбодетандеры, теплообменники и компрессоры, а также хранилища для сжиженного газа.',
+            characteristics: 'Производительность 5 млн т СПГ в год, технология смешанного охлаждения, энергопотребление 500 МВт.',
+            dependencies: ['2.5']
         }, {
             id: '4.2',
             phaseId: 'p4',
-            name: 'Изотермические резервуары',
-            startMonth: 24,
-            endMonth: 34,
+            name: 'Изотермические резервуары для СПГ',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Хранение сжиженного газа',
-            responsible: 'Строительная компания'
+            description: 'Строительство специальных двухстенных резервуаров для хранения сжиженного газа при сверхнизкой температуре. Внутренняя ёмкость из стали, устойчивой к холоду, между стенками – теплоизоляция и азотная подушка.',
+            characteristics: 'Объём каждого 200 000 м³, количество 2 шт., срок хранения без испарения (BOG) до 30 суток.',
+            dependencies: ['4.1']
         }, {
             id: '4.3',
             phaseId: 'p4',
-            name: 'Глубоководный порт',
-            startMonth: 22,
-            endMonth: 30,
+            name: 'Глубоководный порт (причалы, волнолом)',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Причалы, волнолом, терминал',
-            responsible: 'Портстроитель'
+            description: 'Строительство портовой инфраструктуры на берегу моря: глубоководные причалы для танкеров (осадка до 20 м), волнолом для защиты от штормов, береговые коллекторы для перекачки нефти и СПГ.',
+            characteristics: 'Длина причальной стенки 500 м, глубина у причала 25 м, волнолом длиной 1,5 км.',
+            dependencies: ['3.1', '3.4']
         }, {
             id: '4.4',
             phaseId: 'p4',
-            name: 'Криогенный терминал',
-            startMonth: 26,
-            endMonth: 34,
+            name: 'Криогенный терминал и шланги',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Перегрузочный комплекс',
-            responsible: 'Специализированная фирма'
+            description: 'Оснащение причала специальными вакуумными шлангами для перегрузки сжиженного газа на газовозы. Монтаж береговых коллекторов, систем сброса паров, аварийной остановки.',
+            characteristics: 'Производительность загрузки 10 000 м³/час, шланги длиной 30 м, рабочее давление 1 МПа, температура -162°C.',
+            dependencies: ['4.3', '4.2']
         }, {
             id: '4.5',
             phaseId: 'p4',
             name: 'Газотурбинная электростанция (ГТЭС)',
-            startMonth: 20,
-            endMonth: 28,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Энергообеспечение всего проекта',
-            responsible: 'Энергостроительная компания'
+            description: 'Возведение электростанции, работающей на попутном или природном газе. Состоит из нескольких газовых турбин, генераторов, систем охлаждения и редукции. Обеспечивает энергией все объекты Arion.',
+            characteristics: 'Установленная мощность 200 МВт (4 турбины по 50 МВт), КПД ~40%, расход газа 200 м³/час на МВт.',
+            dependencies: ['2.5']
         }, {
             id: '4.6',
             phaseId: 'p4',
             name: 'ЛЭП и трансформаторные подстанции',
-            startMonth: 24,
-            endMonth: 30,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Линии электропередачи',
-            responsible: 'Сетевая организация'
+            description: 'Прокладка высоковольтных линий электропередачи от ГТЭС к НПЗ, порту, насосным станциям и ЦПС. Сооружение распределительных подстанций и трансформаторов.',
+            characteristics: 'Общая протяжённость линий 300 км, напряжение 110 кВ, мощность подстанций 50–100 МВА каждая.',
+            dependencies: ['4.5']
         }, {
             id: '4.7',
             phaseId: 'p4',
-            name: 'Танкеры и газовозы (верфи)',
-            startMonth: 16,
-            endMonth: 36,
+            name: 'Строительство танкеров и газовозов',
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Строительство флота для вывоза',
-            responsible: 'Судостроительный завод'
+            description: 'Заключение контрактов и контроль постройки на верфях двух нефтяных танкеров класса Aframax и двух газовозов для СПГ. Это отдельный логистический трек, не привязанный к объектам на суше, но критичный для вывоза продукции.',
+            characteristics: 'Танкеры дедвейтом 100 000 т, газовозы вместимостью 170 000 м³, срок постройки 24–30 месяцев.',
+            dependencies: []
         }, {
             id: '4.8',
             phaseId: 'p4',
             name: 'Береговая оборона (Sentinel)',
-            startMonth: 26,
-            endMonth: 34,
+            startDate: null,
+            endDate: null,
             pct: 0,
-            description: 'Системы защиты и наблюдения',
-            responsible: 'Оборонный подрядчик'
+            description: 'Развёртывание средств ПВО, радиолокационных станций, береговых ракетных комплексов и патрульных катеров для защиты прибрежных объектов Arion от возможных угроз.',
+            characteristics: 'ЗРК С-400 (2 дивизиона), береговые комплексы «Бастион» (3 установки), гидроакустические станции.',
+            dependencies: ['4.3']
         }];
 
         // ============================================================
         //  HELPERS
         // ============================================================
-
-        const TOTAL_MONTHS = 36; // от 0 до 36
 
         function getPhaseById(id) {
             return phases.find(p => p.id === id);
@@ -1036,6 +1114,18 @@
             return { status: 'pending', label: 'Не начат' };
         }
 
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function getSubName(id) {
+            const sub = subPhases.find(s => s.id === id);
+            return sub ? sub.name : id;
+        }
+
         // ============================================================
         //  RENDER
         // ============================================================
@@ -1046,35 +1136,33 @@
             // remove old dots
             track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
 
-            phases.forEach(phase => {
+            const n = phases.length;
+            phases.forEach((phase, index) => {
                 const progress = getPhaseProgress(phase.id);
                 const status = getStatusInfo(progress);
-                const x = (phase.startMonth / TOTAL_MONTHS) * 100;
+                const x = (index / (n - 1)) * 100; // равномерно
 
                 const dot = document.createElement('div');
                 dot.className = `timeline-dot ${status.status}`;
                 dot.style.left = x + '%';
                 dot.dataset.phaseId = phase.id;
 
-                // процент внутри кружка
                 const pctSpan = document.createElement('span');
                 pctSpan.className = 'dot-pct';
                 pctSpan.textContent = progress + '%';
                 dot.appendChild(pctSpan);
 
-                // маленькая подпись (название фазы сокращённо)
                 const labelSpan = document.createElement('span');
                 labelSpan.className = 'dot-label';
-                labelSpan.textContent = phase.label.split(' ')[0]; // первое слово
+                // сокращённое название (первое слово)
+                labelSpan.textContent = phase.label.split(' ')[0];
                 dot.appendChild(labelSpan);
 
-                // tooltip при наведении
                 const tooltip = document.createElement('div');
                 tooltip.className = 'tooltip';
                 tooltip.textContent = phase.label + ' (' + progress + '%)';
                 dot.appendChild(tooltip);
 
-                // клик -> показать инфо о фазе
                 dot.addEventListener('click', function(e) {
                     e.stopPropagation();
                     showPhaseInfo(phase.id);
@@ -1108,13 +1196,17 @@
             const progress = getPhaseProgress(phaseId);
             const subs = getSubsByPhase(phaseId);
             const completed = subs.filter(s => s.pct >= 100).length;
+            const start = formatDate(phase.startDate);
+            const end = formatDate(phase.endDate);
+            const budget = phase.budget || '—';
 
             detailsEl.innerHTML = `
                 <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
                 <div class="detail-item"><span class="label">Подэтапов:</span> ${subs.length}</div>
                 <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${phase.startMonth} мес.</div>
-                <div class="detail-item"><span class="label">Окончание:</span> ${phase.endMonth} мес.</div>
+                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
+                <div class="detail-item"><span class="label">Окончание:</span> ${end}</div>
+                <div class="detail-item"><span class="label">Бюджет:</span> ${budget}</div>
             `;
         }
 
@@ -1128,6 +1220,9 @@
                 if (!subs.length) return;
 
                 const progress = getPhaseProgress(phase.id);
+                const start = formatDate(phase.startDate);
+                const end = formatDate(phase.endDate);
+                const budget = phase.budget ? phase.budget : '—';
 
                 const block = document.createElement('div');
                 block.className = 'phase-block';
@@ -1136,6 +1231,11 @@
                 header.className = 'phase-header';
                 header.innerHTML = `
                     <span class="phase-title">${phase.label}</span>
+                    <div class="phase-meta">
+                        <span>Начало: ${start}</span>
+                        <span>Окончание: ${end}</span>
+                        <span>Бюджет: ${budget}</span>
+                    </div>
                     <span class="phase-progress">${progress}%</span>
                 `;
                 block.appendChild(header);
@@ -1143,7 +1243,8 @@
                 const cardsWrap = document.createElement('div');
                 cardsWrap.className = 'phase-cards';
 
-                const sorted = [...subs].sort((a, b) => a.startMonth - b.startMonth);
+                // сортировка по id (можно по дате начала, но оставим по порядку)
+                const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id));
                 sorted.forEach(sub => {
                     const card = createPhaseCard(sub);
                     cardsWrap.appendChild(card);
@@ -1179,17 +1280,14 @@
 
             card.appendChild(top);
 
-            // мета
+            // мета (даты)
             const meta = document.createElement('div');
             meta.className = 'card-meta';
-            if (sub.startMonth !== undefined && sub.startMonth !== null) {
-                meta.innerHTML += `<span>Старт: ${sub.startMonth} мес.</span>`;
+            if (sub.startDate) {
+                meta.innerHTML += `<span>Старт: ${formatDate(sub.startDate)}</span>`;
             }
-            if (sub.endMonth !== undefined && sub.endMonth !== null) {
-                meta.innerHTML += `<span>Финиш: ${sub.endMonth} мес.</span>`;
-            }
-            if (sub.responsible) {
-                meta.innerHTML += `<span>Ответственный: ${sub.responsible}</span>`;
+            if (sub.endDate) {
+                meta.innerHTML += `<span>Финиш: ${formatDate(sub.endDate)}</span>`;
             }
             card.appendChild(meta);
 
@@ -1209,21 +1307,28 @@
             const body = document.getElementById('modalBody');
             body.innerHTML = '';
 
+            const phase = getPhaseById(sub.phaseId);
             const fields = [
-                { key: 'Фаза', value: getPhaseById(sub.phaseId)?.label || '—' },
+                { key: 'Фаза', value: phase ? phase.label : '—' },
                 { key: 'Статус', value: getStatusInfo(sub.pct).label },
                 { key: 'Прогресс', value: sub.pct + '%' },
-                { key: 'Начало (мес.)', value: sub.startMonth !== undefined ? sub.startMonth : '—' },
-                { key: 'Окончание (мес.)', value: sub.endMonth !== undefined ? sub.endMonth : '—' },
+                { key: 'Начало', value: formatDate(sub.startDate) },
+                { key: 'Окончание', value: formatDate(sub.endDate) },
                 { key: 'Описание', value: sub.description || '—' },
-                { key: 'Ответственный', value: sub.responsible || '—' },
-                { key: 'Характеристики', value: sub.characteristics || '—' }
+                { key: 'Характеристики', value: sub.characteristics || '—' },
             ];
+
+            // Зависимости
+            if (sub.dependencies && sub.dependencies.length) {
+                const depNames = sub.dependencies.map(id => getSubName(id)).join(', ');
+                fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
+            }
 
             fields.forEach(f => {
                 const row = document.createElement('div');
                 row.className = 'row';
-                row.innerHTML = `<span class="key">${f.key}</span><span class="value">${f.value}</span>`;
+                const valueClass = f.extraClass ? `value ${f.extraClass}` : 'value';
+                row.innerHTML = `<span class="key">${f.key}</span><span class="${valueClass}">${f.value}</span>`;
                 body.appendChild(row);
             });
 
@@ -1240,7 +1345,6 @@
             document.getElementById('completedCount').textContent = completed;
             document.getElementById('totalCount').textContent = total;
 
-            // текущее время
             const now = new Date();
             const timeStr = now.toLocaleString('ru-RU', {
                 day: '2-digit',
@@ -1258,7 +1362,6 @@
             renderPhases();
             updateStats();
 
-            // закрытие модалки
             document.getElementById('modalClose').addEventListener('click', function() {
                 document.getElementById('modalOverlay').classList.remove('active');
             });
