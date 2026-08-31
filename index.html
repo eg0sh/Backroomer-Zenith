@@ -1600,33 +1600,53 @@
                 showToast(`⚠️ ${overdueCount} ${t('exceededLabel')}`, 'warning');
             }
 
+            // === НАДЁЖНАЯ ПРИВЯЗКА СОБЫТИЙ ===
             // Закрытие основной модалки
-            document.getElementById('modalCloseBtn').addEventListener('click', function() {
-                document.getElementById('modalOverlay').classList.remove('active');
-            });
+            const modalCloseBtn = document.getElementById('modalCloseBtn');
+            if (modalCloseBtn) {
+                modalCloseBtn.addEventListener('click', function() {
+                    document.getElementById('modalOverlay').classList.remove('active');
+                });
+            } else { console.warn('modalCloseBtn not found'); }
+
             document.getElementById('modalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
 
             // Закрытие модалки темы
-            document.getElementById('themeModalCloseBtn').addEventListener('click', function() {
-                document.getElementById('themeModalOverlay').classList.remove('active');
-            });
+            const themeModalCloseBtn = document.getElementById('themeModalCloseBtn');
+            if (themeModalCloseBtn) {
+                themeModalCloseBtn.addEventListener('click', function() {
+                    document.getElementById('themeModalOverlay').classList.remove('active');
+                });
+            } else { console.warn('themeModalCloseBtn not found'); }
+
             document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
 
             // Закрытие модалки языка
-            document.getElementById('langModalCloseBtn').addEventListener('click', function() {
-                document.getElementById('langModalOverlay').classList.remove('active');
-            });
+            const langModalCloseBtn = document.getElementById('langModalCloseBtn');
+            if (langModalCloseBtn) {
+                langModalCloseBtn.addEventListener('click', function() {
+                    document.getElementById('langModalOverlay').classList.remove('active');
+                });
+            } else { console.warn('langModalCloseBtn not found'); }
+
             document.getElementById('langModalOverlay').addEventListener('click', function(e) {
                 if (e.target === this) this.classList.remove('active');
             });
 
             // Кнопки для открытия модалок
-            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
-            document.getElementById('langToggle').addEventListener('click', openLangModal);
+            const themeToggle = document.getElementById('themeToggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', openThemeModal);
+            } else { console.warn('themeToggle not found'); }
+
+            const langToggle = document.getElementById('langToggle');
+            if (langToggle) {
+                langToggle.addEventListener('click', openLangModal);
+            } else { console.warn('langToggle not found'); }
 
             // Экспорт
             document.getElementById('exportPDF').addEventListener('click', exportPDF);
