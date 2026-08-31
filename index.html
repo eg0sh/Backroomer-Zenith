@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arion · Статус проекта</title>
     <style>
-        /* ----- reset & base ----- */
+        /* ----- base ----- */
         * {
             margin: 0;
             padding: 0;
@@ -13,13 +13,14 @@
         }
 
         body {
-            background: #0b0e14;
+            background: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             color: #e8edf5;
-            padding: 20px 24px 40px;
             min-height: 100vh;
+            padding: 24px 24px 40px;
             display: flex;
             justify-content: center;
+            align-items: flex-start;
         }
 
         .dashboard {
@@ -50,26 +51,49 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 28px;
+            margin-bottom: 32px;
             gap: 16px;
         }
 
         .header-left h1 {
-            font-size: 42px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #f5d6a8, #f5b041);
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #f7e05e, #f5b041, #e67e22);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 40px rgba(245, 176, 65, 0.15);
+            text-shadow: 0 0 60px rgba(245, 176, 65, 0.25), 0 0 120px rgba(245, 176, 65, 0.1);
             margin: 0;
+            animation: glow-title 3s ease-in-out infinite alternate;
+            position: relative;
+            display: inline-block;
+        }
+
+        @keyframes glow-title {
+            0% {
+                text-shadow: 0 0 40px rgba(245, 176, 65, 0.2), 0 0 80px rgba(245, 176, 65, 0.05);
+            }
+            100% {
+                text-shadow: 0 0 70px rgba(245, 176, 65, 0.4), 0 0 140px rgba(245, 176, 65, 0.15);
+            }
+        }
+
+        .header-left h1::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #f5b041, transparent);
+            border-radius: 4px;
         }
 
         .header-right {
             display: flex;
             align-items: center;
-            gap: 28px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
@@ -77,11 +101,18 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: #141b26;
+            background: rgba(20, 28, 40, 0.8);
+            backdrop-filter: blur(8px);
             padding: 8px 18px;
             border-radius: 40px;
-            border: 1px solid #25303e;
+            border: 1px solid rgba(245, 176, 65, 0.15);
             font-size: 14px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.3s;
+        }
+
+        .stat-badge:hover {
+            border-color: rgba(245, 176, 65, 0.4);
         }
 
         .stat-badge .num {
@@ -92,9 +123,6 @@
         .stat-badge .num.green {
             color: #4cd9a0;
         }
-        .stat-badge .num.gold {
-            color: #f5b041;
-        }
         .stat-badge .label {
             color: #8a9bb5;
             font-weight: 400;
@@ -102,29 +130,32 @@
 
         .update-time {
             font-size: 13px;
-            color: #5a6a7e;
+            color: #8a9bb5;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
             line-height: 1.4;
+            background: rgba(20, 28, 40, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .update-time .dot {
-            display: inline-block;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #4cd9a0;
-            animation: pulse-dot 2s ease-in-out infinite;
-            margin-right: 6px;
-        }
+
         .update-time .time-row {
             display: flex;
             align-items: center;
+            gap: 6px;
         }
-        .update-time .date-range {
-            font-size: 12px;
-            color: #5a6a7e;
-            margin-top: 2px;
+
+        .update-time .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4cd9a0;
+            animation: pulse-dot 2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(76, 217, 160, 0.4);
         }
 
         @keyframes pulse-dot {
@@ -134,30 +165,30 @@
                 transform: scale(1);
             }
             50% {
-                opacity: 0.4;
-                transform: scale(0.8);
+                opacity: 0.3;
+                transform: scale(0.7);
             }
         }
 
-        /* ----- timeline (шкала с кружками) ----- */
+        /* ----- timeline (шкала с кружками фаз) ----- */
         .timeline-wrapper {
-            background: #111822;
-            border-radius: 20px;
+            background: rgba(17, 24, 34, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
             padding: 30px 20px 20px;
-            border: 1px solid #1e2938;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             margin-bottom: 28px;
             position: relative;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 60px rgba(0, 0, 0, 0.6), inset 0 0 80px rgba(245, 176, 65, 0.02);
             overflow-x: auto;
             overflow-y: visible;
         }
 
         .timeline-track {
             position: relative;
-            height: 80px;
+            height: 100px;
             width: 100%;
-            min-width: 600px;
-            /* чтобы не сжималось слишком */;
+            min-width: 500px;
         }
 
         .timeline-line {
@@ -170,6 +201,7 @@
             border-radius: 4px;
             transform: translateY(-50%);
             z-index: 1;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
         }
 
         .timeline-line .phase-fill {
@@ -178,30 +210,47 @@
             position: absolute;
             left: 0;
             top: 0;
-            opacity: 0.3;
-            transition: width 0.6s ease;
+            background: linear-gradient(90deg, #f5b041, #e67e22);
+            box-shadow: 0 0 30px rgba(245, 176, 65, 0.3);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
         }
 
         .timeline-dot {
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 44px;
-            height: 44px;
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            border: 2px solid transparent;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
             font-weight: 700;
             color: #fff;
             cursor: pointer;
             z-index: 2;
-            transition: all 0.2s ease;
-            background: #2a3a4e;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             user-select: none;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            background: #1a2332;
+            text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+        }
+
+        .timeline-dot .dot-pct {
+            font-size: 15px;
+            line-height: 1.1;
+        }
+
+        .timeline-dot .dot-label {
+            font-size: 9px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            opacity: 0.7;
+            margin-top: 1px;
         }
 
         .timeline-dot::after {
@@ -211,61 +260,45 @@
             border-radius: 50%;
             border: 2px solid transparent;
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
         }
 
         .timeline-dot.done {
-            background: #2b6a9e;
+            background: linear-gradient(135deg, #2b6a9e, #1d4a7a);
             border-color: #4a8ec4;
-            box-shadow: 0 0 20px rgba(42, 106, 158, 0.3);
+            box-shadow: 0 0 30px rgba(42, 106, 158, 0.3), inset 0 0 20px rgba(74, 142, 196, 0.2);
         }
 
         .timeline-dot.active {
-            background: #c0392b;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
             border-color: #e74c3c;
-            box-shadow: 0 0 30px rgba(231, 76, 60, 0.6);
-            animation: pulse-red 1.6s ease-in-out infinite;
+            box-shadow: 0 0 50px rgba(231, 76, 60, 0.5), inset 0 0 30px rgba(231, 76, 60, 0.3);
+            animation: pulse-red 1.8s ease-in-out infinite;
         }
 
         .timeline-dot.active::after {
-            border-color: rgba(231, 76, 60, 0.4);
-            animation: ring-pulse 1.6s ease-in-out infinite;
+            border-color: rgba(231, 76, 60, 0.3);
+            animation: ring-pulse 1.8s ease-in-out infinite;
         }
 
         .timeline-dot.pending {
-            background: #2a3a4e;
+            background: linear-gradient(135deg, #2a3a4e, #1a2332);
             border-color: #3a4a5e;
-            box-shadow: none;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .timeline-dot:hover {
-            transform: translate(-50%, -50%) scale(1.12);
+            transform: translate(-50%, -50%) scale(1.15);
             z-index: 5;
-        }
-
-        .timeline-dot .dot-label {
-            font-size: 11px;
-            font-weight: 600;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .timeline-dot.done .dot-label {
-            color: #b0d4f0;
-        }
-        .timeline-dot.active .dot-label {
-            color: #fff;
-        }
-        .timeline-dot.pending .dot-label {
-            color: #8a9bb5;
         }
 
         @keyframes pulse-red {
             0%,
             100% {
-                box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+                box-shadow: 0 0 30px rgba(231, 76, 60, 0.4), 0 0 60px rgba(231, 76, 60, 0.2);
             }
             50% {
-                box-shadow: 0 0 50px rgba(231, 76, 60, 0.8);
+                box-shadow: 0 0 70px rgba(231, 76, 60, 0.7), 0 0 120px rgba(231, 76, 60, 0.3);
             }
         }
 
@@ -276,7 +309,7 @@
                 opacity: 0.6;
             }
             50% {
-                transform: scale(1.3);
+                transform: scale(1.5);
                 opacity: 0;
             }
         }
@@ -284,18 +317,19 @@
         .timeline-dot .tooltip {
             display: none;
             position: absolute;
-            bottom: calc(100% + 12px);
+            bottom: calc(100% + 16px);
             left: 50%;
             transform: translateX(-50%);
-            background: #0f1722;
-            border: 1px solid #2a3a4e;
-            border-radius: 10px;
-            padding: 8px 14px;
+            background: rgba(15, 23, 34, 0.95);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 16px;
             font-size: 13px;
             font-weight: 500;
             color: #e8edf5;
             white-space: nowrap;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
             pointer-events: none;
             z-index: 10;
         }
@@ -304,19 +338,21 @@
             display: block;
         }
 
-        /* ----- информационная панель (по клику на кружок) ----- */
+        /* ----- info panel (по клику на кружок) ----- */
         .info-panel {
-            margin-top: 16px;
-            background: #141c28;
+            margin-top: 18px;
+            background: rgba(20, 28, 40, 0.7);
+            backdrop-filter: blur(6px);
             border-radius: 16px;
-            border: 1px solid #1e2938;
-            padding: 14px 20px;
-            min-height: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 14px 22px;
+            min-height: 56px;
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
             flex-wrap: wrap;
             transition: all 0.3s ease;
+            box-shadow: inset 0 0 40px rgba(245, 176, 65, 0.02);
         }
 
         .info-panel .info-placeholder {
@@ -325,9 +361,10 @@
         }
 
         .info-panel .info-name {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             color: #f5b041;
+            text-shadow: 0 0 30px rgba(245, 176, 65, 0.15);
         }
 
         .info-panel .info-details {
@@ -357,16 +394,18 @@
         }
 
         .phase-block {
-            background: #111822;
+            background: rgba(17, 24, 34, 0.6);
+            backdrop-filter: blur(6px);
             border-radius: 20px;
-            border: 1px solid #1e2938;
+            border: 1px solid rgba(255, 255, 255, 0.05);
             padding: 18px 22px 20px;
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3);
-            transition: border-color 0.2s;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3), inset 0 0 60px rgba(245, 176, 65, 0.01);
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .phase-block:hover {
-            border-color: #2a3a4e;
+            border-color: rgba(245, 176, 65, 0.15);
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.4), inset 0 0 80px rgba(245, 176, 65, 0.02);
         }
 
         .phase-header {
@@ -381,15 +420,17 @@
             font-weight: 600;
             color: #d0dcec;
             letter-spacing: 0.2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
         }
 
         .phase-header .phase-progress {
             font-size: 14px;
             font-weight: 500;
             color: #f5b041;
-            background: #1a2332;
+            background: rgba(20, 28, 40, 0.8);
             padding: 4px 16px;
             border-radius: 40px;
+            border: 1px solid rgba(245, 176, 65, 0.1);
         }
 
         .phase-cards {
@@ -399,26 +440,27 @@
         }
 
         .phase-card {
-            background: #141c28;
+            background: rgba(20, 28, 40, 0.8);
+            backdrop-filter: blur(4px);
             border-radius: 14px;
             padding: 12px 18px;
-            border: 1px solid #1e2938;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             flex: 0 1 auto;
-            min-width: 140px;
+            min-width: 160px;
             max-width: 280px;
             display: flex;
             flex-direction: column;
             gap: 4px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
             position: relative;
         }
 
         .phase-card:hover {
-            border-color: #3a4a5e;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border-color: rgba(245, 176, 65, 0.3);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 40px rgba(245, 176, 65, 0.03);
         }
 
         .phase-card .card-top {
@@ -452,15 +494,16 @@
             border-radius: 50%;
             flex-shrink: 0;
             margin-left: 6px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
         }
 
         .phase-card .card-status-dot.done {
             background: #4cd9a0;
-            box-shadow: 0 0 12px rgba(76, 217, 160, 0.3);
+            box-shadow: 0 0 16px rgba(76, 217, 160, 0.3);
         }
         .phase-card .card-status-dot.active {
             background: #e74c3c;
-            box-shadow: 0 0 16px rgba(231, 76, 60, 0.5);
+            box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
             animation: pulse-dot 1.6s ease-in-out infinite;
         }
         .phase-card .card-status-dot.pending {
@@ -482,13 +525,13 @@
             gap: 4px;
         }
 
-        /* ----- модальное окно для деталей ----- */
+        /* ----- модальное окно для деталей подэтапа ----- */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
+            backdrop-filter: blur(8px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
@@ -500,20 +543,21 @@
         }
 
         .modal {
-            background: #111822;
+            background: rgba(17, 24, 34, 0.95);
+            backdrop-filter: blur(12px);
             border-radius: 24px;
-            padding: 30px 34px;
+            padding: 32px 36px;
             max-width: 520px;
             width: 100%;
-            border: 1px solid #2a3a4e;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            animation: modal-in 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(245, 176, 65, 0.02);
+            animation: modal-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes modal-in {
             from {
                 opacity: 0;
-                transform: scale(0.95) translateY(10px);
+                transform: scale(0.95) translateY(20px);
             }
             to {
                 opacity: 1;
@@ -522,10 +566,11 @@
         }
 
         .modal .modal-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 600;
             color: #f5b041;
             margin-bottom: 16px;
+            text-shadow: 0 0 40px rgba(245, 176, 65, 0.1);
         }
 
         .modal .modal-body {
@@ -540,7 +585,7 @@
             display: flex;
             justify-content: space-between;
             padding: 6px 0;
-            border-bottom: 1px solid #1a2332;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .modal .modal-body .row .key {
@@ -555,25 +600,26 @@
 
         .modal .modal-close {
             margin-top: 20px;
-            background: #1a2332;
-            border: none;
+            background: rgba(26, 35, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             color: #b0c4de;
             padding: 10px 24px;
             border-radius: 40px;
             font-size: 14px;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
             width: 100%;
         }
 
         .modal .modal-close:hover {
-            background: #2a3a4e;
+            background: rgba(42, 58, 78, 0.8);
+            border-color: rgba(245, 176, 65, 0.2);
         }
 
         /* ----- responsive ----- */
         @media (max-width: 820px) {
             body {
-                padding: 12px 12px 30px;
+                padding: 16px 12px 30px;
             }
             .header {
                 flex-direction: column;
@@ -581,28 +627,31 @@
                 gap: 12px;
             }
             .header-left h1 {
-                font-size: 32px;
+                font-size: 38px;
             }
             .header-right {
                 justify-content: flex-start;
                 gap: 12px;
             }
             .timeline-track {
-                min-width: 500px;
-                height: 70px;
+                min-width: 400px;
+                height: 80px;
             }
             .timeline-dot {
-                width: 36px;
-                height: 36px;
-                font-size: 10px;
+                width: 44px;
+                height: 44px;
+            }
+            .timeline-dot .dot-pct {
+                font-size: 12px;
             }
             .timeline-dot .dot-label {
-                font-size: 9px;
+                font-size: 7px;
             }
             .info-panel {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
+                padding: 12px 16px;
             }
             .info-panel .info-details {
                 flex-direction: column;
@@ -625,7 +674,7 @@
 
         @media (max-width: 480px) {
             .header-left h1 {
-                font-size: 26px;
+                font-size: 30px;
             }
             .stat-badge {
                 padding: 4px 12px;
@@ -635,16 +684,18 @@
                 font-size: 15px;
             }
             .timeline-track {
-                min-width: 400px;
-                height: 60px;
+                min-width: 320px;
+                height: 70px;
             }
             .timeline-dot {
-                width: 30px;
-                height: 30px;
-                font-size: 9px;
+                width: 38px;
+                height: 38px;
+            }
+            .timeline-dot .dot-pct {
+                font-size: 10px;
             }
             .timeline-dot .dot-label {
-                font-size: 8px;
+                font-size: 6px;
             }
             .phase-block {
                 padding: 12px 14px;
@@ -673,9 +724,8 @@
                 <div class="update-time">
                     <div class="time-row">
                         <span class="dot"></span>
-                        <span>Обновлено: <span id="lastUpdate">—</span></span>
+                        <span>Текущее время: <span id="lastUpdate">—</span></span>
                     </div>
-                    <div class="date-range" id="projectDates">Строительство: <span id="projectStart">—</span> — <span id="projectEnd">—</span></div>
                 </div>
             </div>
         </header>
@@ -684,14 +734,14 @@
         <div class="timeline-wrapper">
             <div class="timeline-track" id="timelineTrack">
                 <div class="timeline-line" id="timelineLine">
-                    <div class="phase-fill" id="phaseFill" style="width:0%;"></div>
+                    <div class="phase-fill" id="phaseFill"></div>
                 </div>
-                <!-- dots will be rendered by JS -->
+                <!-- dots for phases rendered by JS -->
             </div>
 
-            <!-- info panel (при клике на кружок) -->
+            <!-- info panel (при клике на кружок фазы) -->
             <div class="info-panel" id="infoPanel">
-                <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть название</span>
+                <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть информацию</span>
                 <span class="info-name" id="infoName" style="display:none;"></span>
                 <div class="info-details" id="infoDetails" style="display:none;"></div>
             </div>
@@ -719,16 +769,12 @@
         //  DATA (редактируйте здесь)
         // ============================================================
 
-        // Глобальные даты проекта (для отображения в шапке)
-        const PROJECT_START = '2026-01-01'; // или null, если не указано
-        const PROJECT_END = '2029-01-01'; // или null
-
-        // Фазы
+        // Фазы (теперь с начальным месяцем для позиционирования)
         const phases = [
-            { id: 'p1', label: 'Разведка и бурение', color: '#1d4a7a' },
-            { id: 'p2', label: 'Промысел и ЦПС', color: '#1a5a3e' },
-            { id: 'p3', label: 'Магистраль и НПЗ', color: '#8a5f2a' },
-            { id: 'p4', label: 'СПГ, порт, энергетика', color: '#6a2a5a' }
+            { id: 'p1', label: 'Разведка и бурение', startMonth: 0, endMonth: 6, color: '#1d4a7a' },
+            { id: 'p2', label: 'Промысел и ЦПС', startMonth: 6, endMonth: 14, color: '#1a5a3e' },
+            { id: 'p3', label: 'Магистраль и НПЗ', startMonth: 14, endMonth: 28, color: '#8a5f2a' },
+            { id: 'p4', label: 'СПГ, порт, энергетика', startMonth: 20, endMonth: 36, color: '#6a2a5a' }
         ];
 
         // Подэтапы
@@ -990,66 +1036,64 @@
             return { status: 'pending', label: 'Не начат' };
         }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '—';
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr;
-            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
         // ============================================================
         //  RENDER
         // ============================================================
 
-        // ---- timeline dots ----
+        // ---- timeline dots (for phases) ----
         function renderTimeline() {
             const track = document.getElementById('timelineTrack');
-            // remove old dots (keep line)
-            const line = track.querySelector('.timeline-line');
+            // remove old dots
             track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
 
-            // sort by startMonth
-            const sorted = [...subPhases].sort((a, b) => a.startMonth - b.startMonth);
-
-            sorted.forEach(sub => {
-                const x = (sub.startMonth / TOTAL_MONTHS) * 100;
-                const status = getStatusInfo(sub.pct);
+            phases.forEach(phase => {
+                const progress = getPhaseProgress(phase.id);
+                const status = getStatusInfo(progress);
+                const x = (phase.startMonth / TOTAL_MONTHS) * 100;
 
                 const dot = document.createElement('div');
                 dot.className = `timeline-dot ${status.status}`;
                 dot.style.left = x + '%';
-                dot.dataset.id = sub.id;
+                dot.dataset.phaseId = phase.id;
 
-                // label with percent
-                const label = document.createElement('span');
-                label.className = 'dot-label';
-                label.textContent = sub.pct + '%';
-                dot.appendChild(label);
+                // процент внутри кружка
+                const pctSpan = document.createElement('span');
+                pctSpan.className = 'dot-pct';
+                pctSpan.textContent = progress + '%';
+                dot.appendChild(pctSpan);
 
-                // tooltip (название при наведении)
+                // маленькая подпись (название фазы сокращённо)
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'dot-label';
+                labelSpan.textContent = phase.label.split(' ')[0]; // первое слово
+                dot.appendChild(labelSpan);
+
+                // tooltip при наведении
                 const tooltip = document.createElement('div');
                 tooltip.className = 'tooltip';
-                tooltip.textContent = sub.name;
+                tooltip.textContent = phase.label + ' (' + progress + '%)';
                 dot.appendChild(tooltip);
 
-                // click -> show name in info panel
+                // клик -> показать инфо о фазе
                 dot.addEventListener('click', function(e) {
                     e.stopPropagation();
-                    showInfo(sub);
+                    showPhaseInfo(phase.id);
                 });
 
                 track.appendChild(dot);
             });
 
-            // обновить заливку фазы на линии (просто для красоты, показываем общий прогресс)
+            // обновить заливку линии (общий прогресс)
             const fill = document.getElementById('phaseFill');
             const overall = getOverallProgress();
             fill.style.width = overall + '%';
-            fill.style.background = 'linear-gradient(90deg, #f5b041, #e67e22)';
         }
 
-        // ---- info panel (при клике на кружок) ----
-        function showInfo(sub) {
+        // ---- info panel (при клике на кружок фазы) ----
+        function showPhaseInfo(phaseId) {
+            const phase = getPhaseById(phaseId);
+            if (!phase) return;
+
             const panel = document.getElementById('infoPanel');
             const placeholder = panel.querySelector('.info-placeholder');
             const nameEl = document.getElementById('infoName');
@@ -1059,30 +1103,22 @@
             nameEl.style.display = 'block';
             detailsEl.style.display = 'flex';
 
-            nameEl.textContent = sub.name;
+            nameEl.textContent = phase.label;
 
-            // детали: показываем только даты начала/окончания, если есть
-            let detailsHtml = '';
-            if (sub.startMonth !== undefined && sub.startMonth !== null) {
-                detailsHtml +=
-                    `<div class="detail-item"><span class="label">Начало:</span> ${sub.startMonth} мес.</div>`;
-            }
-            if (sub.endMonth !== undefined && sub.endMonth !== null) {
-                detailsHtml +=
-                    `<div class="detail-item"><span class="label">Окончание:</span> ${sub.endMonth} мес.</div>`;
-            }
-            if (sub.responsible) {
-                detailsHtml +=
-                    `<div class="detail-item"><span class="label">Ответственный:</span> ${sub.responsible}</div>`;
-            }
-            if (sub.characteristics) {
-                detailsHtml +=
-                    `<div class="detail-item"><span class="label">Характеристики:</span> ${sub.characteristics}</div>`;
-            }
-            detailsEl.innerHTML = detailsHtml || '<span class="label">Нет дополнительных данных</span>';
+            const progress = getPhaseProgress(phaseId);
+            const subs = getSubsByPhase(phaseId);
+            const completed = subs.filter(s => s.pct >= 100).length;
+
+            detailsEl.innerHTML = `
+                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
+                <div class="detail-item"><span class="label">Подэтапов:</span> ${subs.length}</div>
+                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
+                <div class="detail-item"><span class="label">Начало:</span> ${phase.startMonth} мес.</div>
+                <div class="detail-item"><span class="label">Окончание:</span> ${phase.endMonth} мес.</div>
+            `;
         }
 
-        // ---- phases section ----
+        // ---- phases section (sub-phases cards) ----
         function renderPhases() {
             const container = document.getElementById('phasesContainer');
             container.innerHTML = '';
@@ -1107,7 +1143,6 @@
                 const cardsWrap = document.createElement('div');
                 cardsWrap.className = 'phase-cards';
 
-                // сортировка по startMonth
                 const sorted = [...subs].sort((a, b) => a.startMonth - b.startMonth);
                 sorted.forEach(sub => {
                     const card = createPhaseCard(sub);
@@ -1144,7 +1179,7 @@
 
             card.appendChild(top);
 
-            // мета (даты)
+            // мета
             const meta = document.createElement('div');
             meta.className = 'card-meta';
             if (sub.startMonth !== undefined && sub.startMonth !== null) {
@@ -1158,7 +1193,7 @@
             }
             card.appendChild(meta);
 
-            // клик -> открыть модальное окно с полными данными
+            // клик -> модалка с полными данными
             card.addEventListener('click', function() {
                 openModal(sub);
             });
@@ -1195,7 +1230,7 @@
             overlay.classList.add('active');
         }
 
-        // ---- stats & dates ----
+        // ---- stats & time ----
         function updateStats() {
             const total = subPhases.length;
             const completed = getCompletedCount();
@@ -1205,7 +1240,7 @@
             document.getElementById('completedCount').textContent = completed;
             document.getElementById('totalCount').textContent = total;
 
-            // время обновления
+            // текущее время
             const now = new Date();
             const timeStr = now.toLocaleString('ru-RU', {
                 day: '2-digit',
@@ -1215,10 +1250,6 @@
                 minute: '2-digit'
             });
             document.getElementById('lastUpdate').textContent = timeStr;
-
-            // даты проекта
-            document.getElementById('projectStart').textContent = formatDate(PROJECT_START);
-            document.getElementById('projectEnd').textContent = formatDate(PROJECT_END);
         }
 
         // ---- init ----
