@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zenith · Главная</title>
+    <style>
+        /* ----- Общие стили для всех страниц ----- */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            color: #e8edf5;
+            min-height: 100vh;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* ----- Верхнее меню ----- */
+        .top-menu {
+            width: 100%;
+            background: rgba(17, 24, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        }
+        .top-menu .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f7e05e, #f5b041, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(245,176,65,0.15);
+        }
+        .top-menu .logo.analysis {
+            background: linear-gradient(135deg, #6a8ec4, #4a6a9e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(74,106,158,0.3);
+        }
+        .top-menu .nav-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+        .top-menu .nav-links a {
+            color: #b0c4de;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 2px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            letter-spacing: 0.2px;
+        }
+        .top-menu .nav-links a:hover,
+        .top-menu .nav-links a.active {
+            color: #f5b041;
+            border-bottom-color: #f5b041;
+        }
+        .top-menu .nav-links a.active {
+            color: #f5b041;
+            border-bottom-color: #f5b041;
+        }
+        .top-menu .right-info {
+            font-size: 13px;
+            color: #5a6a7e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .top-menu .right-info .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4cd9a0;
+            animation: pulse-dot 2s ease-in-out infinite;
+            box-shadow: 0 0 12px rgba(76,217,160,0.4);
+        }
+        @keyframes pulse-dot {
+            0%,100% { opacity:1; transform:scale(1); }
+            50% { opacity:0.3; transform:scale(0.7); }
+        }
+
+        /* ----- Контент главной ----- */
+        .main-content {
+            max-width: 1200px;
+            width: 100%;
+            padding: 40px 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .main-content h1 {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f7e05e, #f5b041, #e67e22);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+        }
+        .main-content p {
+            font-size: 20px;
+            color: #b0c4de;
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .main-content .cards {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .main-content .card {
+            background: rgba(20, 28, 40, 0.7);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 28px 32px;
+            min-width: 200px;
+            flex: 1 0 200px;
+            max-width: 280px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #e8edf5;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        }
+        .main-content .card:hover {
+            transform: translateY(-6px);
+            border-color: #f5b041;
+            box-shadow: 0 12px 50px rgba(245,176,65,0.08);
+        }
+        .main-content .card .icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .main-content .card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+        .main-content .card p {
+            font-size: 14px;
+            color: #8a9bb5;
+            margin: 0;
+        }
+        /* адаптив */
+        @media (max-width: 640px) {
+            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+            .top-menu .nav-links { justify-content: center; }
+            .main-content h1 { font-size: 36px; }
+            .main-content .cards { flex-direction: column; align-items: center; }
+            .main-content .card { max-width: 100%; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== ВЕРХНЕЕ МЕНЮ ===== -->
+    <header class="top-menu">
+        <div class="logo">Zenith</div>
+        <nav class="nav-links">
+            <a href="index.html" class="active">Главная</a>
+            <a href="arion.html">Arion</a>
+            <a href="analysis.html">Аналитика</a>
+        </nav>
+        <div class="right-info">
+            <span class="dot"></span>
+            <span id="headerTime">—</span>
+        </div>
+    </header>
+
+    <!-- ===== КОНТЕНТ ===== -->
+    <main class="main-content">
+        <h1>Добро пожаловать</h1>
+        <p>Центр управления проектами Zenith. Выберите раздел для перехода.</p>
+        <div class="cards">
+            <a href="arion.html" class="card">
+                <span class="icon">⛰️</span>
+                <h3>Arion</h3>
+                <p>Дашборд статуса строительства</p>
+            </a>
+            <a href="analysis.html" class="card">
+                <span class="icon">📊</span>
+                <h3>Аналитика</h3>
+                <p>Прогнозы и события Закулисья</p>
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // обновление времени в шапке
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
+                day: '2-digit', month: '2-digit', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+    </script>
+</body>
+</html>
