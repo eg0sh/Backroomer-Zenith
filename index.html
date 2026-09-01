@@ -1426,7 +1426,7 @@
                 </div>`;
             }).join('');
 
-            // ---- График цены нефти (фиксированное оформление по описанию) ----
+            // ---- График цены нефти (исправленная версия) ----
             const ctxOil = document.getElementById('oilChart').getContext('2d');
             const oilData = extraData.oilPrices;
             const wO = ctxOil.canvas.width;
@@ -1440,14 +1440,14 @@
             ctxOil.fillStyle = bgGrad;
             ctxOil.fillRect(0, 0, wO, hO);
 
-            const pad = { top: 20, bottom: 30, left: 35, right: 15 };
+            // Увеличенные отступы для читаемости подписей
+            const pad = { top: 24, bottom: 32, left: 40, right: 30 };
             const chartW = wO - pad.left - pad.right;
             const chartH = hO - pad.top - pad.bottom;
 
-            // Данные
             const values = oilData.map(d => d.value);
-            const maxVal = Math.max(...values, 100) * 1.1;
-            const minVal = Math.min(...values, 0) - 10;
+            const minVal = 0;
+            const maxVal = 900;
             const range = maxVal - minVal;
 
             // 2. Сетка: тонкие серые пунктирные линии
@@ -1474,33 +1474,33 @@
             ctxOil.fillStyle = '#ffffff';
             ctxOil.font = '11px Inter, sans-serif';
             ctxOil.textAlign = 'center';
-            // Вертикальные подписи
-            for (let i = 0; i <= 5; i++) {
-                const val = -100 + i * 200;
-                const y = pad.top + chartH - ((val - minVal) / range) * chartH;
+
+            // Вертикальные подписи: убрали -100, оставили 100, 300, 500, 700, 900
+            const yLabels = [100, 300, 500, 700, 900];
+            yLabels.forEach(label => {
+                const y = pad.top + chartH - ((label - minVal) / range) * chartH;
                 ctxOil.textAlign = 'right';
-                ctxOil.fillText(val, pad.left - 6, y + 4);
-            }
-            // Горизонтальные подписи (месяцы)
+                ctxOil.fillText(label, pad.left - 6, y + 4);
+            });
+
+            // Горизонтальные подписи (месяцы) с увеличенным отступом
             oilData.forEach((d, i) => {
                 const x = pad.left + (i / (oilData.length - 1)) * chartW;
                 ctxOil.textAlign = 'center';
                 ctxOil.fillText(d.month, x, pad.top + chartH + 18);
             });
 
-            // 4. Легенда «цена за баррель» в верхнем левом углу
+            // 4. Легенда «цена за баррель» (поднята выше)
             ctxOil.textAlign = 'left';
             ctxOil.font = '12px Inter, sans-serif';
-            // Розовая черта
             ctxOil.strokeStyle = '#ff1493';
             ctxOil.lineWidth = 2;
             ctxOil.beginPath();
-            ctxOil.moveTo(8, 12);
-            ctxOil.lineTo(28, 12);
+            ctxOil.moveTo(8, 8);
+            ctxOil.lineTo(28, 8);
             ctxOil.stroke();
-            // Надпись
             ctxOil.fillStyle = '#ffffff';
-            ctxOil.fillText('цена за баррель', 34, 16);
+            ctxOil.fillText('цена за баррель', 34, 12);
 
             // 5. Линия и заливка (розовые)
             const lineColor = '#ff1493';
