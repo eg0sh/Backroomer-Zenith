@@ -17,7 +17,7 @@
             flex-direction: column;
             align-items: center;
         }
-        /* ----- верхнее меню (единое) ----- */
+        /* ----- верхнее меню ----- */
         .top-menu {
             width: 100%;
             background: rgba(10, 18, 32, 0.85);
@@ -134,9 +134,6 @@
             color: #f5b041;
             margin: 6px 0;
         }
-        .forecast-card .value.blue { color: #4a8ec4; }
-        .forecast-card .value.green { color: #4cd9a0; }
-        .forecast-card .value.red { color: #e74c3c; }
         .forecast-card .desc {
             font-size: 14px;
             color: #8ab4d4;
@@ -172,15 +169,33 @@
             border-radius: 40px;
             color: #8ab4d4;
         }
-        .forecast-card .tag {
-            display: inline-block;
-            background: rgba(74,142,196,0.15);
-            color: #8ab4d4;
-            font-size: 12px;
-            padding: 2px 12px;
-            border-radius: 40px;
+        .forecast-card .event-list {
             margin-top: 8px;
         }
+        .forecast-card .event-list .event {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            color: #b0c4de;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .forecast-card .event-list .event .date {
+            font-weight: 600;
+            color: #8ab4d4;
+            min-width: 70px;
+            flex-shrink: 0;
+        }
+        .forecast-card .event-list .event .desc {
+            color: #d0dcec;
+        }
+        .forecast-card .event-list .event .desc .highlight {
+            color: #f5b041;
+        }
+        .forecast-card .event-list .event .desc .danger {
+            color: #e74c3c;
+        }
+
         .full-width {
             grid-column: 1 / -1;
         }
@@ -194,6 +209,8 @@
         @media (max-width: 480px) {
             .analysis-content { padding: 20px 12px; }
             .forecast-card { padding: 16px; }
+            .forecast-card .event-list .event { flex-direction: column; gap: 4px; }
+            .forecast-card .event-list .event .date { min-width: auto; }
         }
     </style>
 </head>
@@ -215,7 +232,7 @@
     <!-- ===== КОНТЕНТ ===== -->
     <main class="analysis-content">
         <h1>Прогнозы и аналитика</h1>
-        <div class="subhead">Сентябрь 2026 — на основе событий Закулисья, данных по нефти и военно-политической обстановки</div>
+        <div class="subhead">Сентябрь 2026 — на основе событий Закулисья, нефтяного рынка и военно-политической обстановки</div>
 
         <div class="forecast-grid">
 
@@ -223,16 +240,16 @@
             <div class="forecast-card">
                 <h2>🛢️ Цена нефти (USD/барр.)</h2>
                 <div class="value">788</div>
-                <div class="desc">Закрытие августа. Рост в июне–июле (266 → 704) был связан с <strong>относительной стабильностью</strong> после завершения крупных войн. В августе цена поднялась до 788 благодаря восстановлению после вторжения Эндера и запуску оборонной корпорации Sentinel.</div>
+                <div class="desc">Закрытие августа. Рост в июне–июле (266 → 704) был вызван <strong>ожиданиями скорого завершения войны</strong> между Тусовщиками и Занудами (которая фактически закончилась 1 августа). Рынок закладывал в цену восстановление стабильности и поставок, а также сезонное увеличение спроса. В августе цена выросла до 788 благодаря отсутствию новых масштабных конфликтов в нефтяных регионах и временному затишью после вторжения Эндера.</div>
 
                 <div class="scenario">
                     <div class="s-title">📈 Базовый сценарий (вероятность 55%)</div>
-                    <div class="s-desc"><strong>780–820</strong> — консолидация. Война Смертомолей/Спортиков продолжается, но без сбоев поставок. Восстановление портала Эндера снижает премию за риск.</div>
+                    <div class="s-desc"><strong>780–820</strong> — консолидация. Война Смертомолей/Спортиков продолжается, но без сбоев поставок. Стабилизация после вторжения Эндера.</div>
                     <span class="prob">Вероятность: 55%</span>
                 </div>
                 <div class="scenario">
                     <div class="s-title">🚀 Оптимистичный (25%)</div>
-                    <div class="s-desc"><strong>850–900</strong> — быстрое перемирие между Смертомолями и Спортиками, успешное закрытие портала Эндера, полное восстановление торговли с Тусовщиками.</div>
+                    <div class="s-desc"><strong>850–900</strong> — быстрое перемирие между Смертомолями и Спортиками, полное восстановление торговли с Тусовщиками, успешное закрытие портала.</div>
                     <span class="prob">Вероятность: 25%</span>
                 </div>
                 <div class="scenario">
@@ -240,13 +257,13 @@
                     <div class="s-desc"><strong>700–750</strong> — эскалация войны Смертомолей до ядерного уровня, новое вторжение Эндера, раскол «Ордена Доблести» и разрыв торговых соглашений.</div>
                     <span class="prob">Вероятность: 20%</span>
                 </div>
-                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Вывод:</strong> снижения в сентябре не ожидается — фундаментальные факторы перевешивают локальные риски.</div>
+                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Вывод:</strong> существенного снижения в сентябре не ожидается — фундаментальные факторы (восстановление после завершения крупной войны, сезонный спрос) перевешивают локальные риски.</div>
             </div>
 
             <!-- 2. Прогноз по военным конфликтам -->
             <div class="forecast-card">
                 <h2>⚔️ Военно-политическая обстановка</h2>
-                <div class="desc"><strong>Активный фронт:</strong> Смертомоли (31.1M убитых) против Спортиков (69.4M убитых). Бактерии предали Спортиков 26.08, что создало трёхсторонний конфликт.</div>
+                <div class="desc"><strong>Активный фронт:</strong> Смертомоли (31.1M убитых) против Спортиков (69.4M убитых). Бактерии предали Спортиков 26.08, создав трёхсторонний конфликт.</div>
 
                 <div class="scenario">
                     <div class="s-title">🕊️ Базовый (60%)</div>
@@ -273,7 +290,7 @@
 
                 <div class="scenario">
                     <div class="s-title">🛡️ Базовый (70%)</div>
-                    <div class="s-desc">Временное затишье. Объект 226 помогает добыть недостающие части. <strong>Никаких новых вторжений</strong> в сентябре. Усиление обороны Sentinel.</div>
+                    <div class="s-desc">Временное затишье. Объект 226 помогает добыть недостающие части. <strong>Никаких новых вторжений</strong> в сентябре.</div>
                     <span class="prob">Вероятность: 70%</span>
                 </div>
                 <div class="scenario">
@@ -312,7 +329,7 @@
                 <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Ключевой фактор:</strong> переговоры Шахтёров с «Орденом» — от их возвращения зависит стабильность рынка.</div>
             </div>
 
-            <!-- 5. Сводный прогноз (полная ширина) -->
+            <!-- 5. Сводный прогноз (полная ширина) + хронология ключевых событий -->
             <div class="forecast-card full-width">
                 <h2>📋 Итоговый прогноз на сентябрь 2026</h2>
                 <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:12px;">
@@ -333,9 +350,36 @@
                     </div>
                 </div>
                 <div style="margin-top:16px; border-top:1px solid rgba(74,142,196,0.1); padding-top:14px; font-size:14px; color:#8ab4d4; line-height:1.6;">
-                    <strong style="color:#b0d4f0;">Общий вывод:</strong> сентябрь будет месяцем <strong>консолидации</strong> после бурного августа. Основные риски — ядерная эскалация (25%) и повторное вторжение Эндера (20%). Рекомендуется усилить разведку портала и следить за переговорами в «Ордене Доблести». Оборонная корпорация <strong>Sentinel</strong> станет ключевым игроком, её бюджет в $1.5 млрд позволит укрепить защиту всех ключевых объектов.
+                    <strong style="color:#b0d4f0;">Общий вывод:</strong> сентябрь будет месяцем <strong>консолидации</strong> после бурного августа. Основные риски — ядерная эскалация (25%) и повторное вторжение Эндера (20%). Рекомендуется усилить разведку портала и следить за переговорами в «Ордене Доблести».
                 </div>
                 <div style="margin-top:8px; font-size:13px; color:#6a8a9e;">Прогноз актуален до 15 сентября 2026. Обновление по мере событий.</div>
+
+                <!-- Хронология ключевых событий августа (влияющих на прогнозы) -->
+                <div style="margin-top:20px;">
+                    <div style="font-weight:600; color:#b0d4f0; margin-bottom:8px;">Ключевые события августа, повлиявшие на прогнозы</div>
+                    <div class="event-list">
+                        <div class="event">
+                            <span class="date">01.08</span>
+                            <span class="desc">Капитуляция Тусовщиков; создан <span class="highlight">«Орден Доблести»</span> — завершение затяжной войны, что снизило геополитическую премию и позволило рынку стабилизироваться.</span>
+                        </div>
+                        <div class="event">
+                            <span class="date">13.08</span>
+                            <span class="desc">Переворот у Фогов: новый лидер — <span class="danger">бывший Рейхсфюрер СС</span> — усилил нестабильность в регионе, но не затронул нефтяные мощности.</span>
+                        </div>
+                        <div class="event">
+                            <span class="date">18.08</span>
+                            <span class="desc"><span class="danger">Вторжение Эндер-Существ</span> (48 млн), Мурино уничтожен — краткосрочный шок, но быстрое восстановление (возвращение Объекта 226) успокоило рынок.</span>
+                        </div>
+                        <div class="event">
+                            <span class="date">22.08</span>
+                            <span class="desc">Начало войны <span class="highlight">Смертомоли vs Спортики</span> — локальный конфликт, не влияющий на глобальные поставки нефти.</span>
+                        </div>
+                        <div class="event">
+                            <span class="date">29.08</span>
+                            <span class="desc">Шахтёры <span class="highlight">покидают</span> «Орден Доблести» — создаёт риск дефицита ресурсов, но пока не отразился на ценах.</span>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
