@@ -5,15 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analysis · Прогнозы и аналитика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js">
-    </script>
     <style>
         /* ----- общие стили ----- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             background: radial-gradient(ellipse at 50% 20%, #0a1220, #050810);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
@@ -87,15 +81,8 @@
             box-shadow: 0 0 12px rgba(74, 142, 196, 0.4);
         }
         @keyframes pulse-dot {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.3;
-                transform: scale(0.7);
-            }
+            0%,100% { opacity:1; transform:scale(1); }
+            50% { opacity:0.3; transform:scale(0.7); }
         }
 
         /* ----- контент ----- */
@@ -162,6 +149,7 @@
             color: #4a6a8a;
             opacity: 0.5;
             transition: opacity 0.2s;
+            pointer-events: none;
         }
         .chart-card:hover .expand-hint {
             opacity: 1;
@@ -226,7 +214,7 @@
             height: 100% !important;
         }
 
-        /* ----- таймлайн ----- */
+        /* ----- таймлайн (горизонтальная линия с переносом) ----- */
         .timeline-section {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
@@ -273,14 +261,23 @@
         }
 
         .timeline-track {
-            position: relative;
-            padding: 16px 0 8px;
-            min-height: 80px;
             display: flex;
             flex-wrap: wrap;
-            gap: 16px 32px;
+            gap: 8px 16px;
             align-items: center;
             justify-content: flex-start;
+            padding: 16px 0 8px;
+            position: relative;
+        }
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: rgba(74, 142, 196, 0.15);
+            z-index: 0;
         }
         .timeline-track .tl-item {
             display: flex;
@@ -288,8 +285,10 @@
             align-items: center;
             cursor: pointer;
             position: relative;
+            z-index: 1;
             min-width: 60px;
             transition: transform 0.2s;
+            flex-shrink: 0;
         }
         .timeline-track .tl-item:hover {
             transform: translateY(-4px);
@@ -304,6 +303,7 @@
             transition: all 0.2s;
             position: relative;
             z-index: 2;
+            margin-bottom: 6px;
         }
         .timeline-track .tl-item .tl-dot.important {
             background: #f5b041;
@@ -318,7 +318,6 @@
         .timeline-track .tl-item .tl-date {
             font-size: 11px;
             color: #8ab4d4;
-            margin-top: 6px;
             font-weight: 500;
         }
         .timeline-track .tl-item .tl-label {
@@ -330,32 +329,14 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .timeline-track .tl-item .tl-tooltip {
-            display: none;
-            position: absolute;
-            bottom: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 18, 32, 0.95);
-            border: 1px solid rgba(74, 142, 196, 0.2);
-            border-radius: 10px;
-            padding: 6px 12px;
-            font-size: 12px;
-            color: #d0dcec;
-            white-space: nowrap;
-            z-index: 10;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            pointer-events: none;
-        }
-        .timeline-track .tl-item:hover .tl-tooltip {
-            display: block;
-        }
         .timeline-track .tl-now {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-left: 8px;
             position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+            margin-left: 4px;
         }
         .timeline-track .tl-now .tl-dot {
             width: 16px;
@@ -365,15 +346,32 @@
             border: 2px solid #4cd9a0;
             box-shadow: 0 0 30px rgba(76, 217, 160, 0.5);
             animation: pulse-dot 1.6s ease-in-out infinite;
+            margin-bottom: 6px;
         }
         .timeline-track .tl-now .tl-date {
             font-size: 11px;
             color: #4cd9a0;
-            margin-top: 6px;
             font-weight: 600;
         }
+        /* Линия между точками (псевдоэлемент) */
+        .timeline-track .tl-item::after {
+            content: '';
+            position: absolute;
+            top: 28px;
+            left: calc(100% + 4px);
+            width: calc(100% + 8px);
+            height: 2px;
+            background: rgba(74, 142, 196, 0.15);
+            z-index: 0;
+        }
+        .timeline-track .tl-item:last-of-type::after {
+            display: none;
+        }
+        .timeline-track .tl-item:last-of-type {
+            margin-right: 0;
+        }
 
-        /* ----- прогнозы ----- */
+        /* ----- прогнозы с раскрытием ----- */
         .forecast-block {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
@@ -398,20 +396,54 @@
             background: rgba(0, 0, 0, 0.2);
             border-radius: 12px;
             padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .forecast-item:hover {
+            background: rgba(0, 0, 0, 0.35);
         }
         .forecast-item .f-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             color: #8ab4d4;
             margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .forecast-item .f-title .f-toggle {
+            font-size: 12px;
+            color: #4a6a8a;
+            transition: transform 0.2s;
+        }
+        .forecast-item .f-title .f-toggle.open {
+            transform: rotate(180deg);
         }
         .forecast-item .f-desc {
             font-size: 13px;
             color: #b0c4de;
             line-height: 1.5;
+            display: none;
+            margin-top: 8px;
         }
-        .forecast-item .f-desc strong {
+        .forecast-item .f-desc.open {
+            display: block;
+        }
+        .forecast-item .f-desc .scenario {
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 6px;
+            font-size: 13px;
+            border-left: 3px solid #4a8ec4;
+        }
+        .forecast-item .f-desc .scenario .s-title {
+            font-weight: 500;
+            color: #b0d4f0;
+        }
+        .forecast-item .f-desc .scenario .s-prob {
             color: #f5b041;
+            font-weight: 500;
         }
 
         /* ----- версия ----- */
@@ -452,8 +484,9 @@
             .fullscreen-overlay .fs-content .fs-chart-wrap {
                 height: 50vh;
             }
-            .timeline-track {
-                gap: 12px 20px;
+            .timeline-track .tl-item .tl-label {
+                max-width: 60px;
+                font-size: 9px;
             }
         }
         @media (max-width: 480px) {
@@ -463,10 +496,6 @@
             .timeline-section .tl-header {
                 flex-direction: column;
                 align-items: stretch;
-            }
-            .timeline-track .tl-item .tl-label {
-                max-width: 60px;
-                font-size: 9px;
             }
             .fullscreen-overlay .fs-content .fs-chart-wrap {
                 height: 40vh;
@@ -496,9 +525,9 @@
         <h1>Аналитика и прогнозы</h1>
         <div class="subhead">Закулисье, август–сентябрь 2026 — данные, тренды, прогнозы</div>
 
-        <!-- ===== БЛОК: ЦЕНА НЕФТИ ===== -->
+        <!-- ===== БЛОК: ЦЕНА НЕФТИ (без прогноза) ===== -->
         <div class="chart-card" id="oilCard" style="margin-bottom:28px;">
-            <h3>🛢️ Цена нефти (USD/барр.) — апрель–август + прогноз на сентябрь</h3>
+            <h3>🛢️ Цена нефти (USD/барр.) — апрель–август</h3>
             <div class="chart-wrapper" style="height:200px;">
                 <canvas id="oilChart"></canvas>
             </div>
@@ -508,45 +537,59 @@
         <!-- ===== ГРАФИКИ ===== -->
         <div class="chart-grid">
 
-            <!-- 1. Столбчатая диаграмма потерь -->
-            <div class="chart-card" id="lossesCard">
-                <h3>📊 Потери по войнам (по месяцам)</h3>
-                <div class="chart-wrapper"><canvas id="lossesChart"></canvas></div>
+            <!-- 1. Потери — малые войны (до 10k) -->
+            <div class="chart-card" id="lossesSmallCard">
+                <h3>📊 Потери в малых войнах (до 10 тыс.)</h3>
+                <div class="chart-wrapper"><canvas id="lossesSmallChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 2. Линейный график динамики потерь (недели) -->
-            <div class="chart-card" id="trendCard">
-                <h3>📈 Динамика потерь (за последний понедельник)</h3>
-                <div class="chart-wrapper"><canvas id="trendChart"></canvas></div>
+            <!-- 2. Потери — средние войны (10k – 1M) -->
+            <div class="chart-card" id="lossesMediumCard">
+                <h3>📊 Потери в средних войнах (10 тыс. – 1 млн)</h3>
+                <div class="chart-wrapper"><canvas id="lossesMediumChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 3. Демография: малые расы -->
+            <!-- 3. Потери — крупные войны (> 1M) -->
+            <div class="chart-card" id="lossesLargeCard">
+                <h3>📊 Потери в крупных войнах (более 1 млн)</h3>
+                <div class="chart-wrapper"><canvas id="lossesLargeChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
+            </div>
+
+            <!-- 4. Демография: малые расы (без Джерри) -->
             <div class="chart-card" id="demoSmallCard">
                 <h3>👥 Демография — малые расы (до 100 млн)</h3>
                 <div class="chart-wrapper"><canvas id="demoSmallChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 4. Демография: средние расы -->
+            <!-- 5. Демография: средние расы -->
             <div class="chart-card" id="demoMidCard">
                 <h3>👥 Демография — средние расы (100 млн – 1 млрд)</h3>
                 <div class="chart-wrapper"><canvas id="demoMidChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 5. Демография: крупные расы -->
+            <!-- 6. Демография: крупные расы -->
             <div class="chart-card" id="demoLargeCard">
                 <h3>👥 Демография — крупные расы (1 млрд+)</h3>
                 <div class="chart-wrapper"><canvas id="demoLargeChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 6. Демография: Бактерии -->
+            <!-- 7. Демография: Бактерии -->
             <div class="chart-card" id="demoBacteriaCard">
                 <h3>🦠 Демография — Бактерии (отдельный масштаб)</h3>
                 <div class="chart-wrapper"><canvas id="demoBacteriaChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
+            </div>
+
+            <!-- 8. Демография: экзотические расы (Джерри, Объект 226 и др.) -->
+            <div class="chart-card" id="demoExoticCard">
+                <h3>👾 Экзотические расы (Джерри, Объект 226, Треножники, Пуги, Коре, Душери, Транспортёры, Шахтёры)</h3>
+                <div class="chart-wrapper"><canvas id="demoExoticChart"></canvas></div>
                 <div class="expand-hint">⛶ увеличить</div>
             </div>
 
@@ -570,31 +613,16 @@
             </div>
         </div>
 
-        <!-- ===== ПРОГНОЗЫ ===== -->
+        <!-- ===== ПРОГНОЗЫ (с раскрытием) ===== -->
         <div class="forecast-block">
-            <h3>🔮 Прогнозы на сентябрь</h3>
-            <div class="forecast-grid">
-                <div class="forecast-item">
-                    <div class="f-title">🛢️ Цена нефти</div>
-                    <div class="f-desc"><strong>$780–820</strong> — консолидация. Возможен рост до $850 при перемирии. Снижение маловероятно.</div>
-                </div>
-                <div class="forecast-item">
-                    <div class="f-title">⚔️ Война Смертомолей/Спортиков</div>
-                    <div class="f-desc"><strong>Перемирие к концу сентября</strong> (вероятность 60%). Риск ядерной эскалации — 25%.</div>
-                </div>
-                <div class="forecast-item">
-                    <div class="f-title">🌌 Угроза Эндера</div>
-                    <div class="f-desc"><strong>Временное затишье</strong>. Портал не закрыт полностью — требуется добыча 11 Ок Эндера.</div>
-                </div>
-                <div class="forecast-item">
-                    <div class="f-title">📉 Экономика</div>
-                    <div class="f-desc"><strong>Дефицит руды</strong> из-за ухода Шахтёров. Рост цен на ресурсы до 2–3% в месяц.</div>
-                </div>
+            <h3>🔮 Прогнозы на сентябрь (нажмите для раскрытия сценариев)</h3>
+            <div class="forecast-grid" id="forecastGrid">
+                <!-- будут вставлены JS -->
             </div>
         </div>
 
         <!-- ===== ВЕРСИЯ ===== -->
-        <div class="version">v1.2.0</div>
+        <div class="version">v1.3.0</div>
 
     </main>
 
@@ -611,17 +639,16 @@
 
     <script>
         // ============================================================
-        //  VERSION (увеличиваем при каждом изменении)
+        //  VERSION CONTROL
         // ============================================================
-        // Текущая версия: v1.2.0
-        // При каждом обновлении кода увеличиваем на 0.0.1
+        // Текущая версия: v1.3.0 (увеличена мажорная версия)
         // ============================================================
 
         // ============================================================
         //  DATA
         // ============================================================
 
-        // Цена нефти
+        // Цена нефти (без прогноза)
         const oilData = [
             { month: 'апрель.26', value: 0 },
             { month: 'май.26', value: 180 },
@@ -630,37 +657,27 @@
             { month: 'август.26', value: 788 }
         ];
 
-        // Потери по войнам (для столбчатой диаграммы)
-        const lossData = [
-            { month: 'Март', race: 'Кожекрады', value: 4361 },
-            { month: 'Март', race: 'Гончие', value: 15478 },
-            { month: 'Март', race: 'Тусовщики', value: 3 },
-            { month: 'Март', race: 'Отстранённые', value: 248 },
-            { month: 'Март', race: 'Фоги', value: 143 },
-            { month: 'Март', race: 'Зануды', value: 8 },
-            { month: 'Апрель', race: 'Тусовщики', value: 879824 },
-            { month: 'Июнь', race: 'Многоруки', value: 6564 },
-            { month: 'Июнь', race: 'Безликие', value: 4262 },
-            { month: 'Июнь', race: 'Зануды', value: 1322 },
-            { month: 'Июнь', race: 'Фоги', value: 307 },
-            { month: 'Июль', race: 'Бо', value: 61 },
-            { month: 'Июль', race: 'Сели', value: 349 },
-            { month: 'Июль', race: 'Гончие', value: 9 },
-            { month: 'Июль', race: 'Тусовщики', value: 9071165 },
-            { month: 'Июль', race: 'Зануды', value: 5235767 },
-            { month: 'Июль', race: 'Безликие', value: 1053332 },
-            { month: 'Июль', race: 'Отстранённые', value: 640 },
-            { month: 'Июль', race: 'Серости', value: 3949 },
-            { month: 'Июль', race: 'Коре', value: 23 },
-            { month: 'Июль', race: 'Треножники', value: 2572 },
-            { month: 'Июль', race: 'Пуги', value: 62 },
-            { month: 'Август', race: 'Безликие', value: 1 },
-            { month: 'Август', race: 'Смертомоли', value: 32596438 },
-            { month: 'Август', race: 'Спортики', value: 96675060 },
-            { month: 'Август', race: 'Бактерии', value: 1737 }
+        // Потери по войнам (для графиков по войнам)
+        // Малые войны (до 10k)
+        const smallWars = [
+            { name: 'Гончих против Кожекрадов', races: { 'Кожекрады': 4361, 'Гончие': 15478, 'Тусовщики': 3, 'Отстранённые': 248,
+                    'Фоги': 143, 'Зануды': 8 } },
+            { name: 'Многоруко-Безликовая', races: { 'Многоруки': 6564, 'Безликие': 4262, 'Зануды': 1322, 'Фоги': 307 } },
+            { name: 'Война Селей и Бо', races: { 'Бо': 61, 'Сели': 349, 'Гончие': 9 } },
+            { name: 'Торговая война Безликих и Шахтёров', races: { 'Безликие': 1 } }
+        ];
+        // Средние войны (10k – 1M)
+        const mediumWars = [
+            { name: 'Гражданская война Тусовщиков', races: { 'Тусовщики': 879824 } }
+        ];
+        // Крупные войны (> 1M)
+        const largeWars = [
+            { name: 'Тусовщико-Занудская', races: { 'Тусовщики': 9071165, 'Зануды': 5235767, 'Безликие': 1053332,
+                    'Отстранённые': 640, 'Серости': 3949, 'Коре': 23, 'Гончие': 3, 'Треножники': 2572, 'Пуги': 62 } },
+            { name: 'Смертомольно-Спортиковая', races: { 'Смертомоли': 32596438, 'Спортики': 96675060, 'Бактерии': 1737 } }
         ];
 
-        // Демография по месяцам
+        // Демография по месяцам (без Джерри в малых расах)
         const demoData = {
             '1 июня': {
                 'Бактерии': 65309890415,
@@ -736,13 +753,13 @@
             date: '2026-08-01',
             time: '12:28',
             title: 'Капитуляция Тусовщиков',
-            desc: 'Завершение 20-дневной войны. Тусовщики безоговорочно капитулировали. Война официально завершена.',
+            desc: 'Завершение 20-дневной войны. Тусовщики безоговорочно капитулировали.',
             important: true
         }, {
             date: '2026-08-02',
             time: '16:37',
             title: 'Уничтожение Миротворцев',
-            desc: '86 Тусовщиков-Миротворцев ликвидированы. «Орден Доблести» вводит тотальные санкции против Тусовщиков.',
+            desc: '86 Тусовщиков-Миротворцев ликвидированы. «Орден Доблести» вводит тотальные санкции.',
             important: false
         }, {
             date: '2026-08-13',
@@ -755,7 +772,7 @@
             date: '2026-08-18',
             time: '13:38',
             title: 'Вторжение Эндер-Существ',
-            desc: '48 млн Эндер-Существ атакуют Мурино. Город стерт с лица земли. Объект 226 возвращён, портал временно закрыт.',
+            desc: '48 млн Эндер-Существ атакуют Мурино. Город стерт с лица земли. Объект 226 возвращён.',
             important: true,
             danger: true
         }, {
@@ -768,7 +785,7 @@
             date: '2026-08-26',
             time: '12:00',
             title: 'Бактерии предают Спортиков',
-            desc: 'Бактерии отказываются быть спонсорами Спортиков, оставляя их без поддержки в критический момент.',
+            desc: 'Бактерии отказываются быть спонсорами Спортиков, оставляя их без поддержки.',
             important: true
         }, {
             date: '2026-08-27',
@@ -804,10 +821,45 @@
             danger: true
         }];
 
-        // Данные для графика динамики потерь (пока одна точка — последний понедельник)
-        const trendData = [
-            { week: '31.08', deaths: 8118718 }
-        ];
+        // Прогнозы со сценариями
+        const forecasts = [{
+            title: '🛢️ Цена нефти',
+            summary: 'Консолидация в диапазоне $780–820',
+            scenarios: [
+                { title: 'Базовый', desc: 'Цена останется в диапазоне 780–820 USD/барр., без резких колебаний.',
+                    prob: '55%' },
+                { title: 'Оптимистичный', desc: 'Рост до 850–900 USD/барр. при перемирии и восстановлении торговли.',
+                    prob: '25%' },
+                { title: 'Пессимистичный', desc: 'Падение до 700–750 USD/барр. при эскалации конфликтов.', prob: '20%' }
+            ]
+        }, {
+            title: '⚔️ Война Смертомолей/Спортиков',
+            summary: 'Перемирие к концу сентября, риск ядерной эскалации',
+            scenarios: [
+                { title: 'Базовый', desc: 'Перемирие к концу сентября под давлением «Ордена Доблести».', prob: '60%' },
+                { title: 'Эскалационный', desc: 'Ядерный удар Бактерий по городам Спортиков — тотальная война.',
+                    prob: '25%' },
+                { title: 'Мирный', desc: 'Компромисс и прекращение огня уже в первую неделю сентября.', prob: '15%' }
+            ]
+        }, {
+            title: '🌌 Угроза Эндера',
+            summary: 'Временное затишье, портал не закрыт полностью',
+            scenarios: [
+                { title: 'Базовый', desc: 'Никаких новых вторжений в сентябре. Объект 226 помогает добыть Ок Эндера.',
+                    prob: '70%' },
+                { title: 'Повторное вторжение', desc: 'Эндер-Существа атакуют другой город, разрушения локального масштаба.',
+                    prob: '20%' },
+                { title: 'Раскол «Ордена»', desc: 'Выход Безликих или Отстранённых из-за торговых споров.', prob: '30%' }
+            ]
+        }, {
+            title: '📉 Экономика',
+            summary: 'Дефицит руды, рост цен на ресурсы',
+            scenarios: [
+                { title: 'Базовый', desc: 'Постепенное восстановление торговли, умеренный рост цен.', prob: '65%' },
+                { title: 'Рост цен', desc: 'Дефицит руды ускоряет инфляцию до 2–3% в месяц.', prob: '25%' },
+                { title: 'Стагнация', desc: 'Снижение спроса на ресурсы, цены падают на 5–10%.', prob: '10%' }
+            ]
+        }];
 
         // ============================================================
         //  HELPERS
@@ -847,23 +899,19 @@
 
         let charts = {};
 
-        // ---- Цена нефти ----
+        // ---- Цена нефти (без прогноза) ----
         function renderOilChart(canvasId) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             const labels = oilData.map(d => d.month);
             const values = oilData.map(d => d.value);
 
-            // Прогноз на сентябрь (диапазон 780–820)
-            const forecastLabels = ['август.26', 'сентябрь.26 (прогноз)'];
-            const forecastValues = [788, 800];
-
             return new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: [...labels, 'сентябрь.26 (прогноз)'],
+                    labels: labels,
                     datasets: [{
                         label: 'Цена нефти',
-                        data: [...values, 800],
+                        data: values,
                         borderColor: '#ff1493',
                         backgroundColor: 'rgba(255,20,147,0.15)',
                         fill: true,
@@ -872,7 +920,6 @@
                         pointBorderColor: '#ff1493',
                         pointRadius: 5,
                         borderWidth: 2.5,
-                        spanGaps: false,
                     }]
                 },
                 options: {
@@ -900,78 +947,29 @@
                             ticks: { color: '#6a8a9e' }
                         }
                     }
-                },
-                plugins: [{
-                    id: 'forecastRange',
-                    afterDraw: function(chart) {
-                        const ctx2 = chart.ctx;
-                        const meta = chart.getDatasetMeta(0);
-                        const lastPoint = meta.data[meta.data.length - 1];
-                        if (!lastPoint) return;
-                        const x = lastPoint.x;
-                        const yMin = chart.scales.y.getPixelForValue(780);
-                        const yMax = chart.scales.y.getPixelForValue(820);
-                        ctx2.save();
-                        ctx2.fillStyle = 'rgba(255,20,147,0.08)';
-                        ctx2.fillRect(x - 20, yMin, 40, yMax - yMin);
-                        ctx2.strokeStyle = 'rgba(255,20,147,0.3)';
-                        ctx2.setLineDash([4, 4]);
-                        ctx2.lineWidth = 1;
-                        ctx2.beginPath();
-                        ctx2.moveTo(x - 20, yMin);
-                        ctx2.lineTo(x + 20, yMin);
-                        ctx2.stroke();
-                        ctx2.beginPath();
-                        ctx2.moveTo(x - 20, yMax);
-                        ctx2.lineTo(x + 20, yMax);
-                        ctx2.stroke();
-                        ctx2.setLineDash([]);
-                        ctx2.fillStyle = '#6a8a9e';
-                        ctx2.font = '10px Inter, sans-serif';
-                        ctx2.textAlign = 'center';
-                        ctx2.fillText('780–820', x, yMin - 6);
-                        ctx2.restore();
-                    }
-                }]
+                }
             });
         }
 
-        // ---- Потери (столбчатая) ----
-        function renderLossesChart(canvasId) {
+        // ---- Потери по войнам (общая функция) ----
+        function renderWarChart(canvasId, warsData, label) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            const months = ['Март', 'Апрель', 'Июнь', 'Июль', 'Август'];
-            const races = ['Кожекрады', 'Гончие', 'Тусовщики', 'Отстранённые', 'Фоги', 'Зануды', 'Многоруки', 'Безликие', 'Бо',
-                'Сели', 'Серости', 'Коре', 'Треножники', 'Пуги', 'Смертомоли', 'Спортики', 'Бактерии'
+            // Собираем все расы из всех войн
+            const allRaces = new Set();
+            warsData.forEach(w => Object.keys(w.races).forEach(r => allRaces.add(r)));
+            const races = Array.from(allRaces);
+            const colors = ['#e74c3c', '#f39c12', '#9b59b6', '#3498db', '#1abc9c', '#2c3e50', '#e67e22', '#34495e', '#16a085',
+                '#27ae60', '#95a5a6', '#7f8c8d', '#8e44ad', '#d35400'
             ];
-            const colors = {
-                'Кожекрады': '#e74c3c',
-                'Гончие': '#f39c12',
-                'Тусовщики': '#9b59b6',
-                'Отстранённые': '#3498db',
-                'Фоги': '#1abc9c',
-                'Зануды': '#2c3e50',
-                'Многоруки': '#e67e22',
-                'Безликие': '#34495e',
-                'Бо': '#16a085',
-                'Сели': '#27ae60',
-                'Серости': '#95a5a6',
-                'Коре': '#7f8c8d',
-                'Треножники': '#8e44ad',
-                'Пуги': '#d35400',
-                'Смертомоли': '#c0392b',
-                'Спортики': '#2980b9',
-                'Бактерии': '#2ecc71'
-            };
+            const colorMap = {};
+            races.forEach((r, i) => colorMap[r] = colors[i % colors.length]);
 
             const datasets = races.map(race => {
-                const data = months.map(m => {
-                    const found = lossData.filter(d => d.month === m && d.race === race);
-                    return found.reduce((sum, d) => sum + d.value, 0);
-                });
+                const data = warsData.map(w => w.races[race] || 0);
                 return {
                     label: race,
                     data: data,
-                    backgroundColor: colors[race] || '#6a8a9e',
+                    backgroundColor: colorMap[race],
                     borderRadius: 3,
                     barPercentage: 0.6,
                     categoryPercentage: 0.8,
@@ -980,14 +978,17 @@
 
             return new Chart(ctx, {
                 type: 'bar',
-                data: { labels: months, datasets: datasets },
+                data: {
+                    labels: warsData.map(w => w.name),
+                    datasets: datasets
+                },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 8 }
+                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 6 }
                         },
                         tooltip: {
                             callbacks: {
@@ -1001,64 +1002,14 @@
                         x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
                         y: {
                             grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: { color: '#6a8a9e', callback: v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v
-                                    .toLocaleString() }
-                        }
-                    }
-                }
-            });
-        }
-
-        // ---- Динамика потерь (линейный) ----
-        function renderTrendChart(canvasId) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            // Данные: пока только одна точка — 31 августа
-            // Для сглаженной линии добавим несколько точек вокруг для лучшего отображения
-            const data = [
-                { week: '24.08', value: 0 },
-                { week: '31.08', value: 8118718 },
-                { week: '07.09', value: null }
-            ];
-
-            return new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: data.map(d => d.week),
-                    datasets: [{
-                        label: 'Потери за неделю',
-                        data: data.map(d => d.value),
-                        borderColor: '#e74c3c',
-                        backgroundColor: 'rgba(231,76,60,0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: '#e74c3c',
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        borderWidth: 2.5,
-                        spanGaps: true,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    if (context.parsed.y === null) return 'нет данных';
-                                    return context.parsed.y.toLocaleString() + ' погибших';
+                            ticks: {
+                                color: '#6a8a9e',
+                                callback: function(value) {
+                                    if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                    if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                    return value;
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6a8a9e' } },
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: { color: '#6a8a9e', callback: v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v
-                                    .toLocaleString() }
                         }
                     }
                 }
@@ -1066,40 +1017,30 @@
         }
 
         // ---- Демография (общая функция) ----
-        function renderDemoChart(canvasId, races, label, color) {
+        function renderDemoChart(canvasId, races, label, tickFormat) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             const labels = ['1 июня', '1 июля', '1 августа', '1 сентября'];
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
+                '#2c3e50'
+            ];
 
-            const datasets = races.map(race => {
-                const data = labels.map(l => {
-                    const val = demoData[l]?.[race];
-                    return val !== undefined ? val : null;
-                });
+            const datasets = races.map((race, i) => {
+                const data = labels.map(l => demoData[l]?.[race] || null);
                 return {
                     label: race,
                     data: data,
-                    borderColor: color || '#4a8ec4',
+                    borderColor: colorPalette[i % colorPalette.length],
                     backgroundColor: 'rgba(74,142,196,0.05)',
                     fill: false,
                     tension: 0.3,
                     pointBackgroundColor: '#fff',
-                    pointBorderColor: color || '#4a8ec4',
+                    pointBorderColor: colorPalette[i % colorPalette.length],
                     pointRadius: 4,
                     pointHoverRadius: 6,
                     borderWidth: 2,
                     spanGaps: true,
                 };
-            });
-
-            // Назначаем разные цвета
-            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
-                '#2c3e50'
-            ];
-            datasets.forEach((ds, i) => {
-                ds.borderColor = colorPalette[i % colorPalette.length];
-                ds.pointBorderColor = colorPalette[i % colorPalette.length];
-                ds.backgroundColor = colorPalette[i % colorPalette.length] + '15';
-            });
+            }).filter(ds => ds.data.some(v => v !== null));
 
             return new Chart(ctx, {
                 type: 'line',
@@ -1125,8 +1066,25 @@
                         x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
                         y: {
                             grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: { color: '#6a8a9e', callback: v => v >= 1e9 ? (v / 1e9).toFixed(2) + 'B' : v >=
-                                    1e6 ? (v / 1e6).toFixed(1) + 'M' : v.toLocaleString() }
+                            ticks: {
+                                color: '#6a8a9e',
+                                callback: function(value) {
+                                    if (tickFormat === 'billion') {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        return value;
+                                    } else if (tickFormat === 'million') {
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    } else {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -1176,12 +1134,6 @@
                 label.textContent = event.title;
                 item.appendChild(label);
 
-                // tooltip
-                const tooltip = document.createElement('div');
-                tooltip.className = 'tl-tooltip';
-                tooltip.textContent = event.title + ' — ' + event.desc;
-                item.appendChild(tooltip);
-
                 item.addEventListener('click', function() {
                     openTimelineModal(event);
                 });
@@ -1207,7 +1159,6 @@
         // ============================================================
 
         function openTimelineModal(event) {
-            // Создаём модалку динамически
             const overlay = document.createElement('div');
             overlay.style.cssText = `
                 position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
@@ -1266,13 +1217,55 @@
             overlay.appendChild(modal);
             document.body.appendChild(overlay);
 
-            // анимация
             const style = document.createElement('style');
             style.textContent = `
                 @keyframes modal-in { from { opacity:0; transform:scale(0.95) translateY(20px); }
                 to { opacity:1; transform:scale(1) translateY(0); } }
             `;
             document.head.appendChild(style);
+        }
+
+        // ============================================================
+        //  ПРОГНОЗЫ (с раскрытием)
+        // ============================================================
+
+        function renderForecasts() {
+            const container = document.getElementById('forecastGrid');
+            container.innerHTML = '';
+
+            forecasts.forEach((f, idx) => {
+                const item = document.createElement('div');
+                item.className = 'forecast-item';
+
+                const title = document.createElement('div');
+                title.className = 'f-title';
+                title.innerHTML = `${f.title} <span class="f-toggle">▼</span>`;
+                title.addEventListener('click', function() {
+                    const desc = item.querySelector('.f-desc');
+                    const toggle = this.querySelector('.f-toggle');
+                    desc.classList.toggle('open');
+                    toggle.classList.toggle('open');
+                });
+                item.appendChild(title);
+
+                const summary = document.createElement('div');
+                summary.style.cssText = 'font-size:13px; color:#8ab4d4; margin-bottom:4px;';
+                summary.textContent = f.summary;
+                item.appendChild(summary);
+
+                const descDiv = document.createElement('div');
+                descDiv.className = 'f-desc';
+                f.scenarios.forEach(s => {
+                    const sc = document.createElement('div');
+                    sc.className = 'scenario';
+                    sc.innerHTML =
+                        `<div class="s-title">${s.title} <span class="s-prob">${s.prob}</span></div><div>${s.desc}</div>`;
+                    descDiv.appendChild(sc);
+                });
+                item.appendChild(descDiv);
+
+                container.appendChild(item);
+            });
         }
 
         // ============================================================
@@ -1289,7 +1282,6 @@
 
             document.querySelectorAll('.chart-card').forEach(card => {
                 card.addEventListener('click', function(e) {
-                    // Игнорируем клик по кнопке или ссылке внутри
                     if (e.target.closest('.expand-hint') || e.target.closest('button')) return;
                     const canvasEl = this.querySelector('canvas');
                     if (!canvasEl) return;
@@ -1299,23 +1291,20 @@
                     const title = this.querySelector('h3')?.textContent || 'График';
                     document.getElementById('fsTitle').textContent = title;
 
-                    // Копируем данные в полноэкранный canvas
                     const fsCtx = canvas.getContext('2d');
                     const originalChart = charts[chartId];
                     const config = originalChart.config;
-                    // Создаём новый экземпляр с теми же данными, но увеличенным размером
-                    // Удаляем старый если был
                     if (fullscreenChart) {
                         fullscreenChart.destroy();
                         fullscreenChart = null;
                     }
 
-                    // Копируем данные и настройки
                     const newConfig = JSON.parse(JSON.stringify(config));
-                    // Убираем ограничения высоты
                     newConfig.options.responsive = true;
                     newConfig.options.maintainAspectRatio = false;
-                    newConfig.options.plugins.legend.labels.font.size = 12;
+                    if (newConfig.options.plugins && newConfig.options.plugins.legend) {
+                        newConfig.options.plugins.legend.labels.font.size = 12;
+                    }
 
                     fullscreenChart = new Chart(fsCtx, newConfig);
                     currentChartId = chartId;
@@ -1342,7 +1331,6 @@
                 }
             });
 
-            // Закрытие по Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && overlay.classList.contains('active')) {
                     overlay.classList.remove('active');
@@ -1375,21 +1363,24 @@
 
             // Графики
             charts['oilChart'] = renderOilChart('oilChart');
-            charts['lossesChart'] = renderLossesChart('lossesChart');
-            charts['trendChart'] = renderTrendChart('trendChart');
+
+            // Потери по войнам
+            charts['lossesSmallChart'] = renderWarChart('lossesSmallChart', smallWars);
+            charts['lossesMediumChart'] = renderWarChart('lossesMediumChart', mediumWars);
+            charts['lossesLargeChart'] = renderWarChart('lossesLargeChart', largeWars);
 
             // Демография
-            const smallRaces = ['Гончие', 'Фоги', 'Многоруки', 'Смертомоли', 'Душери', 'Шахтёры', 'Транспортёры', 'Джерри',
-                'Объект 226'
-            ];
+            const smallRaces = ['Гончие', 'Фоги', 'Многоруки', 'Смертомоли', 'Душери', 'Шахтёры', 'Транспортёры']; // без Джерри
             const midRaces = ['Кожекрады', 'Спортики', 'Безликие', 'Серости'];
             const largeRaces = ['Тусовщики', 'Зануды', 'Отстранённые'];
             const bacteria = ['Бактерии'];
+            const exoticRaces = ['Джерри', 'Объект 226', 'Треножники', 'Пуги', 'Коре'];
 
-            charts['demoSmallChart'] = renderDemoChart('demoSmallChart', smallRaces, 'Малые расы');
-            charts['demoMidChart'] = renderDemoChart('demoMidChart', midRaces, 'Средние расы');
-            charts['demoLargeChart'] = renderDemoChart('demoLargeChart', largeRaces, 'Крупные расы');
-            charts['demoBacteriaChart'] = renderDemoChart('demoBacteriaChart', bacteria, 'Бактерии');
+            charts['demoSmallChart'] = renderDemoChart('demoSmallChart', smallRaces, 'Малые расы', 'million');
+            charts['demoMidChart'] = renderDemoChart('demoMidChart', midRaces, 'Средние расы', 'billion');
+            charts['demoLargeChart'] = renderDemoChart('demoLargeChart', largeRaces, 'Крупные расы', 'billion');
+            charts['demoBacteriaChart'] = renderDemoChart('demoBacteriaChart', bacteria, 'Бактерии', 'billion');
+            charts['demoExoticChart'] = renderDemoChart('demoExoticChart', exoticRaces, 'Экзотические', 'none');
 
             // Таймлайн
             const filterSelect = document.getElementById('monthFilter');
@@ -1398,10 +1389,13 @@
                 renderTimeline(this.value);
             });
 
+            // Прогнозы
+            renderForecasts();
+
             // Полноэкранный режим
             setupFullscreen();
 
-            // Обработка изменения размера окон для перерисовки графиков
+            // Ресайз
             let resizeTimer;
             window.addEventListener('resize', function() {
                 clearTimeout(resizeTimer);
@@ -1420,9 +1414,7 @@
         // ============================================================
         //  VERSION CONTROL
         // ============================================================
-        // Текущая версия: v1.2.0
-        // При каждом обновлении кода увеличиваем на 0.0.1
-        // Например, следующее обновление будет v1.2.1
+        // Текущая версия: v1.3.0
         // ============================================================
     </script>
 </body>
