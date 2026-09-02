@@ -908,67 +908,7 @@
         }
 
         // ============================================================
-        //  ГРАФИК СКОРОСТИ ВЫПОЛНЕНИЯ
-        // ============================================================
-
-        function renderSpeedChart() {
-            const ctx = document.getElementById('speedChart').getContext('2d');
-            const refDate = getLastMonday();
-
-            const items = subPhases.filter(s => s.startDate && s.pct > 0 && s.pct < 100);
-            const labels = items.map(s => s.name);
-            const speeds = items.map(s => {
-                const start = new Date(s.startDate);
-                const days = (refDate - start) / (1000 * 60 * 60 * 24);
-                return days > 0 ? s.pct / days : 0;
-            });
-
-            // Для завершённых тоже можно показать скорость 0, но они уже неактивны
-
-            const colors = speeds.map(sp => {
-                if (sp > 5) return '#4cd9a0';
-                if (sp > 2) return '#f5b041';
-                return '#e74c3c';
-            });
-
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Скорость (%/день)',
-                        data: speeds,
-                        backgroundColor: colors,
-                        borderRadius: 4,
-                        barPercentage: 0.6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y.toFixed(2) + ' %/день';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e', font: { size: 10 } } },
-                        y: {
-                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e',
-                                callback: function(value) { return value.toFixed(1); }
-                            }
-                        }
-                    }
-                }
-            });
-        }
+    
 
         // ============================================================
         //  RENDER (основные функции)
