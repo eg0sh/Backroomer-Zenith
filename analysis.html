@@ -713,7 +713,61 @@
             letter-spacing: 0.3px;
         }
 
-        /* ===== Модальное окно тем ===== */
+        /* ===== Модальное окно тем (как в Арионе) ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 32px 36px;
+            max-width: 560px;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+            animation: modal-in 0.4s cubic-bezier(0.4,0,0.2,1);
+            max-height: 80vh;
+            overflow-y: auto;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .modal .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .modal .modal-close {
+            margin-top: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .modal .modal-close:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        .modal .modal-close:focus-visible {
+            outline: 2px solid var(--accent-gold);
+        }
+
         .theme-modal .theme-options {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -757,11 +811,13 @@
             .stat-modal { padding: 20px; max-width: 100%; }
             .stat-modal .sm-chart-wrap { min-height: 300px; }
             .theme-modal .theme-options { grid-template-columns: 1fr 1fr; }
+            .modal { padding: 24px; }
         }
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
             .analysis-content h1 { font-size: 26px; }
             .theme-modal .theme-options { grid-template-columns: 1fr; }
+            .modal { padding: 20px; }
         }
     </style>
 </head>
@@ -839,7 +895,7 @@
         </div>
 
         <!-- ===== ВЕРСИЯ ===== -->
-        <div class="version">v1.2.2</div>
+        <div class="version">v1.2.3</div>
 
     </main>
 
@@ -856,20 +912,20 @@
         </div>
     </div>
 
-    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ТЕМЫ ===== -->
+    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ТЕМЫ (как в Арионе) ===== -->
     <div class="modal-overlay" id="themeModalOverlay">
         <div class="modal theme-modal">
-            <div class="modal-title" style="color:var(--text-primary); font-size:20px; font-weight:600; margin-bottom:8px;">Выберите тему</div>
+            <div class="modal-title">Выберите тему</div>
             <div class="theme-options" id="themeOptions">
                 <!-- будут вставлены JS -->
             </div>
-            <button class="modal-close" id="themeModalClose" style="margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-secondary); padding:10px 24px; border-radius:40px; font-size:14px; cursor:pointer; transition:all 0.2s; width:100%;">Закрыть</button>
+            <button class="modal-close" id="themeModalClose">Закрыть</button>
         </div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.2
+        //  VERSION: v1.2.3
         // ============================================================
 
         // ============================================================
@@ -1387,11 +1443,9 @@
             }
             // Перерисовываем модальные графики, если открыты
             if (modalChart) {
-                // Просто пересоздаём текущий график
                 const overlay = document.getElementById('statModal');
                 if (overlay.classList.contains('active')) {
                     const key = document.querySelector('.stat-btn:hover')?.dataset.stat || 'bacteria';
-                    // Закрываем и открываем заново
                     const title = document.getElementById('statModalTitle');
                     const config = statConfigs[key] || statConfigs.bacteria;
                     if (modalChart) {
@@ -1487,7 +1541,7 @@
         document.addEventListener('DOMContentLoaded', init);
 
         // ============================================================
-        //  VERSION: v1.2.2
+        //  VERSION: v1.2.3
         // ============================================================
     </script>
 </body>
