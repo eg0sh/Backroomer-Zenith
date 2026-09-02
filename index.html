@@ -5,19 +5,257 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zenith · Главная</title>
     <style>
-        /* ----- общие стили ----- */
+        /* ===== CSS Variables (темы) ===== */
+        :root {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
+            --bg-panel: rgba(17, 24, 34, 0.7);
+            --bg-card: rgba(20, 28, 40, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #5a6a7e;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a4a5e;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+            --version-color: #3a5a6a;
+        }
+        [data-theme="light"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #f0f4f8, #d9e2ec);
+            --bg-panel: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #1a2332;
+            --text-secondary: #2a3a4e;
+            --text-muted: #6a7a8e;
+            --accent-gold: #d48c2c;
+            --accent-glow: rgba(212, 140, 44, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            --dot-done: #2b6a9e;
+            --dot-active: #c0392b;
+            --dot-pending: #8a9bb5;
+            --gradient-start: #b08a2c;
+            --gradient-end: #8a6a1a;
+            --version-color: #6a7a8e;
+        }
+        [data-theme="gold"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a1f0e, #1a1008);
+            --bg-panel: rgba(40, 30, 20, 0.85);
+            --bg-card: rgba(40, 30, 20, 0.9);
+            --border-color: rgba(212, 140, 44, 0.25);
+            --text-primary: #f5e6c8;
+            --text-secondary: #d4b88a;
+            --text-muted: #8a7a5a;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a5a3a;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+            --version-color: #6a5a4a;
+        }
+        [data-theme="blue"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1628, #050d1a);
+            --bg-panel: rgba(10, 22, 40, 0.8);
+            --bg-card: rgba(10, 22, 40, 0.9);
+            --border-color: rgba(74, 142, 196, 0.2);
+            --text-primary: #b0d4f0;
+            --text-secondary: #8ab4d4;
+            --text-muted: #4a6a8a;
+            --accent-gold: #4a8ec4;
+            --accent-glow: rgba(74, 142, 196, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a7a;
+            --gradient-start: #8ab4d4;
+            --gradient-end: #4a6a9e;
+            --version-color: #4a6a8a;
+        }
+        [data-theme="green"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a12, #050d08);
+            --bg-panel: rgba(10, 26, 18, 0.8);
+            --bg-card: rgba(10, 26, 18, 0.9);
+            --border-color: rgba(76, 217, 160, 0.2);
+            --text-primary: #b0e8d0;
+            --text-secondary: #80c8a8;
+            --text-muted: #4a7a62;
+            --accent-gold: #4cd9a0;
+            --accent-glow: rgba(76, 217, 160, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #2b6a9e;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a4a;
+            --gradient-start: #80c8a8;
+            --gradient-end: #4a7a62;
+            --version-color: #4a7a62;
+        }
+        [data-theme="purple"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
+            --bg-panel: rgba(26, 10, 42, 0.8);
+            --bg-card: rgba(26, 10, 42, 0.9);
+            --border-color: rgba(160, 76, 217, 0.2);
+            --text-primary: #d8b0f0;
+            --text-secondary: #b080d4;
+            --text-muted: #6a4a8a;
+            --accent-gold: #a04cd9;
+            --accent-glow: rgba(160, 76, 217, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #5a3a6a;
+            --gradient-start: #b080d4;
+            --gradient-end: #6a4a8a;
+            --version-color: #6a4a8a;
+        }
+        [data-theme="red"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a0a0a, #180505);
+            --bg-panel: rgba(42, 10, 10, 0.8);
+            --bg-card: rgba(42, 10, 10, 0.9);
+            --border-color: rgba(217, 76, 76, 0.2);
+            --text-primary: #f0b0b0;
+            --text-secondary: #d48080;
+            --text-muted: #8a4a4a;
+            --accent-gold: #d94c4c;
+            --accent-glow: rgba(217, 76, 76, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a3a3a;
+            --gradient-start: #d48080;
+            --gradient-end: #8a4a4a;
+            --version-color: #8a4a4a;
+        }
+        [data-theme="eyecare"] {
+            --bg-body: #d9d9d9;
+            --bg-panel: rgba(220, 220, 220, 0.85);
+            --bg-card: rgba(230, 230, 230, 0.9);
+            --border-color: rgba(120, 120, 120, 0.2);
+            --text-primary: #404040;
+            --text-secondary: #505050;
+            --text-muted: #707070;
+            --accent-gold: #8a8a8a;
+            --accent-glow: rgba(128, 128, 128, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.05);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a6a;
+            --dot-pending: #909090;
+            --gradient-start: #8a8a8a;
+            --gradient-end: #6a6a6a;
+            --version-color: #6a6a6a;
+        }
+        [data-theme="cyberpunk"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0010, #000005);
+            --bg-panel: rgba(20, 0, 30, 0.8);
+            --bg-card: rgba(20, 0, 30, 0.9);
+            --border-color: rgba(255, 0, 200, 0.3);
+            --text-primary: #ff66ff;
+            --text-secondary: #ff99ff;
+            --text-muted: #cc66cc;
+            --accent-gold: #ff00ff;
+            --accent-glow: rgba(255, 0, 255, 0.1);
+            --shadow: 0 8px 40px rgba(255, 0, 255, 0.1);
+            --dot-done: #00ffaa;
+            --dot-active: #ff0066;
+            --dot-pending: #660066;
+            --gradient-start: #ff66ff;
+            --gradient-end: #cc33cc;
+            --version-color: #cc66cc;
+        }
+        [data-theme="graphic"] {
+            --bg-body: #f5f5f5;
+            --bg-panel: rgba(255,255,255,0.9);
+            --bg-card: #ffffff;
+            --border-color: #cccccc;
+            --text-primary: #000000;
+            --text-secondary: #222222;
+            --text-muted: #555555;
+            --accent-gold: #000000;
+            --accent-glow: rgba(0,0,0,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #000000;
+            --dot-active: #000000;
+            --dot-pending: #999999;
+            --gradient-start: #333333;
+            --gradient-end: #000000;
+            --version-color: #555555;
+        }
+        [data-theme="matrix"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #001000, #000800);
+            --bg-panel: rgba(0, 20, 0, 0.8);
+            --bg-card: rgba(0, 20, 0, 0.9);
+            --border-color: rgba(0, 255, 0, 0.2);
+            --text-primary: #00ff00;
+            --text-secondary: #66ff66;
+            --text-muted: #006600;
+            --accent-gold: #00ff00;
+            --accent-glow: rgba(0, 255, 0, 0.02);
+            --shadow: 0 8px 40px rgba(0, 255, 0, 0.05);
+            --dot-done: #00ff00;
+            --dot-active: #ff0000;
+            --dot-pending: #006600;
+            --gradient-start: #66ff66;
+            --gradient-end: #00cc00;
+            --version-color: #006600;
+        }
+        [data-theme="space"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0a2a, #000010);
+            --bg-panel: rgba(10, 10, 30, 0.8);
+            --bg-card: rgba(10, 10, 30, 0.9);
+            --border-color: rgba(100, 100, 255, 0.2);
+            --text-primary: #c0c0ff;
+            --text-secondary: #8888ff;
+            --text-muted: #4444aa;
+            --accent-gold: #6666ff;
+            --accent-glow: rgba(100, 100, 255, 0.02);
+            --shadow: 0 8px 40px rgba(100, 100, 255, 0.05);
+            --dot-done: #00ffaa;
+            --dot-active: #ff6666;
+            --dot-pending: #333366;
+            --gradient-start: #8888ff;
+            --gradient-end: #4444cc;
+            --version-color: #4444aa;
+        }
+        [data-theme="retro"] {
+            --bg-body: #f0e8d0;
+            --bg-panel: rgba(240, 232, 208, 0.85);
+            --bg-card: rgba(250, 242, 220, 0.9);
+            --border-color: #b0a080;
+            --text-primary: #4a3a2a;
+            --text-secondary: #6a5a4a;
+            --text-muted: #8a7a6a;
+            --accent-gold: #8a7a50;
+            --accent-glow: rgba(138, 122, 80, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a5a;
+            --dot-pending: #b0a080;
+            --gradient-start: #b0a080;
+            --gradient-end: #8a7a50;
+            --version-color: #8a7a6a;
+        }
+
+        /* ----- base ----- */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
+            background: var(--bg-body);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            color: #e8edf5;
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background 0.4s, color 0.4s;
         }
-        /* ----- верхнее меню (единое) ----- */
+
+        /* ===== Верхнее меню (улучшенное) ===== */
         .top-menu {
             width: 100%;
             background: rgba(17, 24, 34, 0.85);
@@ -31,57 +269,110 @@
             gap: 16px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
             box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            transition: background 0.3s;
+        }
+        .top-menu .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .top-menu .logo {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 700;
-            background: linear-gradient(135deg, #f7e05e, #f5b041, #e67e22);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
-            text-shadow: 0 0 30px rgba(245,176,65,0.15);
+            text-shadow: 0 0 30px var(--accent-glow);
         }
+        .top-menu .logo-sub {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 12px;
+            display: none;
+        }
+        @media (min-width: 600px) {
+            .top-menu .logo-sub { display: inline-block; }
+        }
+
         .top-menu .nav-links {
             display: flex;
-            gap: 24px;
+            gap: 28px;
             flex-wrap: wrap;
+            align-items: center;
         }
         .top-menu .nav-links a {
-            color: #b0c4de;
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 15px;
             font-weight: 500;
             padding: 6px 2px;
             border-bottom: 2px solid transparent;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .top-menu .nav-links a .nav-icon {
+            font-size: 18px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .top-menu .nav-links a:hover .nav-icon,
+        .top-menu .nav-links a.active .nav-icon {
+            opacity: 1;
         }
         .top-menu .nav-links a:hover,
         .top-menu .nav-links a.active {
-            color: #f5b041;
-            border-bottom-color: #f5b041;
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
         }
+
         .top-menu .right-info {
-            font-size: 13px;
-            color: #5a6a7e;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
+            flex-wrap: wrap;
         }
-        .top-menu .right-info .dot {
+        .top-menu .right-info .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .top-menu .right-info .status-indicator .dot {
             display: inline-block;
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #4cd9a0;
+            background: var(--dot-done);
             animation: pulse-dot 2s ease-in-out infinite;
             box-shadow: 0 0 12px rgba(76,217,160,0.4);
         }
         @keyframes pulse-dot {
             0%,100% { opacity:1; transform:scale(1); }
             50% { opacity:0.3; transform:scale(0.7); }
+        }
+        .top-menu .right-info .header-time {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        .top-menu .right-info .version-badge {
+            font-size: 11px;
+            color: var(--version-color);
+            background: var(--bg-card);
+            padding: 2px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            font-weight: 500;
+            letter-spacing: 0.2px;
         }
 
         /* ----- контент главной ----- */
@@ -98,7 +389,7 @@
         .main-content h1 {
             font-size: 56px;
             font-weight: 800;
-            background: linear-gradient(135deg, #f7e05e, #f5b041, #e67e22);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -107,7 +398,7 @@
         }
         .main-content .subhead {
             font-size: 18px;
-            color: #8a9bb5;
+            color: var(--text-muted);
             max-width: 600px;
             line-height: 1.6;
             margin-bottom: 40px;
@@ -120,9 +411,9 @@
             width: 100%;
         }
         .main-content .card {
-            background: rgba(20, 28, 40, 0.7);
+            background: var(--bg-card);
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.06);
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 32px 28px;
             flex: 1 0 220px;
@@ -130,8 +421,8 @@
             min-height: 200px;
             transition: all 0.3s;
             text-decoration: none;
-            color: #e8edf5;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            color: var(--text-primary);
+            box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -139,8 +430,8 @@
         }
         .main-content .card:hover {
             transform: translateY(-6px);
-            border-color: #f5b041;
-            box-shadow: 0 12px 50px rgba(245,176,65,0.08);
+            border-color: var(--accent-gold);
+            box-shadow: 0 12px 50px var(--accent-glow);
         }
         .main-content .card .icon {
             font-size: 44px;
@@ -151,30 +442,31 @@
             font-size: 22px;
             font-weight: 600;
             margin-bottom: 6px;
-            color: #e8edf5;
+            color: var(--text-primary);
         }
         .main-content .card p {
             font-size: 14px;
-            color: #8a9bb5;
+            color: var(--text-muted);
             margin: 0;
             line-height: 1.5;
         }
 
-        /* ----- версия ----- */
+        /* ----- версия внизу ----- */
         .version {
             text-align: center;
             font-size: 12px;
-            color: #3a5a6a;
-            padding: 20px 0 10px;
-            border-top: 1px solid rgba(74, 142, 196, 0.05);
+            color: var(--version-color);
+            padding: 16px 0 8px;
+            border-top: 1px solid var(--border-color);
             margin-top: 20px;
             letter-spacing: 0.3px;
         }
 
         /* ----- адаптив ----- */
-        @media (max-width: 640px) {
-            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
+        @media (max-width: 820px) {
+            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap:8px; }
             .top-menu .nav-links { justify-content: center; }
+            .top-menu .right-info { justify-content: center; }
             .main-content { padding: 40px 16px 30px; }
             .main-content h1 { font-size: 36px; }
             .main-content .cards { flex-direction: column; align-items: center; }
@@ -190,17 +482,30 @@
 </head>
 <body>
 
-    <!-- ===== ВЕРХНЕЕ МЕНЮ (единое) ===== -->
+    <!-- ===== ВЕРХНЕЕ МЕНЮ (улучшенное) ===== -->
     <header class="top-menu">
-        <div class="logo">Zenith</div>
+        <div class="logo-block">
+            <div class="logo">Zenith</div>
+            <div class="logo-sub">Управление проектами</div>
+        </div>
         <nav class="nav-links">
-            <a href="index.html" class="active">Главная</a>
-            <a href="arion.html">Arion</a>
-            <a href="analysis.html">Аналитика</a>
+            <a href="index.html" class="active">
+                <span class="nav-icon">🏠</span> Главная
+            </a>
+            <a href="arion.html">
+                <span class="nav-icon">⛰️</span> Arion
+            </a>
+            <a href="analysis.html">
+                <span class="nav-icon">📊</span> Аналитика
+            </a>
         </nav>
         <div class="right-info">
-            <span class="dot"></span>
-            <span id="headerTime">—</span>
+            <div class="status-indicator">
+                <span class="dot"></span>
+                <span>Система работает</span>
+            </div>
+            <span class="header-time" id="headerTime">—</span>
+            <span class="version-badge">v1.2.3</span>
         </div>
     </header>
 
@@ -223,7 +528,7 @@
         </div>
 
         <!-- ===== ВЕРСИЯ ===== -->
-        <div class="version">v1.2.0</div>
+        <div class="version">v1.2.3</div>
     </main>
 
     <script>
@@ -241,13 +546,9 @@
         updateTime();
         setInterval(updateTime, 60000);
 
-        // ============================================================
-        //  VERSION CONTROL
-        // ============================================================
-        // Текущая версия: v1.2.0
-        // При каждом обновлении кода увеличиваем на 0.0.1
-        // Например, следующее обновление будет v1.2.1
-        // ============================================================
+        // Тема синхронизируется с localStorage (применяется на всех страницах)
+        const savedTheme = localStorage.getItem('arion-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
     </script>
 </body>
 </html>
