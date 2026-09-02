@@ -129,6 +129,102 @@
             height: 100% !important;
         }
 
+        /* ----- кнопки-статистики ----- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+        .stat-btn {
+            background: rgba(10, 22, 40, 0.6);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(74, 142, 196, 0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #b0c4de;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .stat-btn:hover {
+            border-color: #4a8ec4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(74,142,196,0.1);
+        }
+        .stat-btn .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* ----- модальное окно для статистики ----- */
+        .stat-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .stat-modal-overlay.active {
+            display: flex;
+        }
+        .stat-modal {
+            background: rgba(10,22,40,0.95);
+            border-radius: 24px;
+            padding: 30px 32px 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            border: 1px solid rgba(74,142,196,0.2);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+            animation: modal-in 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-modal .sm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .stat-modal .sm-header h2 {
+            font-size: 20px;
+            color: #b0d4f0;
+            font-weight: 500;
+        }
+        .stat-modal .sm-header .sm-close {
+            background: none;
+            border: none;
+            color: #6a8a9e;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .stat-modal .sm-header .sm-close:hover {
+            color: #b0d4f0;
+        }
+        .stat-modal .sm-chart-wrap {
+            flex: 1;
+            min-height: 400px;
+            position: relative;
+        }
+        .stat-modal .sm-chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        @keyframes modal-in {
+            from { opacity:0; transform:scale(0.95) translateY(20px); }
+            to { opacity:1; transform:scale(1) translateY(0); }
+        }
+
         /* ----- прогнозы (очень подробные) ----- */
         .forecast-block {
             background: rgba(10, 22, 40, 0.6);
@@ -226,9 +322,13 @@
             .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap:8px; }
             .top-menu .nav-links { justify-content: center; }
             .analysis-content { padding: 20px 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
             .forecast-grid { grid-template-columns: 1fr; }
+            .stat-modal { padding: 20px; max-width: 100%; }
+            .stat-modal .sm-chart-wrap { min-height: 300px; }
         }
         @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
             .analysis-content h1 { font-size: 26px; }
         }
     </style>
@@ -255,11 +355,47 @@
         <h1>Аналитика и прогнозы</h1>
         <div class="subhead">Закулисье, август–сентябрь 2026 — данные, тренды, прогнозы</div>
 
-        <!-- ===== НЕФТЬ (с подписями значений, первая точка видна) ===== -->
+        <!-- ===== НЕФТЬ (с подписями значений) ===== -->
         <div class="oil-card">
             <h3>🛢️ Цена нефти (USD/барр.) — апрель–август</h3>
             <div class="chart-wrapper">
                 <canvas id="oilChart"></canvas>
+            </div>
+        </div>
+
+        <!-- ===== СТАТИСТИКА (кнопки) ===== -->
+        <div class="stats-grid">
+            <div class="stat-btn" data-stat="bacteria">
+                <span class="icon">🦠</span>
+                Бактерии
+            </div>
+            <div class="stat-btn" data-stat="tusov">
+                <span class="icon">🎉</span>
+                Тусовщики
+            </div>
+            <div class="stat-btn" data-stat="big">
+                <span class="icon">🏛️</span>
+                10 млрд+
+            </div>
+            <div class="stat-btn" data-stat="sport_gon">
+                <span class="icon">⚡</span>
+                Спортики + Гончие
+            </div>
+            <div class="stat-btn" data-stat="mnogo_smert">
+                <span class="icon">💀</span>
+                Многорукие + Смертомоли
+            </div>
+            <div class="stat-btn" data-stat="small">
+                <span class="icon">🐾</span>
+                Малые (≤210 тыс.)
+            </div>
+            <div class="stat-btn" data-stat="losses">
+                <span class="icon">⚔️</span>
+                Потери (Смертомоли vs Спортики)
+            </div>
+            <div class="stat-btn" data-stat="all_demo">
+                <span class="icon">📊</span>
+                Вся демография (сводный)
             </div>
         </div>
 
@@ -275,6 +411,19 @@
         <div class="version">v1.2.1</div>
 
     </main>
+
+    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ СТАТИСТИКИ ===== -->
+    <div class="stat-modal-overlay" id="statModal">
+        <div class="stat-modal">
+            <div class="sm-header">
+                <h2 id="statModalTitle">Статистика</h2>
+                <button class="sm-close" id="statModalClose">✕</button>
+            </div>
+            <div class="sm-chart-wrap">
+                <canvas id="statModalCanvas"></canvas>
+            </div>
+        </div>
+    </div>
 
     <script>
         // ============================================================
@@ -294,7 +443,85 @@
             { month: 'август.26', value: 788 }
         ];
 
-        // Прогнозы (очень подробные, без упоминания Уровней)
+        // Демография по месяцам
+        const demoData = {
+            'май': {
+                'Бактерии': 65309890415,
+                'Тусовщики': 59213000703,
+                'Зануды': 52945126745,
+                'Отстранённые': 1256945387,
+                'Кожекрады': 599278013,
+                'Спортики': 210930452,
+                'Безликие': 63241978,
+                'Серости': 34922603,
+                'Гончие': 9177356,
+                'Фоги': 98266,
+                'Многоруки': 26105,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            'июнь': {
+                'Бактерии': 138073643885,
+                'Тусовщики': 109249533719,
+                'Зануды': 87264309050,
+                'Отстранённые': 53856734291,
+                'Кожекрады': 37411075986,
+                'Безликие': 32923000674,
+                'Спортики': 4914492740,
+                'Серости': 4602905988,
+                'Гончие': 795636205,
+                'Многоруки': 997347,
+                'Фоги': 128304,
+                'Треножники': 653,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            'июль': {
+                'Бактерии': 62137940003860,
+                'Тусовщики': 306745891363,
+                'Зануды': 101050299106,
+                'Отстранённые': 78295000406,
+                'Безликие': 58123985316,
+                'Кожекрады': 52112304098,
+                'Серости': 21946876244,
+                'Спортики': 4914817980,
+                'Гончие': 1116924950,
+                'Многоруки': 7391610,
+                'Смертомоли': 850306,
+                'Фоги': 117268,
+                'Шахтёры': 9856,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            'август': {
+                'Бактерии': 296850993000123,
+                'Тусовщики': 524639645714,
+                'Зануды': 145763009862,
+                'Безликие': 111024549113,
+                'Отстранённые': 81893999246,
+                'Кожекрады': 67089633104,
+                'Серости': 45122903945,
+                'Спортики': 4870200468,
+                'Гончие': 2408913776,
+                'Многоруки': 81942686,
+                'Смертомоли': 81251739,
+                'Душери': 180229,
+                'Фоги': 139486,
+                'Шахтёры': 89228,
+                'Транспортёры': 18104,
+                'Джерри': 1,
+                'Объект 226': 1
+            }
+        };
+
+        // Потери в последней войне (Смертомольно-Спортиковая)
+        const lossesData = {
+            labels: ['22.08', '23.08', '24.08', '25.08', '26.08', '27.08', '28.08', '29.08', '30.08', '31.08', '01.09', '02.09'],
+            смертомоли: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 759346, 685403],
+            спортики: [0, 0, 466, 0, 0, 0, 0, 0, 0, 0, 10203668, 16998753]
+        };
+
+        // Прогнозы (очень подробные)
         const forecasts = [{
             title: '🛢️ Цена нефти',
             summary: 'Консолидация в диапазоне $780–820, возможен рост при перемирии',
@@ -322,7 +549,7 @@
         }, {
             title: '🌌 Угроза Эндера',
             summary: 'Временное затишье, но портал не закрыт полностью — требуется добыча 11 Ок Эндера',
-            detail: 'Вторжение 18 августа, когда 48 млн Эндер-Существ уничтожили город Мурино, стало шоком для всего Закулисья. Благодаря возвращению Объекта 226 и его героическим действиям (создание гигантских грибов, уничтоживших тысячи врагов), портал был временно заблокирован. Однако, как выяснилось, это лишь отсрочка. Объект 226 сообщил, что для полного закрытия портала необходимо добыть ещё 11 Ок Эндера — артефактов, разбросанных по разным территориям. Процесс их поиска и извлечения займёт не менее месяца. В сентябре ожидается временное затишье, но любое промедление или ошибка могут привести к повторному вторжению. Учёные Зануд и Отстранённых работают над созданием защитного периметра, но ресурсов катастрофически не хватает. Риск повторного вторжения оценивается в 20% в сентябре, а к октябрю он может вырасти до 40%, если не удастся добыть артефакты.',
+            detail: 'Вторжение 18 августа, когда 48 млн Эндер-Существ уничтожили город Мурино, стало шоком для всего Закулисья. Благодаря возвращению Объекта 226 и его героическим действиям (создание гигантских грибов, уничтоживших тысячи врагов), портал был временно заблокирован. Однако, как выяснилось, это лишь отсрочка. Объект 226 сообщил, что для полного закрытия портала необходимо добыть ещё 11 Ок Эндера — артефактов, разбросанных по разным локациям. Процесс их поиска и извлечения займёт не менее месяца. В сентябре ожидается временное затишье, но любое промедление или ошибка могут привести к повторному вторжению. Учёные Зануд и Отстранённых работают над созданием защитного периметра, но ресурсов катастрофически не хватает. Риск повторного вторжения оценивается в 20% в сентябре, а к октябрю он может вырасти до 40%, если не удастся добыть артефакты.',
             scenarios: [
                 { title: 'Базовый (70%)',
                 desc: 'Никаких новых вторжений в сентябре. Объект 226 помогает добыть 3–4 Ок Эндера. Укрепляется оборона вокруг портала. «Орден Доблести» выделяет дополнительные ресурсы на исследование. Ситуация остаётся под контролем.' },
@@ -334,7 +561,7 @@
         }, {
             title: '📉 Экономика',
             summary: 'Дефицит руды и ресурсов, рост цен на 2–3% в месяц',
-            detail: 'Уход Шахтёров из «Ордена Доблести» 29 августа создал серьёзный дефицит руды, ископаемых и стратегических ресурсов. Шахтёры, контролировавшие крупные подземные шахты, обеспечивали до 40% потребностей в металлах и редких элементах. Их уход привёл к разрыву цепочек поставок, что особенно ударило по оборонной промышленности и строительству. Безликие ввели пошлины на импорт, но это лишь усугубило ситуацию. Инфляция ускорилась: цены на сталь выросли на 15% за последнюю неделю августа, на топливо — на 8%. Тусовщики, несмотря на снятие санкций, не могут восполнить дефицит, так как их экономика разрушена войной. Серости предлагают посредничество, но переговоры зашли в тупик. Экономисты прогнозируют, что в сентябре инфляция составит 2–3% в месяц, а при отсутствии компромисса — до 5%. Особенно критичной ситуация станет для строительства Arion, которому требуются огромные объёмы металла и энергоносителей.',
+            detail: 'Уход Шахтёров из «Ордена Доблести» 29 августа создал серьёзный дефицит руды, ископаемых и стратегических ресурсов. Шахтёры, контролировавшие подземные шахты, обеспечивали до 40% потребностей в металлах и редких элементах. Их уход привёл к разрыву цепочек поставок, что особенно ударило по оборонной промышленности и строительству. Безликие ввели пошлины на импорт, но это лишь усугубило ситуацию. Инфляция ускорилась: цены на сталь выросли на 15% за последнюю неделю августа, на топливо — на 8%. Тусовщики, несмотря на снятие санкций, не могут восполнить дефицит, так как их экономика разрушена войной. Серости предлагают посредничество, но переговоры зашли в тупик. Экономисты прогнозируют, что в сентябре инфляция составит 2–3% в месяц, а при отсутствии компромисса — до 5%. Особенно критичной ситуация станет для строительства Arion, которому требуются огромные объёмы металла и энергоносителей.',
             scenarios: [
                 { title: 'Базовый (65%)',
                 desc: 'Постепенное восстановление торговли между оставшимися членами «Ордена». Цены на ресурсы умеренно растут (2–3% в месяц). Шахтёры начинают ограниченные поставки после первых переговоров. Инфляция остаётся контролируемой.' },
@@ -346,7 +573,16 @@
         }];
 
         // ============================================================
-        //  ГРАФИК НЕФТИ (с подписями значений, первая точка видна)
+        //  HELPERS
+        // ============================================================
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
+        }
+
+        // ============================================================
+        //  ГРАФИК НЕФТИ (с подписями значений + фикс обрезки первой точки)
         // ============================================================
 
         function renderOilChart() {
@@ -374,15 +610,6 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    // Добавляем отступы, чтобы первая точка (0) была видна
-                    layout: {
-                        padding: {
-                            top: 20,
-                            bottom: 20,
-                            left: 10,
-                            right: 10
-                        }
-                    },
                     plugins: {
                         legend: { display: false },
                         tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' USD/барр.' } },
@@ -409,13 +636,17 @@
                     },
                     scales: {
                         y: {
-                            min: -30, // небольшой отрицательный отступ, чтобы точка 0 не обрезалась
+                            min: 0,
+                            max: 1000,
                             grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: { color: '#6a8a9e', stepSize: 200 }
+                            ticks: { color: '#6a8a9e', stepSize: 200 },
+                            // добавляем небольшой offset, чтобы первая точка не обрезалась
+                            offset: true
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: '#6a8a9e' }
+                            ticks: { color: '#6a8a9e' },
+                            offset: true
                         }
                     }
                 }
@@ -423,7 +654,279 @@
         }
 
         // ============================================================
-        //  ПРОГНОЗЫ
+        //  ДЕМОГРАФИЯ (модальные окна)
+        // ============================================================
+
+        function renderDemoModal(canvasId, races, title, tickFormat) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = ['май', 'июнь', 'июль', 'август'];
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
+                '#2c3e50'
+            ];
+
+            const datasets = races.map((race, i) => {
+                const data = labels.map(l => demoData[l]?.[race] || null);
+                return {
+                    label: race,
+                    data: data,
+                    borderColor: colorPalette[i % colorPalette.length],
+                    backgroundColor: 'rgba(74,142,196,0.05)',
+                    fill: false,
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: colorPalette[i % colorPalette.length],
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    borderWidth: 2.5,
+                    spanGaps: true,
+                };
+            }).filter(ds => ds.data.some(v => v !== null && v > 0));
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() || 'нет данных';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e', font: { size: 12 } } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: {
+                                color: '#6a8a9e',
+                                font: { size: 12 },
+                                callback: function(value) {
+                                    if (tickFormat === 'billion') {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        return value;
+                                    } else if (tickFormat === 'million') {
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    } else {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderLossesModal(canvasId) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = lossesData.labels;
+            const смертомоли = lossesData.смертомоли;
+            const спортики = lossesData.спортики;
+
+            return new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { label: 'Смертомоли', data: смертомоли, backgroundColor: '#c0392b', borderRadius: 3 },
+                        { label: 'Спортики', data: спортики, backgroundColor: '#2980b9', borderRadius: 3 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: {
+                                color: '#6a8a9e',
+                                callback: function(value) {
+                                    if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                    if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAllDemoModal(canvasId) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = ['май', 'июнь', 'июль', 'август'];
+            const allRaces = Object.keys(demoData['август']).filter(r => r !== 'Джерри' && r !== 'Объект 226');
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
+                '#2c3e50', '#16a085', '#27ae60', '#95a5a6', '#7f8c8d', '#8e44ad', '#d35400'
+            ];
+
+            const datasets = allRaces.map((race, i) => {
+                const data = labels.map(l => demoData[l]?.[race] || null);
+                return {
+                    label: race,
+                    data: data,
+                    borderColor: colorPalette[i % colorPalette.length],
+                    backgroundColor: 'rgba(74,142,196,0.05)',
+                    fill: false,
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: colorPalette[i % colorPalette.length],
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                    spanGaps: true,
+                };
+            }).filter(ds => ds.data.some(v => v !== null && v > 0));
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 6 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() || 'нет данных';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: {
+                                color: '#6a8a9e',
+                                callback: function(value) {
+                                    if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                    if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                    if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        //  СТАТИСТИКА (кнопки → модальные окна)
+        // ============================================================
+
+        const statConfigs = {
+            bacteria: {
+                title: 'Бактерии',
+                races: ['Бактерии'],
+                tickFormat: 'billion'
+            },
+            tusov: {
+                title: 'Тусовщики',
+                races: ['Тусовщики'],
+                tickFormat: 'billion'
+            },
+            big: {
+                title: 'Расы ≥ 10 млрд',
+                races: ['Зануды', 'Отстранённые', 'Кожекрады', 'Безликие', 'Серости'],
+                tickFormat: 'billion'
+            },
+            sport_gon: {
+                title: 'Спортики + Гончие',
+                races: ['Спортики', 'Гончие'],
+                tickFormat: 'million'
+            },
+            mnogo_smert: {
+                title: 'Многорукие + Смертомоли',
+                races: ['Многоруки', 'Смертомоли'],
+                tickFormat: 'million'
+            },
+            small: {
+                title: 'Малые расы (≤ 210 тыс.)',
+                races: ['Фоги', 'Шахтёры', 'Транспортёры', 'Душери', 'Джерри', 'Объект 226', 'Треножники', 'Пуги', 'Коре'],
+                tickFormat: 'none'
+            },
+            losses: {
+                title: 'Потери в войне Смертомолей vs Спортиков',
+                type: 'losses'
+            },
+            all_demo: {
+                title: 'Сводная демография (все расы)',
+                type: 'all_demo'
+            }
+        };
+
+        let modalChart = null;
+
+        function openStatModal(key) {
+            const config = statConfigs[key];
+            if (!config) return;
+
+            const overlay = document.getElementById('statModal');
+            const title = document.getElementById('statModalTitle');
+            const canvas = document.getElementById('statModalCanvas');
+
+            title.textContent = config.title;
+
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+
+            if (config.type === 'losses') {
+                modalChart = renderLossesModal('statModalCanvas');
+            } else if (config.type === 'all_demo') {
+                modalChart = renderAllDemoModal('statModalCanvas');
+            } else {
+                modalChart = renderDemoModal('statModalCanvas', config.races, config.title, config.tickFormat);
+            }
+
+            overlay.classList.add('active');
+        }
+
+        function closeStatModal() {
+            document.getElementById('statModal').classList.remove('active');
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+        }
+
+        // ============================================================
+        //  ПРОГНОЗЫ (очень подробные)
         // ============================================================
 
         function renderForecasts() {
@@ -452,13 +955,11 @@
 
                 const detail = document.createElement('div');
                 detail.className = 'f-detail';
-                // Основной текст
                 const mainDesc = document.createElement('div');
                 mainDesc.style.marginBottom = '12px';
                 mainDesc.textContent = f.detail;
                 detail.appendChild(mainDesc);
 
-                // Сценарии
                 f.scenarios.forEach(s => {
                     const sc = document.createElement('div');
                     sc.className = 'scenario';
@@ -479,7 +980,6 @@
         // ============================================================
 
         function init() {
-            // Время в шапке
             function updateHeaderTime() {
                 const now = new Date();
                 document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
@@ -493,10 +993,24 @@
             updateHeaderTime();
             setInterval(updateHeaderTime, 60000);
 
-            // Нефть
             renderOilChart();
 
-            // Прогнозы
+            // Кнопки статистики
+            document.querySelectorAll('.stat-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.dataset.stat;
+                    openStatModal(key);
+                });
+            });
+
+            document.getElementById('statModalClose').addEventListener('click', closeStatModal);
+            document.getElementById('statModal').addEventListener('click', function(e) {
+                if (e.target === this) closeStatModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeStatModal();
+            });
+
             renderForecasts();
         }
 
