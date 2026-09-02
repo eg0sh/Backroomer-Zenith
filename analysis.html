@@ -18,7 +18,6 @@
             flex-direction: column;
             align-items: center;
         }
-        /* ----- верхнее меню ----- */
         .top-menu {
             width: 100%;
             background: rgba(10, 18, 32, 0.85);
@@ -33,7 +32,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
         }
         .top-menu .logo {
             font-size: 24px;
@@ -43,7 +42,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
-            text-shadow: 0 0 30px rgba(74, 106, 158, 0.3);
+            text-shadow: 0 0 30px rgba(74,106,158,0.3);
         }
         .top-menu .nav-links {
             display: flex;
@@ -78,7 +77,7 @@
             border-radius: 50%;
             background: #4a8ec4;
             animation: pulse-dot 2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(74, 142, 196, 0.4);
+            box-shadow: 0 0 12px rgba(74,142,196,0.4);
         }
         @keyframes pulse-dot {
             0%,100% { opacity:1; transform:scale(1); }
@@ -104,127 +103,75 @@
             margin-bottom: 28px;
         }
 
-        /* ----- карточки графиков ----- */
-        .chart-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-        .chart-card {
+        /* ----- карточка нефти ----- */
+        .oil-card {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
             border-radius: 20px;
             border: 1px solid rgba(74, 142, 196, 0.1);
             padding: 18px 20px 16px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-            transition: border-color 0.3s;
-            cursor: pointer;
-            position: relative;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            margin-bottom: 28px;
         }
-        .chart-card:hover {
-            border-color: rgba(74, 142, 196, 0.3);
-        }
-        .chart-card h3 {
+        .oil-card h3 {
             font-size: 15px;
             font-weight: 500;
             color: #8ab4d4;
             margin-bottom: 10px;
-            letter-spacing: 0.2px;
         }
-        .chart-card .chart-wrapper {
+        .oil-card .chart-wrapper {
             position: relative;
             width: 100%;
-            height: 220px;
+            height: 200px;
         }
-        .chart-card .chart-wrapper canvas {
+        .oil-card .chart-wrapper canvas {
             width: 100% !important;
             height: 100% !important;
         }
-        .chart-card .expand-hint {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 12px;
-            color: #4a6a8a;
-            opacity: 0.5;
-            transition: opacity 0.2s;
-            pointer-events: none;
-        }
-        .chart-card:hover .expand-hint {
-            opacity: 1;
-        }
-        .full-width {
-            grid-column: 1 / -1;
-        }
 
-        /* ----- полноэкранный режим ----- */
-        .fullscreen-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.92);
-            backdrop-filter: blur(10px);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
+        /* ----- кнопки-статистики ----- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 28px;
         }
-        .fullscreen-overlay.active {
-            display: flex;
-        }
-        .fullscreen-overlay .fs-content {
-            width: 100%;
-            max-width: 1200px;
-            max-height: 85vh;
-            background: rgba(10, 22, 40, 0.8);
-            border-radius: 24px;
-            padding: 30px 32px 24px;
-            border: 1px solid rgba(74, 142, 196, 0.2);
-            position: relative;
-        }
-        .fullscreen-overlay .fs-content .fs-close {
-            position: absolute;
-            top: 12px;
-            right: 20px;
-            background: none;
-            border: none;
-            color: #8ab4d4;
-            font-size: 28px;
-            cursor: pointer;
-            transition: color 0.2s;
-            z-index: 10;
-        }
-        .fullscreen-overlay .fs-content .fs-close:hover {
-            color: #b0d4f0;
-        }
-        .fullscreen-overlay .fs-content h3 {
-            font-size: 18px;
+        .stat-btn {
+            background: rgba(10, 22, 40, 0.6);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(74, 142, 196, 0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: #b0c4de;
+            font-size: 15px;
             font-weight: 500;
-            color: #b0d4f0;
-            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
         }
-        .fullscreen-overlay .fs-content .fs-chart-wrap {
-            width: 100%;
-            height: 65vh;
-            position: relative;
+        .stat-btn:hover {
+            border-color: #4a8ec4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(74,142,196,0.1);
         }
-        .fullscreen-overlay .fs-content .fs-chart-wrap canvas {
-            width: 100% !important;
-            height: 100% !important;
+        .stat-btn .icon {
+            font-size: 28px;
+            display: block;
+            margin-bottom: 6px;
         }
 
-        /* ----- таймлайн (горизонтальная линия с переносом) ----- */
-        .timeline-section {
+        /* ----- таймлайн (как в Арионе) ----- */
+        .timeline-wrapper {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
             border-radius: 20px;
             border: 1px solid rgba(74, 142, 196, 0.1);
-            padding: 18px 22px 22px;
+            padding: 20px 22px 22px;
             margin-bottom: 28px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
         }
-        .timeline-section .tl-header {
+        .timeline-wrapper .tl-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -232,23 +179,23 @@
             gap: 12px;
             margin-bottom: 16px;
         }
-        .timeline-section .tl-header h3 {
+        .timeline-wrapper .tl-header h3 {
             font-size: 17px;
             font-weight: 500;
             color: #b0d4f0;
         }
-        .timeline-section .tl-header .tl-filter {
+        .timeline-wrapper .tl-header .tl-filter {
             display: flex;
             gap: 8px;
             align-items: center;
         }
-        .timeline-section .tl-header .tl-filter label {
+        .timeline-wrapper .tl-header .tl-filter label {
             font-size: 13px;
             color: #6a8a9e;
         }
-        .timeline-section .tl-header .tl-filter select {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(74, 142, 196, 0.2);
+        .timeline-wrapper .tl-header .tl-filter select {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(74,142,196,0.2);
             color: #b0c4de;
             padding: 4px 12px;
             border-radius: 30px;
@@ -256,122 +203,115 @@
             outline: none;
             cursor: pointer;
         }
-        .timeline-section .tl-header .tl-filter select:hover {
+        .timeline-wrapper .tl-header .tl-filter select:hover {
             border-color: #4a8ec4;
         }
 
         .timeline-track {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px 16px;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 16px 0 8px;
             position: relative;
+            height: 70px;
+            width: 100%;
+            padding: 0 2%;
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            gap: 0;
         }
-        .timeline-track::before {
-            content: '';
+        .timeline-track .tl-line {
             position: absolute;
-            top: 28px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(74, 142, 196, 0.15);
-            z-index: 0;
+            top: 50%;
+            left: 2%;
+            right: 2%;
+            height: 3px;
+            background: #2a3a5a;
+            border-radius: 4px;
+            transform: translateY(-50%);
+            z-index: 1;
         }
-        .timeline-track .tl-item {
+        .timeline-track .tl-line .tl-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #4a8ec4, #6a8ec4);
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+        .timeline-track .tl-dot-wrap {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-            min-width: 60px;
-            transition: transform 0.2s;
             flex-shrink: 0;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 0 8px;
         }
-        .timeline-track .tl-item:hover {
+        .timeline-track .tl-dot-wrap:hover {
             transform: translateY(-4px);
         }
-        .timeline-track .tl-item .tl-dot {
-            width: 14px;
-            height: 14px;
+        .timeline-track .tl-dot-wrap .tl-dot {
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: #4a8ec4;
-            border: 2px solid #8ab4d4;
-            box-shadow: 0 0 16px rgba(74, 142, 196, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: 0 0 16px rgba(0,0,0,0.4);
             transition: all 0.2s;
-            position: relative;
-            z-index: 2;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .timeline-track .tl-item .tl-dot.important {
+        .timeline-track .tl-dot-wrap .tl-dot.important {
             background: #f5b041;
             border-color: #f5b041;
-            box-shadow: 0 0 24px rgba(245, 176, 65, 0.4);
+            box-shadow: 0 0 24px rgba(245,176,65,0.4);
         }
-        .timeline-track .tl-item .tl-dot.danger {
+        .timeline-track .tl-dot-wrap .tl-dot.danger {
             background: #e74c3c;
             border-color: #e74c3c;
-            box-shadow: 0 0 24px rgba(231, 76, 60, 0.4);
+            box-shadow: 0 0 24px rgba(231,76,60,0.4);
         }
-        .timeline-track .tl-item .tl-date {
-            font-size: 11px;
-            color: #8ab4d4;
-            font-weight: 500;
+        .timeline-track .tl-dot-wrap .tl-dot.default {
+            background: #4a6a8a;
+            border-color: #4a6a8a;
         }
-        .timeline-track .tl-item .tl-label {
+        .timeline-track .tl-dot-wrap .tl-label {
             font-size: 10px;
             color: #6a8a9e;
             text-align: center;
-            max-width: 80px;
+            max-width: 60px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        .timeline-track .tl-dot-wrap .tl-date {
+            font-size: 10px;
+            color: #8ab4d4;
+            font-weight: 500;
+        }
         .timeline-track .tl-now {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
-            z-index: 1;
             flex-shrink: 0;
-            margin-left: 4px;
+            margin-left: 8px;
         }
         .timeline-track .tl-now .tl-dot {
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             border-radius: 50%;
             background: #4cd9a0;
             border: 2px solid #4cd9a0;
-            box-shadow: 0 0 30px rgba(76, 217, 160, 0.5);
+            box-shadow: 0 0 30px rgba(76,217,160,0.5);
             animation: pulse-dot 1.6s ease-in-out infinite;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
-        .timeline-track .tl-now .tl-date {
-            font-size: 11px;
+        .timeline-track .tl-now .tl-label {
+            font-size: 10px;
             color: #4cd9a0;
             font-weight: 600;
         }
-        /* Линия между точками (псевдоэлемент) */
-        .timeline-track .tl-item::after {
-            content: '';
-            position: absolute;
-            top: 28px;
-            left: calc(100% + 4px);
-            width: calc(100% + 8px);
-            height: 2px;
-            background: rgba(74, 142, 196, 0.15);
-            z-index: 0;
-        }
-        .timeline-track .tl-item:last-of-type::after {
-            display: none;
-        }
-        .timeline-track .tl-item:last-of-type {
-            margin-right: 0;
-        }
 
-        /* ----- прогнозы с раскрытием ----- */
+        /* ----- прогнозы ----- */
         .forecast-block {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
@@ -379,7 +319,7 @@
             border: 1px solid rgba(74, 142, 196, 0.1);
             padding: 18px 22px 20px;
             margin-bottom: 28px;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
         }
         .forecast-block h3 {
             font-size: 17px;
@@ -393,20 +333,19 @@
             gap: 16px;
         }
         .forecast-item {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0,0,0,0.2);
             border-radius: 12px;
             padding: 12px 16px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .forecast-item:hover {
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0,0,0,0.35);
         }
         .forecast-item .f-title {
             font-size: 14px;
             font-weight: 600;
             color: #8ab4d4;
-            margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -419,31 +358,103 @@
         .forecast-item .f-title .f-toggle.open {
             transform: rotate(180deg);
         }
-        .forecast-item .f-desc {
+        .forecast-item .f-summary {
             font-size: 13px;
-            color: #b0c4de;
-            line-height: 1.5;
+            color: #8ab4d4;
+            margin: 2px 0 4px;
+        }
+        .forecast-item .f-detail {
             display: none;
             margin-top: 8px;
+            font-size: 13px;
+            color: #b0c4de;
+            line-height: 1.6;
         }
-        .forecast-item .f-desc.open {
+        .forecast-item .f-detail.open {
             display: block;
         }
-        .forecast-item .f-desc .scenario {
+        .forecast-item .f-detail .scenario {
             margin-top: 6px;
-            padding: 6px 10px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 6px;
-            font-size: 13px;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.25);
+            border-radius: 8px;
             border-left: 3px solid #4a8ec4;
         }
-        .forecast-item .f-desc .scenario .s-title {
+        .forecast-item .f-detail .scenario .s-title {
             font-weight: 500;
             color: #b0d4f0;
         }
-        .forecast-item .f-desc .scenario .s-prob {
+        .forecast-item .f-detail .scenario .s-prob {
             color: #f5b041;
             font-weight: 500;
+        }
+        .forecast-item .f-detail .scenario .s-desc {
+            margin-top: 2px;
+            color: #8ab4d4;
+        }
+
+        /* ----- модальное окно для статистики ----- */
+        .stat-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .stat-modal-overlay.active {
+            display: flex;
+        }
+        .stat-modal {
+            background: rgba(10,22,40,0.95);
+            border-radius: 24px;
+            padding: 30px 32px 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 85vh;
+            border: 1px solid rgba(74,142,196,0.2);
+            box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+            animation: modal-in 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .stat-modal .sm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .stat-modal .sm-header h2 {
+            font-size: 20px;
+            color: #b0d4f0;
+            font-weight: 500;
+        }
+        .stat-modal .sm-header .sm-close {
+            background: none;
+            border: none;
+            color: #6a8a9e;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .stat-modal .sm-header .sm-close:hover {
+            color: #b0d4f0;
+        }
+        .stat-modal .sm-chart-wrap {
+            flex: 1;
+            min-height: 400px;
+            position: relative;
+        }
+        .stat-modal .sm-chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        @keyframes modal-in {
+            from { opacity:0; transform:scale(0.95) translateY(20px); }
+            to { opacity:1; transform:scale(1) translateY(0); }
         }
 
         /* ----- версия ----- */
@@ -452,54 +463,28 @@
             font-size: 12px;
             color: #3a5a6a;
             padding: 16px 0 8px;
-            border-top: 1px solid rgba(74, 142, 196, 0.05);
+            border-top: 1px solid rgba(74,142,196,0.05);
             margin-top: 12px;
             letter-spacing: 0.3px;
         }
 
         /* ----- адаптив ----- */
         @media (max-width: 820px) {
-            .top-menu {
-                padding: 10px 16px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .top-menu .nav-links {
-                justify-content: center;
-            }
-            .analysis-content {
-                padding: 20px 12px;
-            }
-            .chart-grid {
-                grid-template-columns: 1fr;
-            }
-            .forecast-grid {
-                grid-template-columns: 1fr;
-            }
-            .fullscreen-overlay .fs-content {
-                padding: 16px;
-                max-height: 90vh;
-            }
-            .fullscreen-overlay .fs-content .fs-chart-wrap {
-                height: 50vh;
-            }
-            .timeline-track .tl-item .tl-label {
-                max-width: 60px;
-                font-size: 9px;
-            }
+            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap:8px; }
+            .top-menu .nav-links { justify-content: center; }
+            .analysis-content { padding: 20px 12px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .forecast-grid { grid-template-columns: 1fr; }
+            .stat-modal { padding: 20px; max-width: 100%; }
+            .stat-modal .sm-chart-wrap { min-height: 300px; }
         }
         @media (max-width: 480px) {
-            .analysis-content h1 {
-                font-size: 26px;
-            }
-            .timeline-section .tl-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .fullscreen-overlay .fs-content .fs-chart-wrap {
-                height: 40vh;
-            }
+            .stats-grid { grid-template-columns: 1fr; }
+            .analysis-content h1 { font-size: 26px; }
+            .timeline-track { padding: 0; }
+            .timeline-track .tl-dot-wrap { margin: 0 4px; }
+            .timeline-track .tl-dot-wrap .tl-label { max-width: 40px; font-size: 8px; }
+            .timeline-track .tl-dot-wrap .tl-date { font-size: 8px; }
         }
     </style>
 </head>
@@ -519,84 +504,58 @@
         </div>
     </header>
 
-    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
+    <!-- ===== КОНТЕНТ ===== -->
     <main class="analysis-content">
 
         <h1>Аналитика и прогнозы</h1>
         <div class="subhead">Закулисье, август–сентябрь 2026 — данные, тренды, прогнозы</div>
 
-        <!-- ===== БЛОК: ЦЕНА НЕФТИ (без прогноза) ===== -->
-        <div class="chart-card" id="oilCard" style="margin-bottom:28px;">
+        <!-- ===== НЕФТЬ ===== -->
+        <div class="oil-card">
             <h3>🛢️ Цена нефти (USD/барр.) — апрель–август</h3>
-            <div class="chart-wrapper" style="height:200px;">
+            <div class="chart-wrapper">
                 <canvas id="oilChart"></canvas>
             </div>
-            <div class="expand-hint">⛶ увеличить</div>
         </div>
 
-        <!-- ===== ГРАФИКИ ===== -->
-        <div class="chart-grid">
-
-            <!-- 1. Потери — малые войны (до 10k) -->
-            <div class="chart-card" id="lossesSmallCard">
-                <h3>📊 Потери в малых войнах (до 10 тыс.)</h3>
-                <div class="chart-wrapper"><canvas id="lossesSmallChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+        <!-- ===== СТАТИСТИКА (кнопки) ===== -->
+        <div class="stats-grid">
+            <div class="stat-btn" data-stat="bacteria">
+                <span class="icon">🦠</span>
+                Бактерии
             </div>
-
-            <!-- 2. Потери — средние войны (10k – 1M) -->
-            <div class="chart-card" id="lossesMediumCard">
-                <h3>📊 Потери в средних войнах (10 тыс. – 1 млн)</h3>
-                <div class="chart-wrapper"><canvas id="lossesMediumChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="tusov">
+                <span class="icon">🎉</span>
+                Тусовщики
             </div>
-
-            <!-- 3. Потери — крупные войны (> 1M) -->
-            <div class="chart-card" id="lossesLargeCard">
-                <h3>📊 Потери в крупных войнах (более 1 млн)</h3>
-                <div class="chart-wrapper"><canvas id="lossesLargeChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="big">
+                <span class="icon">🏛️</span>
+                10 млрд+
             </div>
-
-            <!-- 4. Демография: малые расы (без Джерри) -->
-            <div class="chart-card" id="demoSmallCard">
-                <h3>👥 Демография — малые расы (до 100 млн)</h3>
-                <div class="chart-wrapper"><canvas id="demoSmallChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="sport_gon">
+                <span class="icon">⚡</span>
+                Спортики + Гончие
             </div>
-
-            <!-- 5. Демография: средние расы -->
-            <div class="chart-card" id="demoMidCard">
-                <h3>👥 Демография — средние расы (100 млн – 1 млрд)</h3>
-                <div class="chart-wrapper"><canvas id="demoMidChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="mnogo_smert">
+                <span class="icon">💀</span>
+                Многорукие + Смертомоли
             </div>
-
-            <!-- 6. Демография: крупные расы -->
-            <div class="chart-card" id="demoLargeCard">
-                <h3>👥 Демография — крупные расы (1 млрд+)</h3>
-                <div class="chart-wrapper"><canvas id="demoLargeChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="small">
+                <span class="icon">🐾</span>
+                Малые (≤210 тыс.)
             </div>
-
-            <!-- 7. Демография: Бактерии -->
-            <div class="chart-card" id="demoBacteriaCard">
-                <h3>🦠 Демография — Бактерии (отдельный масштаб)</h3>
-                <div class="chart-wrapper"><canvas id="demoBacteriaChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="losses">
+                <span class="icon">⚔️</span>
+                Потери (Смертомоли vs Спортики)
             </div>
-
-            <!-- 8. Демография: экзотические расы (Джерри, Объект 226, Треножники, Пуги, Коре, Душери, Транспортёры, Шахтёры) -->
-            <div class="chart-card" id="demoExoticCard">
-                <h3>👾 Экзотические расы (Джерри, Объект 226, Треножники, Пуги, Коре, Душери, Транспортёры, Шахтёры)</h3>
-                <div class="chart-wrapper"><canvas id="demoExoticChart"></canvas></div>
-                <div class="expand-hint">⛶ увеличить</div>
+            <div class="stat-btn" data-stat="all_demo">
+                <span class="icon">📊</span>
+                Вся демография (сводный)
             </div>
-
         </div>
 
-        <!-- ===== ТАЙМЛАЙН ===== -->
-        <div class="timeline-section">
+        <!-- ===== ТАЙМЛАЙН (как в Арионе) ===== -->
+        <div class="timeline-wrapper">
             <div class="tl-header">
                 <h3>📅 Таймлайн ключевых событий</h3>
                 <div class="tl-filter">
@@ -609,13 +568,14 @@
                 </div>
             </div>
             <div class="timeline-track" id="timelineTrack">
-                <!-- будет вставлено JS -->
+                <div class="tl-line"><div class="tl-fill" id="tlFill"></div></div>
+                <!-- точки будут вставлены JS -->
             </div>
         </div>
 
-        <!-- ===== ПРОГНОЗЫ (с раскрытием) ===== -->
+        <!-- ===== ПРОГНОЗЫ ===== -->
         <div class="forecast-block">
-            <h3>🔮 Прогнозы на сентябрь (нажмите для раскрытия сценариев)</h3>
+            <h3>🔮 Детальные прогнозы на сентябрь (нажмите для раскрытия)</h3>
             <div class="forecast-grid" id="forecastGrid">
                 <!-- будут вставлены JS -->
             </div>
@@ -626,29 +586,29 @@
 
     </main>
 
-    <!-- ===== ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ ===== -->
-    <div class="fullscreen-overlay" id="fullscreenOverlay">
-        <div class="fs-content">
-            <button class="fs-close" id="fsClose">✕</button>
-            <h3 id="fsTitle">График</h3>
-            <div class="fs-chart-wrap" id="fsChartWrap">
-                <canvas id="fsCanvas"></canvas>
+    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ СТАТИСТИКИ ===== -->
+    <div class="stat-modal-overlay" id="statModal">
+        <div class="stat-modal">
+            <div class="sm-header">
+                <h2 id="statModalTitle">Статистика</h2>
+                <button class="sm-close" id="statModalClose">✕</button>
+            </div>
+            <div class="sm-chart-wrap">
+                <canvas id="statModalCanvas"></canvas>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION CONTROL
-        // ============================================================
-        // Текущая версия: v1.2.1 (патч)
+        //  VERSION: v1.2.1
         // ============================================================
 
         // ============================================================
         //  DATA
         // ============================================================
 
-        // Цена нефти (без прогноза)
+        // Цена нефти
         const oilData = [
             { month: 'апрель.26', value: 0 },
             { month: 'май.26', value: 180 },
@@ -657,29 +617,9 @@
             { month: 'август.26', value: 788 }
         ];
 
-        // Потери по войнам (для графиков по войнам)
-        // Малые войны (до 10k)
-        const smallWars = [
-            { name: 'Гончих против Кожекрадов', races: { 'Кожекрады': 4361, 'Гончие': 15478, 'Тусовщики': 3, 'Отстранённые': 248,
-                    'Фоги': 143, 'Зануды': 8 } },
-            { name: 'Многоруко-Безликовая', races: { 'Многоруки': 6564, 'Безликие': 4262, 'Зануды': 1322, 'Фоги': 307 } },
-            { name: 'Война Селей и Бо', races: { 'Бо': 61, 'Сели': 349, 'Гончие': 9 } },
-            { name: 'Торговая война Безликих и Шахтёров', races: { 'Безликие': 1 } }
-        ];
-        // Средние войны (10k – 1M)
-        const mediumWars = [
-            { name: 'Гражданская война Тусовщиков', races: { 'Тусовщики': 879824 } }
-        ];
-        // Крупные войны (> 1M)
-        const largeWars = [
-            { name: 'Тусовщико-Занудская', races: { 'Тусовщики': 9071165, 'Зануды': 5235767, 'Безликие': 1053332,
-                    'Отстранённые': 640, 'Серости': 3949, 'Коре': 23, 'Гончие': 3, 'Треножники': 2572, 'Пуги': 62 } },
-            { name: 'Смертомольно-Спортиковая', races: { 'Смертомоли': 32596438, 'Спортики': 96675060, 'Бактерии': 1737 } }
-        ];
-
-        // Демография по месяцам (без Джерри в малых расах)
+        // Демография по месяцам (новые данные)
         const demoData = {
-            '1 июня': {
+            'май': {
                 'Бактерии': 65309890415,
                 'Тусовщики': 59213000703,
                 'Зануды': 52945126745,
@@ -694,7 +634,7 @@
                 'Джерри': 1,
                 'Объект 226': 1
             },
-            '1 июля': {
+            'июнь': {
                 'Бактерии': 138073643885,
                 'Тусовщики': 109249533719,
                 'Зануды': 87264309050,
@@ -710,7 +650,7 @@
                 'Джерри': 1,
                 'Объект 226': 1
             },
-            '1 августа': {
+            'июль': {
                 'Бактерии': 62137940003860,
                 'Тусовщики': 306745891363,
                 'Зануды': 101050299106,
@@ -727,137 +667,86 @@
                 'Джерри': 1,
                 'Объект 226': 1
             },
-            '1 сентября': {
-                'Бактерии': 303496720210089,
-                'Тусовщики': 529000851406,
-                'Зануды': 146608194309,
-                'Безликие': 112363284987,
-                'Отстранённые': 81925416399,
-                'Кожекрады': 67665749008,
-                'Серости': 46098643712,
-                'Спортики': 4859996800,
-                'Гончие': 2512528896,
-                'Многоруки': 86945317,
-                'Смертомоли': 80492396,
-                'Душери': 193040,
-                'Фоги': 133012,
+            'август': {
+                'Бактерии': 296850993000123,
+                'Тусовщики': 524639645714,
+                'Зануды': 145763009862,
+                'Безликие': 111024549113,
+                'Отстранённые': 81893999246,
+                'Кожекрады': 67089633104,
+                'Серости': 45122903945,
+                'Спортики': 4870200468,
+                'Гончие': 2408913776,
+                'Многоруки': 81942686,
+                'Смертомоли': 81251739,
+                'Душери': 180229,
+                'Фоги': 139486,
                 'Шахтёры': 89228,
-                'Транспортёры': 20103,
+                'Транспортёры': 18104,
                 'Джерри': 1,
                 'Объект 226': 1
             }
         };
 
-        // Ключевые события для таймлайна (только самые важные дни)
-        const timelineEvents = [{
-            date: '2026-08-01',
-            time: '12:28',
-            title: 'Капитуляция Тусовщиков',
-            desc: 'Завершение 20-дневной войны. Тусовщики безоговорочно капитулировали.',
-            important: true
-        }, {
-            date: '2026-08-02',
-            time: '16:37',
-            title: 'Уничтожение Миротворцев',
-            desc: '86 Тусовщиков-Миротворцев ликвидированы. «Орден Доблести» вводит тотальные санкции.',
-            important: false
-        }, {
-            date: '2026-08-13',
-            time: '17:46',
-            title: 'Переворот у Фогов',
-            desc: 'Толпа растерзала Главаря Фогов и высшее командование. Новый лидер — бывший Рейхсфюрер СС.',
-            important: true,
-            danger: true
-        }, {
-            date: '2026-08-18',
-            time: '13:38',
-            title: 'Вторжение Эндер-Существ',
-            desc: '48 млн Эндер-Существ атакуют Мурино. Город стерт с лица земли. Объект 226 возвращён.',
-            important: true,
-            danger: true
-        }, {
-            date: '2026-08-22',
-            time: '00:00',
-            title: 'Начало войны Смертомолей и Спортиков',
-            desc: 'Смертомоли вторгаются на территорию Спортиков. Начинается масштабный конфликт.',
-            important: true
-        }, {
-            date: '2026-08-26',
-            time: '12:00',
-            title: 'Бактерии предают Спортиков',
-            desc: 'Бактерии отказываются быть спонсорами Спортиков, оставляя их без поддержки.',
-            important: true
-        }, {
-            date: '2026-08-27',
-            time: '14:00',
-            title: 'Торнадо и перелом в войне',
-            desc: 'Торнадо уничтожает 5 лагерей Тусовщиков. Спортики уничтожают последний лагерь Смертомолей.',
-            important: false
-        }, {
-            date: '2026-08-29',
-            time: '10:00',
-            title: 'Шахтёры покидают «Орден Доблести»',
-            desc: 'Шахтёры выходят из союза, уходя в полную изоляцию. Раскол в «Ордене» становится реальностью.',
-            important: true
-        }, {
-            date: '2026-08-31',
-            time: '23:59',
-            title: 'Снятие санкций с Тусовщиков',
-            desc: 'Санкции сняты, но влияние расы сведено к нулю. Reseewe вступает в «Глаза Аргоса».',
-            important: false
-        }, {
-            date: '2026-09-01',
-            time: '00:00',
-            title: 'Рекордные потери на фронте',
-            desc: 'Погибло 759 346 Смертомолей и 10 203 668 Спортиков за один день.',
-            important: true,
-            danger: true
-        }, {
-            date: '2026-09-02',
-            time: '23:59',
-            title: 'Ещё более высокие потери',
-            desc: '685 403 Смертомоли и 16 998 753 Спортика погибли. Война достигает пика жестокости.',
-            important: true,
-            danger: true
-        }];
+        // Потери в последней войне (Смертомольно-Спортиковая)
+        const lossesData = {
+            labels: ['22.08', '23.08', '24.08', '25.08', '26.08', '27.08', '28.08', '29.08', '30.08', '31.08', '01.09', '02.09'],
+            смертомоли: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 759346, 685403],
+            спортики: [0, 0, 466, 0, 0, 0, 0, 0, 0, 0, 10203668, 16998753]
+        };
+        // Добавим начальные потери с 22.08 (первые дни)
+        // По данным: 22.08 — начало, 24.08 — 466 Спортиков, 01.09 — 759346/10203668, 02.09 — 685403/16998753
+        // Заполним приблизительно для остальных дней (пусть будут нули, чтобы график был читаем)
 
-        // Прогнозы со сценариями
+        // События для таймлайна
+        const timelineEvents = [
+            { date: '2026-08-01', title: 'Капитуляция Тусовщиков', important: true },
+            { date: '2026-08-02', title: 'Уничтожение Миротворцев', important: false },
+            { date: '2026-08-13', title: 'Переворот у Фогов', important: true, danger: true },
+            { date: '2026-08-18', title: 'Вторжение Эндера', important: true, danger: true },
+            { date: '2026-08-22', title: 'Начало войны Смертомолей/Спортиков', important: true },
+            { date: '2026-08-26', title: 'Бактерии предают Спортиков', important: true },
+            { date: '2026-08-29', title: 'Шахтёры покидают «Орден»', important: true },
+            { date: '2026-09-01', title: 'Рекордные потери', important: true, danger: true },
+            { date: '2026-09-02', title: 'Пик жестокости', important: true, danger: true }
+        ];
+
+        // Прогнозы (детальные)
         const forecasts = [{
             title: '🛢️ Цена нефти',
             summary: 'Консолидация в диапазоне $780–820',
+            detail: 'Рынок стабилизируется после завершения крупных войн. Восстановление торговли и сезонный спрос удерживают цены. Риски — эскалация конфликтов или новое вторжение Эндера.',
             scenarios: [
-                { title: 'Базовый', desc: 'Цена останется в диапазоне 780–820 USD/барр., без резких колебаний.',
-                    prob: '55%' },
-                { title: 'Оптимистичный', desc: 'Рост до 850–900 USD/барр. при перемирии и восстановлении торговли.',
-                    prob: '25%' },
-                { title: 'Пессимистичный', desc: 'Падение до 700–750 USD/барр. при эскалации конфликтов.', prob: '20%' }
+                { title: 'Базовый (55%)', desc: 'Цена останется в диапазоне 780–820 USD/барр. Без резких колебаний.' },
+                { title: 'Оптимистичный (25%)', desc: 'Рост до 850–900 USD/барр. при перемирии и восстановлении торговли.' },
+                { title: 'Пессимистичный (20%)', desc: 'Падение до 700–750 USD/барр. при эскалации конфликтов.' }
             ]
         }, {
             title: '⚔️ Война Смертомолей/Спортиков',
             summary: 'Перемирие к концу сентября, риск ядерной эскалации',
+            detail: 'Огромные потери с обеих сторон вынуждают стороны искать компромисс. Бактерии, предав Спортиков, создали трёхсторонний конфликт. «Орден Доблести» давит на все стороны.',
             scenarios: [
-                { title: 'Базовый', desc: 'Перемирие к концу сентября под давлением «Ордена Доблести».', prob: '60%' },
-                { title: 'Эскалационный', desc: 'Ядерный удар Бактерий по городам Спортиков — тотальная война.',
-                    prob: '25%' },
-                { title: 'Мирный', desc: 'Компромисс и прекращение огня уже в первую неделю сентября.', prob: '15%' }
+                { title: 'Базовый (60%)', desc: 'Перемирие к концу сентября под давлением «Ордена Доблести».' },
+                { title: 'Эскалационный (25%)', desc: 'Ядерный удар Бактерий по городам Спортиков — тотальная война.' },
+                { title: 'Мирный (15%)', desc: 'Компромисс и прекращение огня уже в первую неделю сентября.' }
             ]
         }, {
             title: '🌌 Угроза Эндера',
             summary: 'Временное затишье, портал не закрыт полностью',
+            detail: 'Вторжение 18.08 отбито, но портал не закрыт — требуется добыча 11 Ок Эндера. Объект 226 помогает, но процесс займёт время. Риск повторного вторжения сохраняется.',
             scenarios: [
-                { title: 'Базовый', desc: 'Никаких новых вторжений в сентябре. Объект 226 помогает добыть Ок Эндера.',
-                    prob: '70%' },
-                { title: 'Повторное вторжение', desc: 'Эндер-Существа атакуют другой город, разрушения локального масштаба.',
-                    prob: '20%' },
-                { title: 'Раскол «Ордена»', desc: 'Выход Безликих или Отстранённых из-за торговых споров.', prob: '30%' }
+                { title: 'Базовый (70%)', desc: 'Никаких новых вторжений в сентябре. Объект 226 помогает добыть Ок Эндера.' },
+                { title: 'Повторное вторжение (20%)', desc: 'Эндер-Существа атакуют другой город, разрушения локального масштаба.' },
+                { title: 'Раскол «Ордена» (30%)', desc: 'Выход Безликих или Отстранённых из-за торговых споров.' }
             ]
         }, {
             title: '📉 Экономика',
             summary: 'Дефицит руды, рост цен на ресурсы',
+            detail: 'Уход Шахтёров из «Ордена» создал дефицит руды и ископаемых. Пошлины Безликих снижены, но этого недостаточно. Инфляция может ускориться.',
             scenarios: [
-                { title: 'Базовый', desc: 'Постепенное восстановление торговли, умеренный рост цен.', prob: '65%' },
-                { title: 'Рост цен', desc: 'Дефицит руды ускоряет инфляцию до 2–3% в месяц.', prob: '25%' },
-                { title: 'Стагнация', desc: 'Снижение спроса на ресурсы, цены падают на 5–10%.', prob: '10%' }
+                { title: 'Базовый (65%)', desc: 'Постепенное восстановление торговли, умеренный рост цен.' },
+                { title: 'Рост цен (25%)', desc: 'Дефицит руды ускоряет инфляцию до 2–3% в месяц.' },
+                { title: 'Стагнация (10%)', desc: 'Снижение спроса на ресурсы, цены падают на 5–10%.' }
             ]
         }];
 
@@ -867,30 +756,11 @@
 
         function formatDate(dateStr) {
             const d = new Date(dateStr);
-            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit' });
         }
 
-        function formatTimeAgo(dateStr, timeStr) {
-            const eventDate = new Date(dateStr + 'T' + (timeStr || '00:00'));
-            const now = new Date();
-            let diff = (now - eventDate) / 1000;
-            let parts = [];
-            const years = Math.floor(diff / 31536000);
-            if (years > 0) { parts.push(years + ' лет');
-                diff %= 31536000; }
-            const months = Math.floor(diff / 2592000);
-            if (months > 0) { parts.push(months + ' мес');
-                diff %= 2592000; }
-            const days = Math.floor(diff / 86400);
-            if (days > 0) { parts.push(days + ' дн');
-                diff %= 86400; }
-            const hours = Math.floor(diff / 3600);
-            if (hours > 0) { parts.push(hours + ' ч');
-                diff %= 3600; }
-            const minutes = Math.floor(diff / 60);
-            if (minutes > 0) { parts.push(minutes + ' мин'); }
-            if (parts.length === 0) return 'только что';
-            return parts.join(' ') + ' назад';
+        function getMonth(dateStr) {
+            return new Date(dateStr).getMonth() + 1;
         }
 
         // ============================================================
@@ -899,13 +769,13 @@
 
         let charts = {};
 
-        // ---- Цена нефти (без прогноза) ----
-        function renderOilChart(canvasId) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
+        // ---- Нефть ----
+        function renderOilChart() {
+            const ctx = document.getElementById('oilChart').getContext('2d');
             const labels = oilData.map(d => d.month);
             const values = oilData.map(d => d.value);
 
-            return new Chart(ctx, {
+            charts['oil'] = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -927,60 +797,107 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
+                        tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' USD/барр.' } }
+                    },
+                    scales: {
+                        y: { min: 0, max: 1000, grid: { color: 'rgba(255,255,255,0.06)' }, ticks: { color: '#6a8a9e',
+                                stepSize: 200 } },
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } }
+                    }
+                }
+            });
+        }
+
+        // ---- Демография (общая функция для модальных окон) ----
+        function renderDemoModal(canvasId, races, title, tickFormat) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = ['май', 'июнь', 'июль', 'август'];
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
+                '#2c3e50'
+            ];
+
+            const datasets = races.map((race, i) => {
+                const data = labels.map(l => demoData[l]?.[race] || null);
+                return {
+                    label: race,
+                    data: data,
+                    borderColor: colorPalette[i % colorPalette.length],
+                    backgroundColor: 'rgba(74,142,196,0.05)',
+                    fill: false,
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: colorPalette[i % colorPalette.length],
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    borderWidth: 2.5,
+                    spanGaps: true,
+                };
+            }).filter(ds => ds.data.some(v => v !== null && v > 0));
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
+                        },
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.parsed.y + ' USD/барр.';
+                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() || 'нет данных';
                                 }
                             }
                         }
                     },
                     scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e', font: { size: 12 } } },
                         y: {
-                            min: 0,
-                            max: 1000,
-                            grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
-                            ticks: { color: '#6a8a9e', stepSize: 200 }
-                        },
-                        x: {
-                            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
-                            ticks: { color: '#6a8a9e' }
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: {
+                                color: '#6a8a9e',
+                                font: { size: 12 },
+                                callback: function(value) {
+                                    if (tickFormat === 'billion') {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        return value;
+                                    } else if (tickFormat === 'million') {
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    } else {
+                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                        return value;
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             });
         }
 
-        // ---- Потери по войнам (общая функция) ----
-        function renderWarChart(canvasId, warsData, label) {
+        // ---- Потери (Смертомоли vs Спортики) ----
+        function renderLossesModal(canvasId) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            // Собираем все расы из всех войн
-            const allRaces = new Set();
-            warsData.forEach(w => Object.keys(w.races).forEach(r => allRaces.add(r)));
-            const races = Array.from(allRaces);
-            const colors = ['#e74c3c', '#f39c12', '#9b59b6', '#3498db', '#1abc9c', '#2c3e50', '#e67e22', '#34495e', '#16a085',
-                '#27ae60', '#95a5a6', '#7f8c8d', '#8e44ad', '#d35400'
-            ];
-            const colorMap = {};
-            races.forEach((r, i) => colorMap[r] = colors[i % colors.length]);
-
-            const datasets = races.map(race => {
-                const data = warsData.map(w => w.races[race] || 0);
-                return {
-                    label: race,
-                    data: data,
-                    backgroundColor: colorMap[race],
-                    borderRadius: 3,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8,
-                };
-            }).filter(ds => ds.data.some(v => v > 0));
+            const labels = lossesData.labels;
+            const смертомоли = lossesData.смертомоли;
+            const спортики = lossesData.спортики;
 
             return new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: warsData.map(w => w.name),
-                    datasets: datasets
+                    labels: labels,
+                    datasets: [
+                        { label: 'Смертомоли', data: смертомоли, backgroundColor: '#c0392b', borderRadius: 3 },
+                        { label: 'Спортики', data: спортики, backgroundColor: '#2980b9', borderRadius: 3 }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -988,7 +905,7 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 6 }
+                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
                         },
                         tooltip: {
                             callbacks: {
@@ -1016,15 +933,16 @@
             });
         }
 
-        // ---- Демография (общая функция) ----
-        function renderDemoChart(canvasId, races, label, tickFormat) {
+        // ---- Сводная демография (все расы) ----
+        function renderAllDemoModal(canvasId) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            const labels = ['1 июня', '1 июля', '1 августа', '1 сентября'];
+            const labels = ['май', 'июнь', 'июль', 'август'];
+            const allRaces = Object.keys(demoData['август']).filter(r => r !== 'Джерри' && r !== 'Объект 226');
             const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
-                '#2c3e50'
+                '#2c3e50', '#16a085', '#27ae60', '#95a5a6', '#7f8c8d', '#8e44ad', '#d35400'
             ];
 
-            const datasets = races.map((race, i) => {
+            const datasets = allRaces.map((race, i) => {
                 const data = labels.map(l => demoData[l]?.[race] || null);
                 return {
                     label: race,
@@ -1040,7 +958,7 @@
                     borderWidth: 2,
                     spanGaps: true,
                 };
-            }).filter(ds => ds.data.some(v => v !== null));
+            }).filter(ds => ds.data.some(v => v !== null && v > 0));
 
             return new Chart(ctx, {
                 type: 'line',
@@ -1056,8 +974,7 @@
                         tooltip: {
                             callbacks: {
                                 label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() ||
-                                        'нет данных';
+                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() || 'нет данных';
                                 }
                             }
                         }
@@ -1069,20 +986,10 @@
                             ticks: {
                                 color: '#6a8a9e',
                                 callback: function(value) {
-                                    if (tickFormat === 'billion') {
-                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-                                        return value;
-                                    } else if (tickFormat === 'million') {
-                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
-                                        return value;
-                                    } else {
-                                        if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-                                        if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-                                        if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
-                                        return value;
-                                    }
+                                    if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
+                                    if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+                                    if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
+                                    return value;
                                 }
                             }
                         }
@@ -1092,148 +999,176 @@
         }
 
         // ============================================================
-        //  ТАЙМЛАЙН
+        //  СТАТИСТИКА (кнопки → модальные окна)
+        // ============================================================
+
+        const statConfigs = {
+            bacteria: {
+                title: 'Бактерии',
+                races: ['Бактерии'],
+                tickFormat: 'billion'
+            },
+            tusov: {
+                title: 'Тусовщики',
+                races: ['Тусовщики'],
+                tickFormat: 'billion'
+            },
+            big: {
+                title: 'Расы ≥ 10 млрд',
+                races: ['Зануды', 'Отстранённые', 'Кожекрады', 'Безликие', 'Серости'],
+                tickFormat: 'billion'
+            },
+            sport_gon: {
+                title: 'Спортики + Гончие',
+                races: ['Спортики', 'Гончие'],
+                tickFormat: 'million'
+            },
+            mnogo_smert: {
+                title: 'Многорукие + Смертомоли',
+                races: ['Многоруки', 'Смертомоли'],
+                tickFormat: 'million'
+            },
+            small: {
+                title: 'Малые расы (≤ 210 тыс.)',
+                races: ['Фоги', 'Шахтёры', 'Транспортёры', 'Душери', 'Джерри', 'Объект 226', 'Треножники', 'Пуги', 'Коре'],
+                tickFormat: 'none'
+            },
+            losses: {
+                title: 'Потери в войне Смертомолей vs Спортиков',
+                type: 'losses'
+            },
+            all_demo: {
+                title: 'Сводная демография (все расы)',
+                type: 'all_demo'
+            }
+        };
+
+        let modalChart = null;
+
+        function openStatModal(key) {
+            const config = statConfigs[key];
+            if (!config) return;
+
+            const overlay = document.getElementById('statModal');
+            const title = document.getElementById('statModalTitle');
+            const canvas = document.getElementById('statModalCanvas');
+
+            title.textContent = config.title;
+
+            // Удаляем старый график
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+
+            // Создаём новый график
+            if (config.type === 'losses') {
+                modalChart = renderLossesModal('statModalCanvas');
+            } else if (config.type === 'all_demo') {
+                modalChart = renderAllDemoModal('statModalCanvas');
+            } else {
+                modalChart = renderDemoModal('statModalCanvas', config.races, config.title, config.tickFormat);
+            }
+
+            overlay.classList.add('active');
+        }
+
+        function closeStatModal() {
+            document.getElementById('statModal').classList.remove('active');
+            if (modalChart) {
+                modalChart.destroy();
+                modalChart = null;
+            }
+        }
+
+        // ============================================================
+        //  ТАЙМЛАЙН (как в Арионе)
         // ============================================================
 
         function renderTimeline(filterMonth = 'all') {
             const track = document.getElementById('timelineTrack');
-            track.innerHTML = '';
+            // очищаем всё, кроме линии
+            track.querySelectorAll('.tl-dot-wrap, .tl-now').forEach(el => el.remove());
 
-            const now = new Date();
             const filtered = timelineEvents.filter(e => {
-                const d = new Date(e.date);
-                const month = d.getMonth() + 1;
+                const m = getMonth(e.date);
                 if (filterMonth === 'all') return true;
-                return month === parseInt(filterMonth);
+                return m === parseInt(filterMonth);
             });
 
+            // Сортируем по дате
             filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-            filtered.forEach(event => {
-                const d = new Date(event.date);
-                const day = d.getDate().toString().padStart(2, '0');
-                const month = (d.getMonth() + 1).toString().padStart(2, '0');
+            // Находим позиции для точек (равномерно распределяем)
+            const total = filtered.length;
+            const leftMargin = 2;
+            const rightMargin = 2;
+            const range = 100 - leftMargin - rightMargin;
 
-                const item = document.createElement('div');
-                item.className = 'tl-item';
-                item.setAttribute('data-date', event.date);
+            filtered.forEach((event, index) => {
+                const pos = leftMargin + (index / (total - 1 || 1)) * range;
+
+                const wrap = document.createElement('div');
+                wrap.className = 'tl-dot-wrap';
+                wrap.style.position = 'absolute';
+                wrap.style.left = pos + '%';
+                wrap.style.top = '50%';
+                wrap.style.transform = 'translate(-50%, -50%)';
 
                 const dot = document.createElement('div');
                 dot.className = 'tl-dot';
                 if (event.important) dot.classList.add('important');
                 if (event.danger) dot.classList.add('danger');
-                item.appendChild(dot);
+                if (!event.important && !event.danger) dot.classList.add('default');
+                wrap.appendChild(dot);
 
                 const dateLabel = document.createElement('div');
                 dateLabel.className = 'tl-date';
-                dateLabel.textContent = day + '.' + month;
-                item.appendChild(dateLabel);
+                dateLabel.textContent = formatDate(event.date);
+                wrap.appendChild(dateLabel);
 
                 const label = document.createElement('div');
                 label.className = 'tl-label';
                 label.textContent = event.title;
-                item.appendChild(label);
+                wrap.appendChild(label);
 
-                item.addEventListener('click', function() {
-                    openTimelineModal(event);
+                // Клик для показа описания
+                wrap.addEventListener('click', function() {
+                    alert(event.title + '\n' + (event.desc || 'Подробное описание события.'));
                 });
 
-                track.appendChild(item);
+                track.appendChild(wrap);
             });
 
             // "Сейчас"
-            const nowItem = document.createElement('div');
-            nowItem.className = 'tl-now';
+            const nowWrap = document.createElement('div');
+            nowWrap.className = 'tl-now';
+            nowWrap.style.position = 'absolute';
+            nowWrap.style.right = '2%';
+            nowWrap.style.top = '50%';
+            nowWrap.style.transform = 'translateY(-50%)';
+
             const nowDot = document.createElement('div');
             nowDot.className = 'tl-dot';
-            nowItem.appendChild(nowDot);
+            nowWrap.appendChild(nowDot);
+
             const nowLabel = document.createElement('div');
-            nowLabel.className = 'tl-date';
+            nowLabel.className = 'tl-label';
             nowLabel.textContent = 'Сейчас';
-            nowItem.appendChild(nowLabel);
-            track.appendChild(nowItem);
+            nowWrap.appendChild(nowLabel);
+
+            track.appendChild(nowWrap);
         }
 
         // ============================================================
-        //  МОДАЛЬНОЕ ОКНО ТАЙМЛАЙНА
-        // ============================================================
-
-        function openTimelineModal(event) {
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-                position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
-                z-index:10000; display:flex; justify-content:center; align-items:center; padding:20px;
-            `;
-            overlay.addEventListener('click', function(e) {
-                if (e.target === this) this.remove();
-            });
-
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-                background:rgba(10,22,40,0.95); border-radius:24px; padding:32px 36px;
-                max-width:600px; width:100%; border:1px solid rgba(74,142,196,0.2);
-                box-shadow:0 24px 80px rgba(0,0,0,0.8); animation:modal-in 0.3s ease;
-            `;
-
-            const title = document.createElement('h2');
-            title.style.cssText = 'font-size:22px; color:#f5b041; margin-bottom:8px;';
-            title.textContent = event.title;
-
-            const dateTime = document.createElement('div');
-            dateTime.style.cssText = 'font-size:14px; color:#6a8a9e; margin-bottom:12px;';
-            const d = new Date(event.date);
-            dateTime.textContent = formatDate(event.date) + ', ' + (event.time || '00:00');
-
-            const desc = document.createElement('p');
-            desc.style.cssText = 'font-size:15px; color:#b0c4de; line-height:1.6; margin-bottom:12px;';
-            desc.textContent = event.desc;
-
-            const ago = document.createElement('div');
-            ago.style.cssText = 'font-size:13px; color:#4a8ec4; margin-bottom:16px;';
-            ago.textContent = '⏱ ' + formatTimeAgo(event.date, event.time);
-
-            const closeBtn = document.createElement('button');
-            closeBtn.style.cssText = `
-                background:rgba(74,142,196,0.15); border:1px solid rgba(74,142,196,0.2);
-                color:#8ab4d4; padding:8px 24px; border-radius:40px; font-size:14px;
-                cursor:pointer; transition:all 0.2s; width:100%;
-            `;
-            closeBtn.textContent = 'Закрыть';
-            closeBtn.addEventListener('click', function() { overlay.remove(); });
-            closeBtn.addEventListener('mouseenter', function() {
-                this.style.borderColor = '#4a8ec4';
-                this.style.color = '#b0d4f0';
-            });
-            closeBtn.addEventListener('mouseleave', function() {
-                this.style.borderColor = 'rgba(74,142,196,0.2)';
-                this.style.color = '#8ab4d4';
-            });
-
-            modal.appendChild(title);
-            modal.appendChild(dateTime);
-            modal.appendChild(desc);
-            modal.appendChild(ago);
-            modal.appendChild(closeBtn);
-            overlay.appendChild(modal);
-            document.body.appendChild(overlay);
-
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes modal-in { from { opacity:0; transform:scale(0.95) translateY(20px); }
-                to { opacity:1; transform:scale(1) translateY(0); } }
-            `;
-            document.head.appendChild(style);
-        }
-
-        // ============================================================
-        //  ПРОГНОЗЫ (с раскрытием)
+        //  ПРОГНОЗЫ (детальные)
         // ============================================================
 
         function renderForecasts() {
             const container = document.getElementById('forecastGrid');
             container.innerHTML = '';
 
-            forecasts.forEach((f, idx) => {
+            forecasts.forEach((f) => {
                 const item = document.createElement('div');
                 item.className = 'forecast-item';
 
@@ -1241,104 +1176,36 @@
                 title.className = 'f-title';
                 title.innerHTML = `${f.title} <span class="f-toggle">▼</span>`;
                 title.addEventListener('click', function() {
-                    const desc = item.querySelector('.f-desc');
+                    const detail = item.querySelector('.f-detail');
                     const toggle = this.querySelector('.f-toggle');
-                    desc.classList.toggle('open');
+                    detail.classList.toggle('open');
                     toggle.classList.toggle('open');
                 });
                 item.appendChild(title);
 
                 const summary = document.createElement('div');
-                summary.style.cssText = 'font-size:13px; color:#8ab4d4; margin-bottom:4px;';
+                summary.className = 'f-summary';
                 summary.textContent = f.summary;
                 item.appendChild(summary);
 
-                const descDiv = document.createElement('div');
-                descDiv.className = 'f-desc';
+                const detail = document.createElement('div');
+                detail.className = 'f-detail';
+                // Детальное описание
+                const desc = document.createElement('div');
+                desc.style.marginBottom = '8px';
+                desc.textContent = f.detail;
+                detail.appendChild(desc);
+
                 f.scenarios.forEach(s => {
                     const sc = document.createElement('div');
                     sc.className = 'scenario';
                     sc.innerHTML =
-                        `<div class="s-title">${s.title} <span class="s-prob">${s.prob}</span></div><div>${s.desc}</div>`;
-                    descDiv.appendChild(sc);
+                        `<div class="s-title">${s.title}</div><div class="s-desc">${s.desc}</div>`;
+                    detail.appendChild(sc);
                 });
-                item.appendChild(descDiv);
 
+                item.appendChild(detail);
                 container.appendChild(item);
-            });
-        }
-
-        // ============================================================
-        //  ПОЛНОЭКРАННЫЙ РЕЖИМ
-        // ============================================================
-
-        let fullscreenChart = null;
-        let currentChartId = null;
-
-        function setupFullscreen() {
-            const overlay = document.getElementById('fullscreenOverlay');
-            const closeBtn = document.getElementById('fsClose');
-            const canvas = document.getElementById('fsCanvas');
-
-            document.querySelectorAll('.chart-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    if (e.target.closest('.expand-hint') || e.target.closest('button')) return;
-                    const canvasEl = this.querySelector('canvas');
-                    if (!canvasEl) return;
-                    const chartId = canvasEl.id;
-                    if (!charts[chartId]) return;
-
-                    const title = this.querySelector('h3')?.textContent || 'График';
-                    document.getElementById('fsTitle').textContent = title;
-
-                    const fsCtx = canvas.getContext('2d');
-                    const originalChart = charts[chartId];
-                    const config = originalChart.config;
-                    if (fullscreenChart) {
-                        fullscreenChart.destroy();
-                        fullscreenChart = null;
-                    }
-
-                    const newConfig = JSON.parse(JSON.stringify(config));
-                    newConfig.options.responsive = true;
-                    newConfig.options.maintainAspectRatio = false;
-                    if (newConfig.options.plugins && newConfig.options.plugins.legend) {
-                        newConfig.options.plugins.legend.labels.font.size = 12;
-                    }
-
-                    fullscreenChart = new Chart(fsCtx, newConfig);
-                    currentChartId = chartId;
-
-                    overlay.classList.add('active');
-                });
-            });
-
-            closeBtn.addEventListener('click', function() {
-                overlay.classList.remove('active');
-                if (fullscreenChart) {
-                    fullscreenChart.destroy();
-                    fullscreenChart = null;
-                }
-            });
-
-            overlay.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    overlay.classList.remove('active');
-                    if (fullscreenChart) {
-                        fullscreenChart.destroy();
-                        fullscreenChart = null;
-                    }
-                }
-            });
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && overlay.classList.contains('active')) {
-                    overlay.classList.remove('active');
-                    if (fullscreenChart) {
-                        fullscreenChart.destroy();
-                        fullscreenChart = null;
-                    }
-                }
             });
         }
 
@@ -1361,26 +1228,8 @@
             updateHeaderTime();
             setInterval(updateHeaderTime, 60000);
 
-            // Графики
-            charts['oilChart'] = renderOilChart('oilChart');
-
-            // Потери по войнам
-            charts['lossesSmallChart'] = renderWarChart('lossesSmallChart', smallWars);
-            charts['lossesMediumChart'] = renderWarChart('lossesMediumChart', mediumWars);
-            charts['lossesLargeChart'] = renderWarChart('lossesLargeChart', largeWars);
-
-            // Демография
-            const smallRaces = ['Гончие', 'Фоги', 'Многоруки', 'Смертомоли', 'Душери', 'Шахтёры', 'Транспортёры']; // без Джерри
-            const midRaces = ['Кожекрады', 'Спортики', 'Безликие', 'Серости'];
-            const largeRaces = ['Тусовщики', 'Зануды', 'Отстранённые'];
-            const bacteria = ['Бактерии'];
-            const exoticRaces = ['Джерри', 'Объект 226', 'Треножники', 'Пуги', 'Коре'];
-
-            charts['demoSmallChart'] = renderDemoChart('demoSmallChart', smallRaces, 'Малые расы', 'million');
-            charts['demoMidChart'] = renderDemoChart('demoMidChart', midRaces, 'Средние расы', 'billion');
-            charts['demoLargeChart'] = renderDemoChart('demoLargeChart', largeRaces, 'Крупные расы', 'billion');
-            charts['demoBacteriaChart'] = renderDemoChart('demoBacteriaChart', bacteria, 'Бактерии', 'billion');
-            charts['demoExoticChart'] = renderDemoChart('demoExoticChart', exoticRaces, 'Экзотические', 'none');
+            // Нефть
+            renderOilChart();
 
             // Таймлайн
             const filterSelect = document.getElementById('monthFilter');
@@ -1392,29 +1241,28 @@
             // Прогнозы
             renderForecasts();
 
-            // Полноэкранный режим
-            setupFullscreen();
+            // Кнопки статистики
+            document.querySelectorAll('.stat-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const key = this.dataset.stat;
+                    openStatModal(key);
+                });
+            });
 
-            // Ресайз
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    Object.keys(charts).forEach(key => {
-                        if (charts[key] && charts[key].resize) {
-                            charts[key].resize();
-                        }
-                    });
-                }, 300);
+            // Закрытие модального окна
+            document.getElementById('statModalClose').addEventListener('click', closeStatModal);
+            document.getElementById('statModal').addEventListener('click', function(e) {
+                if (e.target === this) closeStatModal();
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeStatModal();
             });
         }
 
         document.addEventListener('DOMContentLoaded', init);
 
         // ============================================================
-        //  VERSION CONTROL
-        // ============================================================
-        // Текущая версия: v1.2.1
+        //  VERSION: v1.2.1
         // ============================================================
     </script>
 </body>
