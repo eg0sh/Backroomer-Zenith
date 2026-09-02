@@ -695,7 +695,22 @@
             max-height:80vh; overflow-y:auto;
             transition:background 0.4s, border-color 0.4s;
         }
-        .modal .modal-title { font-size:20px; font-weight:600; color:var(--text-primary); margin-bottom:8px; }
+        .modal .modal-title {
+            font-size:20px; font-weight:600; margin-bottom:8px;
+            transition:color 0.3s;
+        }
+        .modal .modal-title.status-done {
+            color: var(--dot-done) !important;
+            text-shadow: 0 0 30px rgba(76,217,160,0.3);
+        }
+        .modal .modal-title.status-active {
+            color: var(--accent-gold) !important;
+            text-shadow: 0 0 30px var(--accent-glow);
+        }
+        .modal .modal-title.status-pending {
+            color: var(--text-muted) !important;
+            text-shadow: none;
+        }
         .modal .modal-close {
             margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color);
             color:var(--text-secondary); padding:10px 24px; border-radius:40px;
@@ -830,7 +845,7 @@
 </head>
 <body>
 
-    <!-- ===== ВЕРХНЕЕ МЕНЮ (с кнопкой темы) ===== -->
+    <!-- ===== ВЕРХНЕЕ МЕНЮ ===== -->
     <header class="top-menu">
         <div class="logo">Zenith</div>
         <nav class="nav-links">
@@ -878,7 +893,7 @@
             </div>
         </header>
 
-        <!-- ===== EXPORT BAR (без поля даты) ===== -->
+        <!-- ===== EXPORT BAR ===== -->
         <div class="export-bar">
             <button class="export-btn" id="exportPDF">📄 PDF</button>
             <button class="export-btn" id="exportPNG">🖼️ PNG</button>
@@ -938,12 +953,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.2.4</div>
+        <div class="version">v1.2.5</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.4
+        //  VERSION: v1.2.5
         // ============================================================
 
         // ============================================================
@@ -1073,8 +1088,8 @@
                 characteristics: 'Общая протяжённость линий 300 км, напряжение 110 кВ, мощность подстанций 50–100 МВА каждая.',
                 dependencies: ['4.5'] },
             { id: '4.7', phaseId: 'p4', name: 'Танкеры и газовозы', startDate: null, endDate: null, pct: 0,
-                description: 'Заключение контрактов и контроль постройки на верфях двух нефтяных танкеров класса Aframax и двух газовозов для СПГ. Это отдельный логистический трек, не привязанный к объектам на суше, но критичный для вывоза продукции.',
-                characteristics: 'Танкеры дедвейтом 100 000 т, газовозы вместимостью 170 000 м³, срок постройки 24–30 месяцев.',
+                description: 'Заключение контрактов и контроль постройки на верфях двух нефтяных танкеров и двух газовозов для СПГ. Это отдельный логистический трек, не привязанный к объектам на суше, но критичный для вывоза продукции.',
+                characteristics: 'Танкеры дедвейтом 100 000 т, газовозы вместимостью 170 000 м³.',
                 dependencies: [] },
             { id: '4.8', phaseId: 'p4', name: 'Береговая оборона', startDate: null, endDate: null, pct: 0,
                 description: 'Развёртывание средств ПВО, радиолокационных станций, береговых ракетных комплексов и патрульных катеров для защиты прибрежных объектов.',
@@ -1098,7 +1113,7 @@
 
         const extraData = {
             totalBudget: 500,
-            spentBudget: 5, // изменено с 100 на 5
+            spentBudget: 5,
             risks: [
                 { name: 'Задержка поставок', probability: 0.45, impact: 0.50 },
                 { name: 'Погодные условия', probability: 0.35, impact: 0.40 },
@@ -1140,7 +1155,6 @@
         // ============================================================
 
         let currentTheme = localStorage.getItem('arion-theme') || 'dark';
-        // Приоритетная дата прогноза — 3 сентября 2026 (задаётся в коде)
         const FORECAST_REF_DATE = new Date('2026-09-03');
 
         // ============================================================
@@ -1184,11 +1198,10 @@
         }
 
         // ============================================================
-        //  РАСЧЁТ ПРОГНОЗА (от заданной даты 2026-09-03)
+        //  РАСЧЁТ ПРОГНОЗА
         // ============================================================
 
         function getLastMonday() {
-            // Используем фиксированную дату для расчёта
             const base = new Date(FORECAST_REF_DATE);
             const day = base.getDay();
             const diff = (day === 0 ? 6 : day - 1);
