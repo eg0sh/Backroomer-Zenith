@@ -37,7 +37,7 @@
         .top-menu .logo {
             font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(135deg, #6a8ec4, #4a6a9e);
+            background: linear-gradient(135deg, #6a8ec4, #4a6a9e, #8ab4d4);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -93,7 +93,10 @@
         .analysis-content h1 {
             font-size: 36px;
             font-weight: 700;
-            color: #b0d4f0;
+            background: linear-gradient(135deg, #b0d4f0, #8ab4d4, #6a8ec4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
         }
@@ -393,10 +396,6 @@
                 <span class="icon">⚔️</span>
                 Потери (Смертомоли vs Спортики)
             </div>
-            <div class="stat-btn" data-stat="all_demo">
-                <span class="icon">📊</span>
-                Вся демография (сводный)
-            </div>
         </div>
 
         <!-- ===== ПРОГНОЗЫ (очень подробные) ===== -->
@@ -582,7 +581,7 @@
         }
 
         // ============================================================
-        //  ГРАФИК НЕФТИ (с подписями значений + фикс обрезки первой точки)
+        //  ГРАФИК НЕФТИ (с подписями значений + $ вместо квадрата)
         // ============================================================
 
         function renderOilChart() {
@@ -612,8 +611,14 @@
                     maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
-                        tooltip: { callbacks: { label: ctx => ctx.parsed.y + ' USD/барр.' } },
-                        // кастомный плагин для подписей значений над точками
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y + ' USD/барр.';
+                                }
+                            }
+                        },
+                        // кастомный плагин для подписей значений над точками с $
                         afterDraw: function(chart) {
                             const meta = chart.getDatasetMeta(0);
                             const data = chart.data.datasets[0].data;
@@ -628,7 +633,7 @@
                                     const x = element.x;
                                     const y = element.y - 10;
                                     ctx2.fillStyle = '#8ab4d4';
-                                    ctx2.fillText(value, x, y);
+                                    ctx2.fillText('$' + value, x, y);
                                 }
                             });
                             ctx2.restore();
@@ -640,7 +645,6 @@
                             max: 1000,
                             grid: { color: 'rgba(255,255,255,0.06)' },
                             ticks: { color: '#6a8a9e', stepSize: 200 },
-                            // добавляем небольшой offset, чтобы первая точка не обрезалась
                             offset: true
                         },
                         x: {
@@ -780,70 +784,6 @@
             });
         }
 
-        function renderAllDemoModal(canvasId) {
-            const ctx = document.getElementById(canvasId).getContext('2d');
-            const labels = ['май', 'июнь', 'июль', 'август'];
-            const allRaces = Object.keys(demoData['август']).filter(r => r !== 'Джерри' && r !== 'Объект 226');
-            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
-                '#2c3e50', '#16a085', '#27ae60', '#95a5a6', '#7f8c8d', '#8e44ad', '#d35400'
-            ];
-
-            const datasets = allRaces.map((race, i) => {
-                const data = labels.map(l => demoData[l]?.[race] || null);
-                return {
-                    label: race,
-                    data: data,
-                    borderColor: colorPalette[i % colorPalette.length],
-                    backgroundColor: 'rgba(74,142,196,0.05)',
-                    fill: false,
-                    tension: 0.3,
-                    pointBackgroundColor: '#fff',
-                    pointBorderColor: colorPalette[i % colorPalette.length],
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2,
-                    spanGaps: true,
-                };
-            }).filter(ds => ds.data.some(v => v !== null && v > 0));
-
-            return new Chart(ctx, {
-                type: 'line',
-                data: { labels: labels, datasets: datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 6 }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() || 'нет данных';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
-                        y: {
-                            grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: {
-                                color: '#6a8a9e',
-                                callback: function(value) {
-                                    if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-                                    if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
-                                    if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
-                                    return value;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
         // ============================================================
         //  СТАТИСТИКА (кнопки → модальные окна)
         // ============================================================
@@ -882,10 +822,6 @@
             losses: {
                 title: 'Потери в войне Смертомолей vs Спортиков',
                 type: 'losses'
-            },
-            all_demo: {
-                title: 'Сводная демография (все расы)',
-                type: 'all_demo'
             }
         };
 
@@ -908,8 +844,6 @@
 
             if (config.type === 'losses') {
                 modalChart = renderLossesModal('statModalCanvas');
-            } else if (config.type === 'all_demo') {
-                modalChart = renderAllDemoModal('statModalCanvas');
             } else {
                 modalChart = renderDemoModal('statModalCanvas', config.races, config.title, config.tickFormat);
             }
