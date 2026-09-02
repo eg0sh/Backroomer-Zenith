@@ -6,23 +6,391 @@
     <title>Analysis · Прогнозы и аналитика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* ----- общие стили ----- */
+        /* ===== CSS Variables (темы) ===== */
+        :root {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
+            --bg-panel: rgba(17, 24, 34, 0.7);
+            --bg-card: rgba(20, 28, 40, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #5a6a7e;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a4a5e;
+            --line-bg: #4a5a6e;
+            --line-fill: linear-gradient(90deg, #f5b041, #e67e22);
+            --chart-bg: rgba(20, 28, 40, 0.5);
+            --chart-text: #b0c4de;
+            --shadow-color: rgba(0,0,0,0.3);
+            --chart-grid: rgba(255,255,255,0.08);
+            --chart-line: #f5b041;
+            --chart-area: rgba(245,176,65,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #f5b041;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+        }
+        /* Светлая тема */
+        [data-theme="light"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #f0f4f8, #d9e2ec);
+            --bg-panel: rgba(255, 255, 255, 0.85);
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --border-color: rgba(0, 0, 0, 0.1);
+            --text-primary: #1a2332;
+            --text-secondary: #2a3a4e;
+            --text-muted: #6a7a8e;
+            --accent-gold: #d48c2c;
+            --accent-glow: rgba(212, 140, 44, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            --dot-done: #2b6a9e;
+            --dot-active: #c0392b;
+            --dot-pending: #8a9bb5;
+            --line-bg: #b0c4de;
+            --line-fill: linear-gradient(90deg, #d48c2c, #b06a1a);
+            --chart-bg: rgba(255, 255, 255, 0.6);
+            --chart-text: #2a3a4e;
+            --shadow-color: rgba(0,0,0,0.1);
+            --chart-grid: rgba(0,0,0,0.08);
+            --chart-line: #d48c2c;
+            --chart-area: rgba(212,140,44,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #d48c2c;
+            --gradient-start: #b08a2c;
+            --gradient-end: #8a6a1a;
+        }
+        /* Золотая тема */
+        [data-theme="gold"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a1f0e, #1a1008);
+            --bg-panel: rgba(40, 30, 20, 0.85);
+            --bg-card: rgba(40, 30, 20, 0.9);
+            --border-color: rgba(212, 140, 44, 0.25);
+            --text-primary: #f5e6c8;
+            --text-secondary: #d4b88a;
+            --text-muted: #8a7a5a;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a5a3a;
+            --line-bg: #5a4a2a;
+            --line-fill: linear-gradient(90deg, #f5b041, #e67e22);
+            --chart-bg: rgba(40, 30, 20, 0.6);
+            --chart-text: #d4b88a;
+            --shadow-color: rgba(0,0,0,0.6);
+            --chart-grid: rgba(255,255,255,0.06);
+            --chart-line: #f5b041;
+            --chart-area: rgba(245,176,65,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #f5b041;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+        }
+        /* Синяя тема */
+        [data-theme="blue"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1628, #050d1a);
+            --bg-panel: rgba(10, 22, 40, 0.8);
+            --bg-card: rgba(10, 22, 40, 0.9);
+            --border-color: rgba(74, 142, 196, 0.2);
+            --text-primary: #b0d4f0;
+            --text-secondary: #8ab4d4;
+            --text-muted: #4a6a8a;
+            --accent-gold: #4a8ec4;
+            --accent-glow: rgba(74, 142, 196, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a7a;
+            --line-bg: #2a4a6a;
+            --line-fill: linear-gradient(90deg, #4a8ec4, #2a6a9e);
+            --chart-bg: rgba(10, 22, 40, 0.6);
+            --chart-text: #8ab4d4;
+            --shadow-color: rgba(0,0,0,0.5);
+            --chart-grid: rgba(255,255,255,0.06);
+            --chart-line: #4a8ec4;
+            --chart-area: rgba(74,142,196,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #4a8ec4;
+            --gradient-start: #8ab4d4;
+            --gradient-end: #4a6a9e;
+        }
+        /* Зелёная тема */
+        [data-theme="green"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a12, #050d08);
+            --bg-panel: rgba(10, 26, 18, 0.8);
+            --bg-card: rgba(10, 26, 18, 0.9);
+            --border-color: rgba(76, 217, 160, 0.2);
+            --text-primary: #b0e8d0;
+            --text-secondary: #80c8a8;
+            --text-muted: #4a7a62;
+            --accent-gold: #4cd9a0;
+            --accent-glow: rgba(76, 217, 160, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #2b6a9e;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a4a;
+            --line-bg: #2a5a42;
+            --line-fill: linear-gradient(90deg, #4cd9a0, #2a9a6e);
+            --chart-bg: rgba(10, 26, 18, 0.6);
+            --chart-text: #80c8a8;
+            --shadow-color: rgba(0,0,0,0.5);
+            --chart-grid: rgba(255,255,255,0.06);
+            --chart-line: #4cd9a0;
+            --chart-area: rgba(76,217,160,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #4cd9a0;
+            --gradient-start: #80c8a8;
+            --gradient-end: #4a7a62;
+        }
+        /* Фиолетовая тема */
+        [data-theme="purple"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
+            --bg-panel: rgba(26, 10, 42, 0.8);
+            --bg-card: rgba(26, 10, 42, 0.9);
+            --border-color: rgba(160, 76, 217, 0.2);
+            --text-primary: #d8b0f0;
+            --text-secondary: #b080d4;
+            --text-muted: #6a4a8a;
+            --accent-gold: #a04cd9;
+            --accent-glow: rgba(160, 76, 217, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #5a3a6a;
+            --line-bg: #4a2a6a;
+            --line-fill: linear-gradient(90deg, #a04cd9, #7a2a9e);
+            --chart-bg: rgba(26, 10, 42, 0.6);
+            --chart-text: #b080d4;
+            --shadow-color: rgba(0,0,0,0.5);
+            --chart-grid: rgba(255,255,255,0.06);
+            --chart-line: #a04cd9;
+            --chart-area: rgba(160,76,217,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #a04cd9;
+            --gradient-start: #b080d4;
+            --gradient-end: #6a4a8a;
+        }
+        /* Красная тема */
+        [data-theme="red"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a0a0a, #180505);
+            --bg-panel: rgba(42, 10, 10, 0.8);
+            --bg-card: rgba(42, 10, 10, 0.9);
+            --border-color: rgba(217, 76, 76, 0.2);
+            --text-primary: #f0b0b0;
+            --text-secondary: #d48080;
+            --text-muted: #8a4a4a;
+            --accent-gold: #d94c4c;
+            --accent-glow: rgba(217, 76, 76, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a3a3a;
+            --line-bg: #6a2a2a;
+            --line-fill: linear-gradient(90deg, #d94c4c, #b02a2a);
+            --chart-bg: rgba(42, 10, 10, 0.6);
+            --chart-text: #d48080;
+            --shadow-color: rgba(0,0,0,0.5);
+            --chart-grid: rgba(255,255,255,0.06);
+            --chart-line: #d94c4c;
+            --chart-area: rgba(217,76,76,0.15);
+            --chart-point: #fff;
+            --chart-point-border: #d94c4c;
+            --gradient-start: #d48080;
+            --gradient-end: #8a4a4a;
+        }
+        /* Защита глаз */
+        [data-theme="eyecare"] {
+            --bg-body: #d9d9d9;
+            --bg-panel: rgba(220, 220, 220, 0.85);
+            --bg-card: rgba(230, 230, 230, 0.9);
+            --border-color: rgba(120, 120, 120, 0.2);
+            --text-primary: #404040;
+            --text-secondary: #505050;
+            --text-muted: #707070;
+            --accent-gold: #8a8a8a;
+            --accent-glow: rgba(128, 128, 128, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.05);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a6a;
+            --dot-pending: #909090;
+            --line-bg: #a0a0a0;
+            --line-fill: linear-gradient(90deg, #8a8a8a, #6a6a6a);
+            --chart-bg: rgba(200, 200, 200, 0.5);
+            --chart-text: #505050;
+            --shadow-color: rgba(0,0,0,0.05);
+            --chart-grid: rgba(80,80,80,0.1);
+            --chart-line: #6a6a6a;
+            --chart-area: rgba(128,128,128,0.1);
+            --chart-point: #fff;
+            --chart-point-border: #6a6a6a;
+            --gradient-start: #8a8a8a;
+            --gradient-end: #6a6a6a;
+        }
+        /* Киберпанк */
+        [data-theme="cyberpunk"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0010, #000005);
+            --bg-panel: rgba(20, 0, 30, 0.8);
+            --bg-card: rgba(20, 0, 30, 0.9);
+            --border-color: rgba(255, 0, 200, 0.3);
+            --text-primary: #ff66ff;
+            --text-secondary: #ff99ff;
+            --text-muted: #cc66cc;
+            --accent-gold: #ff00ff;
+            --accent-glow: rgba(255, 0, 255, 0.1);
+            --shadow: 0 8px 40px rgba(255, 0, 255, 0.1);
+            --dot-done: #00ffaa;
+            --dot-active: #ff0066;
+            --dot-pending: #660066;
+            --line-bg: #660066;
+            --line-fill: linear-gradient(90deg, #ff00ff, #cc00cc);
+            --chart-bg: rgba(20, 0, 30, 0.6);
+            --chart-text: #ff99ff;
+            --shadow-color: rgba(255,0,255,0.1);
+            --chart-grid: rgba(255,0,255,0.1);
+            --chart-line: #ff00ff;
+            --chart-area: rgba(255,0,255,0.1);
+            --chart-point: #fff;
+            --chart-point-border: #ff00ff;
+            --gradient-start: #ff66ff;
+            --gradient-end: #cc33cc;
+        }
+        /* Графическая (монохромная) */
+        [data-theme="graphic"] {
+            --bg-body: #f5f5f5;
+            --bg-panel: rgba(255,255,255,0.9);
+            --bg-card: #ffffff;
+            --border-color: #cccccc;
+            --text-primary: #000000;
+            --text-secondary: #222222;
+            --text-muted: #555555;
+            --accent-gold: #000000;
+            --accent-glow: rgba(0,0,0,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #000000;
+            --dot-active: #000000;
+            --dot-pending: #999999;
+            --line-bg: #cccccc;
+            --line-fill: linear-gradient(90deg, #000000, #333333);
+            --chart-bg: rgba(255,255,255,0.8);
+            --chart-text: #000000;
+            --shadow-color: rgba(0,0,0,0.1);
+            --chart-grid: rgba(0,0,0,0.1);
+            --chart-line: #000000;
+            --chart-area: rgba(0,0,0,0.05);
+            --chart-point: #fff;
+            --chart-point-border: #000000;
+            --gradient-start: #333333;
+            --gradient-end: #000000;
+        }
+        /* Матрица */
+        [data-theme="matrix"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #001000, #000800);
+            --bg-panel: rgba(0, 20, 0, 0.8);
+            --bg-card: rgba(0, 20, 0, 0.9);
+            --border-color: rgba(0, 255, 0, 0.2);
+            --text-primary: #00ff00;
+            --text-secondary: #66ff66;
+            --text-muted: #006600;
+            --accent-gold: #00ff00;
+            --accent-glow: rgba(0, 255, 0, 0.02);
+            --shadow: 0 8px 40px rgba(0, 255, 0, 0.05);
+            --dot-done: #00ff00;
+            --dot-active: #ff0000;
+            --dot-pending: #006600;
+            --line-bg: #003300;
+            --line-fill: linear-gradient(90deg, #00ff00, #00cc00);
+            --chart-bg: rgba(0, 20, 0, 0.6);
+            --chart-text: #66ff66;
+            --shadow-color: rgba(0,255,0,0.05);
+            --chart-grid: rgba(0,255,0,0.08);
+            --chart-line: #00ff00;
+            --chart-area: rgba(0,255,0,0.08);
+            --chart-point: #000;
+            --chart-point-border: #00ff00;
+            --gradient-start: #66ff66;
+            --gradient-end: #00cc00;
+        }
+        /* Космос */
+        [data-theme="space"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0a2a, #000010);
+            --bg-panel: rgba(10, 10, 30, 0.8);
+            --bg-card: rgba(10, 10, 30, 0.9);
+            --border-color: rgba(100, 100, 255, 0.2);
+            --text-primary: #c0c0ff;
+            --text-secondary: #8888ff;
+            --text-muted: #4444aa;
+            --accent-gold: #6666ff;
+            --accent-glow: rgba(100, 100, 255, 0.02);
+            --shadow: 0 8px 40px rgba(100, 100, 255, 0.05);
+            --dot-done: #00ffaa;
+            --dot-active: #ff6666;
+            --dot-pending: #333366;
+            --line-bg: #222266;
+            --line-fill: linear-gradient(90deg, #6666ff, #4444cc);
+            --chart-bg: rgba(10, 10, 30, 0.6);
+            --chart-text: #8888ff;
+            --shadow-color: rgba(100,100,255,0.05);
+            --chart-grid: rgba(100,100,255,0.08);
+            --chart-line: #6666ff;
+            --chart-area: rgba(100,100,255,0.08);
+            --chart-point: #fff;
+            --chart-point-border: #6666ff;
+            --gradient-start: #8888ff;
+            --gradient-end: #4444cc;
+        }
+        /* Ретро */
+        [data-theme="retro"] {
+            --bg-body: #f0e8d0;
+            --bg-panel: rgba(240, 232, 208, 0.85);
+            --bg-card: rgba(250, 242, 220, 0.9);
+            --border-color: #b0a080;
+            --text-primary: #4a3a2a;
+            --text-secondary: #6a5a4a;
+            --text-muted: #8a7a6a;
+            --accent-gold: #8a7a50;
+            --accent-glow: rgba(138, 122, 80, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a5a;
+            --dot-pending: #b0a080;
+            --line-bg: #b0a080;
+            --line-fill: linear-gradient(90deg, #8a7a50, #6a5a30);
+            --chart-bg: rgba(240, 232, 208, 0.6);
+            --chart-text: #4a3a2a;
+            --shadow-color: rgba(0,0,0,0.1);
+            --chart-grid: rgba(0,0,0,0.08);
+            --chart-line: #8a7a50;
+            --chart-area: rgba(138,122,80,0.1);
+            --chart-point: #fff;
+            --chart-point-border: #8a7a50;
+            --gradient-start: #b0a080;
+            --gradient-end: #8a7a50;
+        }
+
+        /* ----- base ----- */
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            background: radial-gradient(ellipse at 50% 20%, #0a1220, #050810);
+            background: var(--bg-body);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            color: #e8edf5;
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background 0.4s, color 0.4s;
         }
+
+        /* ===== Верхнее меню (единое) ===== */
         .top-menu {
             width: 100%;
-            background: rgba(10, 18, 32, 0.85);
+            background: rgba(17, 24, 34, 0.85);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(100, 150, 220, 0.2);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             padding: 12px 30px;
             display: flex;
             align-items: center;
@@ -32,17 +400,18 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            transition: background 0.3s;
         }
         .top-menu .logo {
             font-size: 24px;
             font-weight: 700;
-            background: linear-gradient(135deg, #6a8ec4, #4a6a9e, #8ab4d4);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
-            text-shadow: 0 0 30px rgba(74,106,158,0.3);
+            text-shadow: 0 0 30px var(--accent-glow);
         }
         .top-menu .nav-links {
             display: flex;
@@ -50,7 +419,7 @@
             flex-wrap: wrap;
         }
         .top-menu .nav-links a {
-            color: #8ab4d4;
+            color: var(--text-secondary);
             text-decoration: none;
             font-size: 15px;
             font-weight: 500;
@@ -60,12 +429,12 @@
         }
         .top-menu .nav-links a:hover,
         .top-menu .nav-links a.active {
-            color: #6a8ec4;
-            border-bottom-color: #6a8ec4;
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
         }
         .top-menu .right-info {
             font-size: 13px;
-            color: #4a6a8a;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 12px;
@@ -75,14 +444,34 @@
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: #4a8ec4;
+            background: var(--dot-done);
             animation: pulse-dot 2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(74,142,196,0.4);
+            box-shadow: 0 0 12px rgba(76,217,160,0.4);
         }
         @keyframes pulse-dot {
             0%,100% { opacity:1; transform:scale(1); }
             50% { opacity:0.3; transform:scale(0.7); }
         }
+
+        .header-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .theme-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .theme-btn:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+        .theme-btn:focus-visible { outline: 2px solid var(--accent-gold); }
 
         /* ----- контент ----- */
         .analysis-content {
@@ -93,7 +482,7 @@
         .analysis-content h1 {
             font-size: 36px;
             font-weight: 700;
-            background: linear-gradient(135deg, #b0d4f0, #8ab4d4, #6a8ec4);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -102,24 +491,25 @@
         }
         .analysis-content .subhead {
             font-size: 16px;
-            color: #6a8a9e;
+            color: var(--text-muted);
             margin-bottom: 28px;
         }
 
         /* ----- график нефти ----- */
         .oil-card {
-            background: rgba(10, 22, 40, 0.6);
+            background: var(--bg-panel);
             backdrop-filter: blur(6px);
             border-radius: 20px;
-            border: 1px solid rgba(74, 142, 196, 0.1);
+            border: 1px solid var(--border-color);
             padding: 18px 20px 16px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
             margin-bottom: 28px;
+            transition: background 0.4s, border-color 0.4s;
         }
         .oil-card h3 {
             font-size: 15px;
             font-weight: 500;
-            color: #8ab4d4;
+            color: var(--text-secondary);
             margin-bottom: 10px;
         }
         .oil-card .chart-wrapper {
@@ -140,23 +530,23 @@
             margin-bottom: 28px;
         }
         .stat-btn {
-            background: rgba(10, 22, 40, 0.6);
+            background: var(--bg-card);
             backdrop-filter: blur(6px);
-            border: 1px solid rgba(74, 142, 196, 0.1);
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 16px 20px;
-            color: #b0c4de;
+            color: var(--text-secondary);
             font-size: 15px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: var(--shadow);
         }
         .stat-btn:hover {
-            border-color: #4a8ec4;
+            border-color: var(--accent-gold);
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(74,142,196,0.1);
+            box-shadow: 0 8px 30px var(--accent-glow);
         }
         .stat-btn .icon {
             font-size: 28px;
@@ -180,17 +570,19 @@
             display: flex;
         }
         .stat-modal {
-            background: rgba(10,22,40,0.95);
+            background: var(--bg-panel);
+            backdrop-filter: blur(12px);
             border-radius: 24px;
             padding: 30px 32px 24px;
             max-width: 900px;
             width: 100%;
             max-height: 85vh;
-            border: 1px solid rgba(74,142,196,0.2);
+            border: 1px solid var(--border-color);
             box-shadow: 0 24px 80px rgba(0,0,0,0.8);
             animation: modal-in 0.3s ease;
             display: flex;
             flex-direction: column;
+            transition: background 0.4s, border-color 0.4s;
         }
         .stat-modal .sm-header {
             display: flex;
@@ -200,19 +592,19 @@
         }
         .stat-modal .sm-header h2 {
             font-size: 20px;
-            color: #b0d4f0;
+            color: var(--text-primary);
             font-weight: 500;
         }
         .stat-modal .sm-header .sm-close {
             background: none;
             border: none;
-            color: #6a8a9e;
+            color: var(--text-muted);
             font-size: 28px;
             cursor: pointer;
             transition: color 0.2s;
         }
         .stat-modal .sm-header .sm-close:hover {
-            color: #b0d4f0;
+            color: var(--text-secondary);
         }
         .stat-modal .sm-chart-wrap {
             flex: 1;
@@ -230,18 +622,19 @@
 
         /* ----- прогнозы (очень подробные) ----- */
         .forecast-block {
-            background: rgba(10, 22, 40, 0.6);
+            background: var(--bg-panel);
             backdrop-filter: blur(6px);
             border-radius: 20px;
-            border: 1px solid rgba(74, 142, 196, 0.1);
+            border: 1px solid var(--border-color);
             padding: 18px 22px 20px;
             margin-bottom: 28px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow);
+            transition: background 0.4s, border-color 0.4s;
         }
         .forecast-block h3 {
             font-size: 17px;
             font-weight: 500;
-            color: #b0d4f0;
+            color: var(--text-primary);
             margin-bottom: 12px;
         }
         .forecast-grid {
@@ -262,14 +655,14 @@
         .forecast-item .f-title {
             font-size: 14px;
             font-weight: 600;
-            color: #8ab4d4;
+            color: var(--text-secondary);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .forecast-item .f-title .f-toggle {
             font-size: 12px;
-            color: #4a6a8a;
+            color: var(--text-muted);
             transition: transform 0.2s;
         }
         .forecast-item .f-title .f-toggle.open {
@@ -277,14 +670,14 @@
         }
         .forecast-item .f-summary {
             font-size: 13px;
-            color: #8ab4d4;
+            color: var(--text-secondary);
             margin: 2px 0 4px;
         }
         .forecast-item .f-detail {
             display: none;
             margin-top: 8px;
             font-size: 14px;
-            color: #b0c4de;
+            color: var(--text-secondary);
             line-height: 1.7;
         }
         .forecast-item .f-detail.open {
@@ -295,17 +688,17 @@
             padding: 10px 14px;
             background: rgba(0,0,0,0.25);
             border-radius: 10px;
-            border-left: 4px solid #4a8ec4;
+            border-left: 4px solid var(--accent-gold);
         }
         .forecast-item .f-detail .scenario .s-title {
             font-weight: 600;
             font-size: 15px;
-            color: #b0d4f0;
+            color: var(--text-primary);
         }
         .forecast-item .f-detail .scenario .s-desc {
             margin-top: 4px;
             font-size: 14px;
-            color: #8ab4d4;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
@@ -313,11 +706,45 @@
         .version {
             text-align: center;
             font-size: 12px;
-            color: #3a5a6a;
+            color: var(--text-muted);
             padding: 16px 0 8px;
-            border-top: 1px solid rgba(74,142,196,0.05);
+            border-top: 1px solid var(--border-color);
             margin-top: 12px;
             letter-spacing: 0.3px;
+        }
+
+        /* ===== Модальное окно тем ===== */
+        .theme-modal .theme-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .theme-modal .theme-option {
+            padding: 12px 8px;
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .theme-modal .theme-option:hover {
+            border-color: var(--accent-gold);
+            transform: scale(1.03);
+        }
+        .theme-modal .theme-option.active {
+            border-color: var(--accent-gold);
+            background: var(--accent-glow);
+        }
+        .theme-modal .theme-option .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin: 0 auto 6px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
         /* ----- адаптив ----- */
@@ -329,10 +756,12 @@
             .forecast-grid { grid-template-columns: 1fr; }
             .stat-modal { padding: 20px; max-width: 100%; }
             .stat-modal .sm-chart-wrap { min-height: 300px; }
+            .theme-modal .theme-options { grid-template-columns: 1fr 1fr; }
         }
         @media (max-width: 480px) {
             .stats-grid { grid-template-columns: 1fr; }
             .analysis-content h1 { font-size: 26px; }
+            .theme-modal .theme-options { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -340,7 +769,7 @@
 
     <!-- ===== ВЕРХНЕЕ МЕНЮ ===== -->
     <header class="top-menu">
-        <div class="logo analysis">Analysis</div>
+        <div class="logo">Zenith</div>
         <nav class="nav-links">
             <a href="index.html">Главная</a>
             <a href="arion.html">Arion</a>
@@ -349,13 +778,16 @@
         <div class="right-info">
             <span class="dot"></span>
             <span id="headerTime">—</span>
+            <div class="header-controls">
+                <button class="theme-btn" id="themeToggle">🎨 Тема</button>
+            </div>
         </div>
     </header>
 
     <!-- ===== КОНТЕНТ ===== -->
     <main class="analysis-content">
 
-        <h1>Аналитика и прогнозы</h1>
+        <h1>Аналитика и Протоколы</h1>
         <div class="subhead">Закулисье, август–сентябрь 2026 — данные, тренды, прогнозы</div>
 
         <!-- ===== НЕФТЬ (с подписями значений) ===== -->
@@ -407,7 +839,7 @@
         </div>
 
         <!-- ===== ВЕРСИЯ ===== -->
-        <div class="version">v1.2.1</div>
+        <div class="version">v1.2.2</div>
 
     </main>
 
@@ -424,9 +856,20 @@
         </div>
     </div>
 
+    <!-- ===== МОДАЛЬНОЕ ОКНО ДЛЯ ВЫБОРА ТЕМЫ ===== -->
+    <div class="modal-overlay" id="themeModalOverlay">
+        <div class="modal theme-modal">
+            <div class="modal-title" style="color:var(--text-primary); font-size:20px; font-weight:600; margin-bottom:8px;">Выберите тему</div>
+            <div class="theme-options" id="themeOptions">
+                <!-- будут вставлены JS -->
+            </div>
+            <button class="modal-close" id="themeModalClose" style="margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color); color:var(--text-secondary); padding:10px 24px; border-radius:40px; font-size:14px; cursor:pointer; transition:all 0.2s; width:100%;">Закрыть</button>
+        </div>
+    </div>
+
     <script>
         // ============================================================
-        //  VERSION: v1.2.1
+        //  VERSION: v1.2.2
         // ============================================================
 
         // ============================================================
@@ -572,6 +1015,26 @@
         }];
 
         // ============================================================
+        //  ТЕМЫ
+        // ============================================================
+
+        const themes = [
+            { id: 'dark', label: 'Тёмная', color: '#141c28' },
+            { id: 'light', label: 'Светлая', color: '#f0f4f8' },
+            { id: 'gold', label: 'Золотая', color: '#2a1f0e' },
+            { id: 'blue', label: 'Синяя', color: '#0a1628' },
+            { id: 'green', label: 'Зелёная', color: '#0a1a12' },
+            { id: 'purple', label: 'Фиолетовая', color: '#1a0a2a' },
+            { id: 'red', label: 'Красная', color: '#2a0a0a' },
+            { id: 'eyecare', label: 'Защита глаз', color: '#d9d9d9' },
+            { id: 'cyberpunk', label: 'Киберпанк', color: '#0a0010' },
+            { id: 'graphic', label: 'Графическая', color: '#f5f5f5' },
+            { id: 'matrix', label: 'Матрица', color: '#001000' },
+            { id: 'space', label: 'Космос', color: '#0a0a2a' },
+            { id: 'retro', label: 'Ретро', color: '#f0e8d0' }
+        ];
+
+        // ============================================================
         //  HELPERS
         // ============================================================
 
@@ -618,7 +1081,6 @@
                                 }
                             }
                         },
-                        // кастомный плагин для подписей значений над точками с $
                         afterDraw: function(chart) {
                             const meta = chart.getDatasetMeta(0);
                             const data = chart.data.datasets[0].data;
@@ -632,7 +1094,7 @@
                                 if (value !== undefined) {
                                     const x = element.x;
                                     const y = element.y - 10;
-                                    ctx2.fillStyle = '#8ab4d4';
+                                    ctx2.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#8ab4d4';
                                     ctx2.fillText('$' + value, x, y);
                                 }
                             });
@@ -643,13 +1105,13 @@
                         y: {
                             min: 0,
                             max: 1000,
-                            grid: { color: 'rgba(255,255,255,0.06)' },
-                            ticks: { color: '#6a8a9e', stepSize: 200 },
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e', stepSize: 200 },
                             offset: true
                         },
                         x: {
                             grid: { display: false },
-                            ticks: { color: '#6a8a9e' },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e' },
                             offset: true
                         }
                     }
@@ -664,9 +1126,7 @@
         function renderDemoModal(canvasId, races, title, tickFormat) {
             const ctx = document.getElementById(canvasId).getContext('2d');
             const labels = ['май', 'июнь', 'июль', 'август'];
-            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
-                '#2c3e50'
-            ];
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db', '#2c3e50'];
 
             const datasets = races.map((race, i) => {
                 const data = labels.map(l => demoData[l]?.[race] || null);
@@ -695,7 +1155,7 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
+                            labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
                         },
                         tooltip: {
                             callbacks: {
@@ -706,11 +1166,11 @@
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#6a8a9e', font: { size: 12 } } },
+                        x: { grid: { display: false }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e', font: { size: 12 } } },
                         y: {
-                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
                             ticks: {
-                                color: '#6a8a9e',
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e',
                                 font: { size: 12 },
                                 callback: function(value) {
                                     if (tickFormat === 'billion') {
@@ -756,7 +1216,7 @@
                     plugins: {
                         legend: {
                             position: 'bottom',
-                            labels: { color: '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
+                            labels: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#8ab4d4', font: { size: 12 }, boxWidth: 14, padding: 8 }
                         },
                         tooltip: {
                             callbacks: {
@@ -767,11 +1227,11 @@
                         }
                     },
                     scales: {
-                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
+                        x: { grid: { display: false }, ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e' } },
                         y: {
-                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
                             ticks: {
-                                color: '#6a8a9e',
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e',
                                 callback: function(value) {
                                     if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
                                     if (value >= 1e3) return (value / 1e3).toFixed(1) + 'k';
@@ -910,10 +1370,70 @@
         }
 
         // ============================================================
+        //  ТЕМЫ (синхронизация с localStorage)
+        // ============================================================
+
+        let currentTheme = localStorage.getItem('arion-theme') || 'dark';
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('arion-theme', theme);
+            currentTheme = theme;
+            // Обновляем графики после смены темы (цвета)
+            if (window.oilChartInstance) {
+                window.oilChartInstance.destroy();
+                window.oilChartInstance = null;
+                renderOilChart();
+            }
+            // Перерисовываем модальные графики, если открыты
+            if (modalChart) {
+                // Просто пересоздаём текущий график
+                const overlay = document.getElementById('statModal');
+                if (overlay.classList.contains('active')) {
+                    const key = document.querySelector('.stat-btn:hover')?.dataset.stat || 'bacteria';
+                    // Закрываем и открываем заново
+                    const title = document.getElementById('statModalTitle');
+                    const config = statConfigs[key] || statConfigs.bacteria;
+                    if (modalChart) {
+                        modalChart.destroy();
+                        modalChart = null;
+                    }
+                    if (config.type === 'losses') {
+                        modalChart = renderLossesModal('statModalCanvas');
+                    } else {
+                        modalChart = renderDemoModal('statModalCanvas', config.races, config.title, config.tickFormat);
+                    }
+                }
+            }
+        }
+
+        function openThemeModal() {
+            const overlay = document.getElementById('themeModalOverlay');
+            const optionsContainer = document.getElementById('themeOptions');
+            optionsContainer.innerHTML = '';
+            themes.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'theme-option' + (t.id === currentTheme ? ' active' : '');
+                div.innerHTML = `
+                    <div class="color-preview" style="background:${t.color};"></div>
+                    ${t.label}
+                `;
+                div.addEventListener('click', () => {
+                    applyTheme(t.id);
+                    overlay.classList.remove('active');
+                });
+                optionsContainer.appendChild(div);
+            });
+            overlay.classList.add('active');
+            document.getElementById('themeModalClose').focus();
+        }
+
+        // ============================================================
         //  ИНИЦИАЛИЗАЦИЯ
         // ============================================================
 
         function init() {
+            // Время в шапке
             function updateHeaderTime() {
                 const now = new Date();
                 document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
@@ -927,6 +1447,10 @@
             updateHeaderTime();
             setInterval(updateHeaderTime, 60000);
 
+            // Применяем тему
+            applyTheme(currentTheme);
+
+            // График нефти
             renderOilChart();
 
             // Кнопки статистики
@@ -942,7 +1466,19 @@
                 if (e.target === this) closeStatModal();
             });
             document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') closeStatModal();
+                if (e.key === 'Escape') {
+                    closeStatModal();
+                    document.getElementById('themeModalOverlay').classList.remove('active');
+                }
+            });
+
+            // Кнопка темы
+            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
+            document.getElementById('themeModalClose').addEventListener('click', function() {
+                document.getElementById('themeModalOverlay').classList.remove('active');
+            });
+            document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.remove('active');
             });
 
             renderForecasts();
@@ -951,7 +1487,7 @@
         document.addEventListener('DOMContentLoaded', init);
 
         // ============================================================
-        //  VERSION: v1.2.1
+        //  VERSION: v1.2.2
         // ============================================================
     </script>
 </body>
