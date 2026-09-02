@@ -741,7 +741,7 @@
         }
         .analytics-grid {
             display:grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap:20px;
         }
         .analytics-card {
@@ -830,7 +830,7 @@
 </head>
 <body>
 
-    <!-- ===== ВЕРХНЕЕ МЕНЮ ===== -->
+    <!-- ===== ВЕРХНЕЕ МЕНЮ (с кнопкой темы) ===== -->
     <header class="top-menu">
         <div class="logo">Zenith</div>
         <nav class="nav-links">
@@ -915,10 +915,6 @@
                 <div class="analytics-card">
                     <h3>Цена нефти (USD/барр.)</h3>
                     <canvas id="oilChart" width="400" height="160"></canvas>
-                </div>
-                <div class="analytics-card">
-                    <h3>Продуктивность (% изменения в неделю)</h3>
-                    <canvas id="productivityChart" width="400" height="160"></canvas>
                 </div>
             </div>
         </div>
@@ -1102,7 +1098,7 @@
 
         const extraData = {
             totalBudget: 500,
-            spentBudget: 5,
+            spentBudget: 5, // изменено с 100 на 5
             risks: [
                 { name: 'Задержка поставок', probability: 0.45, impact: 0.50 },
                 { name: 'Погодные условия', probability: 0.35, impact: 0.40 },
@@ -1116,12 +1112,6 @@
                 { month: 'июнь.26', value: 266 },
                 { month: 'июль.26', value: 704 },
                 { month: 'август.26', value: 788 }
-            ],
-            // Данные продуктивности (% изменения за неделю)
-            productivity: [
-                { date: '2026-08-16', value: 10 }, // неделя 16-22 авг
-                { date: '2026-08-23', value: 25 }, // неделя 23-29 авг
-                { date: '2026-08-30', value: 80 }   // неделя 30 авг - 5 сен
             ]
         };
 
@@ -1150,8 +1140,8 @@
         // ============================================================
 
         let currentTheme = localStorage.getItem('arion-theme') || 'dark';
-        // Приоритетная дата прогноза — 3 сентября 2026 (устанавливаем в коде)
-        const customForecastDate = new Date('2026-09-03');
+        // Приоритетная дата прогноза — 3 сентября 2026 (задаётся в коде)
+        const FORECAST_REF_DATE = new Date('2026-09-03');
 
         // ============================================================
         //  HELPERS
@@ -1194,11 +1184,12 @@
         }
 
         // ============================================================
-        //  ПРОГНОЗ (с фиксированной датой)
+        //  РАСЧЁТ ПРОГНОЗА (от заданной даты 2026-09-03)
         // ============================================================
 
         function getLastMonday() {
-            const base = customForecastDate ? new Date(customForecastDate) : new Date();
+            // Используем фиксированную дату для расчёта
+            const base = new Date(FORECAST_REF_DATE);
             const day = base.getDay();
             const diff = (day === 0 ? 6 : day - 1);
             const monday = new Date(base);
@@ -1444,7 +1435,7 @@
         }
 
         // ============================================================
-        //  MODAL
+        //  MODAL (основной)
         // ============================================================
 
         function openModal(sub) {
@@ -1667,61 +1658,6 @@
                 ctxOil.textAlign = 'center';
                 ctxOil.fillText(d.value, x, y-10);
             });
-
-            // ===== Продуктивность =====
-            const ctxProd = document.getElementById('productivityChart').getContext('2d');
-            const prodData = extraData.productivity;
-            const prodLabels = prodData.map(d => formatDate(d.date));
-            const prodValues = prodData.map(d => d.value);
-
-            // Задаём цвета в зависимости от темы
-            const prodLineColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-line').trim() || '#f5b041';
-            const prodAreaColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-area').trim() || 'rgba(245,176,65,0.15)';
-            const prodTextColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
-            const prodGridColor = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.08)';
-
-            new Chart(ctxProd, {
-                type: 'line',
-                data: {
-                    labels: prodLabels,
-                    datasets: [{
-                        label: 'Продуктивность (% изменения за неделю)',
-                        data: prodValues,
-                        borderColor: prodLineColor,
-                        backgroundColor: prodAreaColor,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: prodLineColor,
-                        pointRadius: 5,
-                        borderWidth: 2.5,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + '%';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            grid: { color: prodGridColor },
-                            ticks: { color: prodTextColor, callback: v => v + '%' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: prodTextColor }
-                        }
-                    }
-                }
-            });
         }
 
         // ============================================================
@@ -1846,6 +1782,7 @@
         // ============================================================
 
         function init() {
+            // Время в шапке
             function updateHeaderTime() {
                 const now = new Date();
                 document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
