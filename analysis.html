@@ -3,10 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Analysis · Прогнозы</title>
+    <title>Analysis · Прогнозы и аналитика</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1/dist/chartjs-plugin-annotation.min.js">
+    </script>
     <style>
         /* ----- общие стили ----- */
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             background: radial-gradient(ellipse at 50% 20%, #0a1220, #050810);
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
@@ -31,8 +38,8 @@
             gap: 16px;
             position: sticky;
             top: 0;
-            z-index: 100;
-            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
         .top-menu .logo {
             font-size: 24px;
@@ -42,7 +49,7 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             letter-spacing: -0.5px;
-            text-shadow: 0 0 30px rgba(74,106,158,0.3);
+            text-shadow: 0 0 30px rgba(74, 106, 158, 0.3);
         }
         .top-menu .nav-links {
             display: flex;
@@ -77,145 +84,399 @@
             border-radius: 50%;
             background: #4a8ec4;
             animation: pulse-dot 2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(74,142,196,0.4);
+            box-shadow: 0 0 12px rgba(74, 142, 196, 0.4);
         }
         @keyframes pulse-dot {
-            0%,100% { opacity:1; transform:scale(1); }
-            50% { opacity:0.3; transform:scale(0.7); }
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.3;
+                transform: scale(0.7);
+            }
         }
 
-        /* ----- контент аналитики ----- */
+        /* ----- контент ----- */
         .analysis-content {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
-            padding: 30px 24px 60px;
+            padding: 30px 24px 20px;
         }
         .analysis-content h1 {
             font-size: 36px;
             font-weight: 700;
             color: #b0d4f0;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             letter-spacing: -0.5px;
         }
         .analysis-content .subhead {
             font-size: 16px;
             color: #6a8a9e;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
-        .forecast-grid {
+
+        /* ----- карточки графиков ----- */
+        .chart-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
+            margin-bottom: 28px;
         }
-        .forecast-card {
+        .chart-card {
             background: rgba(10, 22, 40, 0.6);
             backdrop-filter: blur(6px);
             border-radius: 20px;
             border: 1px solid rgba(74, 142, 196, 0.1);
-            padding: 22px 24px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            padding: 18px 20px 16px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
             transition: border-color 0.3s;
+            cursor: pointer;
+            position: relative;
         }
-        .forecast-card:hover {
+        .chart-card:hover {
             border-color: rgba(74, 142, 196, 0.3);
         }
-        .forecast-card h2 {
-            font-size: 18px;
-            font-weight: 600;
-            color: #b0d4f0;
-            margin-bottom: 12px;
-            letter-spacing: 0.2px;
-            border-bottom: 1px solid rgba(74,142,196,0.1);
-            padding-bottom: 8px;
-        }
-        .forecast-card .value {
-            font-size: 28px;
-            font-weight: 700;
-            color: #f5b041;
-            margin: 6px 0;
-        }
-        .forecast-card .desc {
-            font-size: 14px;
-            color: #8ab4d4;
-            line-height: 1.7;
-        }
-        .forecast-card .desc strong {
-            color: #b0d4f0;
-        }
-        .forecast-card .scenario {
-            margin-top: 12px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 10px;
-            padding: 12px 14px;
-        }
-        .forecast-card .scenario .s-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #b0d4f0;
-            margin-bottom: 4px;
-        }
-        .forecast-card .scenario .s-desc {
-            font-size: 13px;
-            color: #8ab4d4;
-            line-height: 1.5;
-        }
-        .forecast-card .scenario .prob {
-            display: inline-block;
-            margin-top: 6px;
-            font-size: 12px;
+        .chart-card h3 {
+            font-size: 15px;
             font-weight: 500;
-            background: rgba(74,142,196,0.15);
-            padding: 2px 12px;
-            border-radius: 40px;
             color: #8ab4d4;
+            margin-bottom: 10px;
+            letter-spacing: 0.2px;
         }
-        .forecast-card .event-list {
-            margin-top: 8px;
+        .chart-card .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
         }
-        .forecast-card .event-list .event {
-            display: flex;
-            gap: 12px;
-            font-size: 13px;
-            color: #b0c4de;
-            padding: 6px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+        .chart-card .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
         }
-        .forecast-card .event-list .event .date {
-            font-weight: 600;
-            color: #8ab4d4;
-            min-width: 70px;
-            flex-shrink: 0;
+        .chart-card .expand-hint {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 12px;
+            color: #4a6a8a;
+            opacity: 0.5;
+            transition: opacity 0.2s;
         }
-        .forecast-card .event-list .event .desc {
-            color: #d0dcec;
+        .chart-card:hover .expand-hint {
+            opacity: 1;
         }
-        .forecast-card .event-list .event .desc .highlight {
-            color: #f5b041;
-        }
-        .forecast-card .event-list .event .desc .danger {
-            color: #e74c3c;
-        }
-
         .full-width {
             grid-column: 1 / -1;
         }
 
+        /* ----- полноэкранный режим ----- */
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .fullscreen-overlay.active {
+            display: flex;
+        }
+        .fullscreen-overlay .fs-content {
+            width: 100%;
+            max-width: 1200px;
+            max-height: 85vh;
+            background: rgba(10, 22, 40, 0.8);
+            border-radius: 24px;
+            padding: 30px 32px 24px;
+            border: 1px solid rgba(74, 142, 196, 0.2);
+            position: relative;
+        }
+        .fullscreen-overlay .fs-content .fs-close {
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #8ab4d4;
+            font-size: 28px;
+            cursor: pointer;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+        .fullscreen-overlay .fs-content .fs-close:hover {
+            color: #b0d4f0;
+        }
+        .fullscreen-overlay .fs-content h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #b0d4f0;
+            margin-bottom: 12px;
+        }
+        .fullscreen-overlay .fs-content .fs-chart-wrap {
+            width: 100%;
+            height: 65vh;
+            position: relative;
+        }
+        .fullscreen-overlay .fs-content .fs-chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        /* ----- таймлайн ----- */
+        .timeline-section {
+            background: rgba(10, 22, 40, 0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            border: 1px solid rgba(74, 142, 196, 0.1);
+            padding: 18px 22px 22px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+        .timeline-section .tl-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .timeline-section .tl-header h3 {
+            font-size: 17px;
+            font-weight: 500;
+            color: #b0d4f0;
+        }
+        .timeline-section .tl-header .tl-filter {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .timeline-section .tl-header .tl-filter label {
+            font-size: 13px;
+            color: #6a8a9e;
+        }
+        .timeline-section .tl-header .tl-filter select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(74, 142, 196, 0.2);
+            color: #b0c4de;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+        }
+        .timeline-section .tl-header .tl-filter select:hover {
+            border-color: #4a8ec4;
+        }
+
+        .timeline-track {
+            position: relative;
+            padding: 16px 0 8px;
+            min-height: 80px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 32px;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .timeline-track .tl-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            min-width: 60px;
+            transition: transform 0.2s;
+        }
+        .timeline-track .tl-item:hover {
+            transform: translateY(-4px);
+        }
+        .timeline-track .tl-item .tl-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #4a8ec4;
+            border: 2px solid #8ab4d4;
+            box-shadow: 0 0 16px rgba(74, 142, 196, 0.3);
+            transition: all 0.2s;
+            position: relative;
+            z-index: 2;
+        }
+        .timeline-track .tl-item .tl-dot.important {
+            background: #f5b041;
+            border-color: #f5b041;
+            box-shadow: 0 0 24px rgba(245, 176, 65, 0.4);
+        }
+        .timeline-track .tl-item .tl-dot.danger {
+            background: #e74c3c;
+            border-color: #e74c3c;
+            box-shadow: 0 0 24px rgba(231, 76, 60, 0.4);
+        }
+        .timeline-track .tl-item .tl-date {
+            font-size: 11px;
+            color: #8ab4d4;
+            margin-top: 6px;
+            font-weight: 500;
+        }
+        .timeline-track .tl-item .tl-label {
+            font-size: 10px;
+            color: #6a8a9e;
+            text-align: center;
+            max-width: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .timeline-track .tl-item .tl-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 18, 32, 0.95);
+            border: 1px solid rgba(74, 142, 196, 0.2);
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 12px;
+            color: #d0dcec;
+            white-space: nowrap;
+            z-index: 10;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+        .timeline-track .tl-item:hover .tl-tooltip {
+            display: block;
+        }
+        .timeline-track .tl-now {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 8px;
+            position: relative;
+        }
+        .timeline-track .tl-now .tl-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #4cd9a0;
+            border: 2px solid #4cd9a0;
+            box-shadow: 0 0 30px rgba(76, 217, 160, 0.5);
+            animation: pulse-dot 1.6s ease-in-out infinite;
+        }
+        .timeline-track .tl-now .tl-date {
+            font-size: 11px;
+            color: #4cd9a0;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        /* ----- прогнозы ----- */
+        .forecast-block {
+            background: rgba(10, 22, 40, 0.6);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            border: 1px solid rgba(74, 142, 196, 0.1);
+            padding: 18px 22px 20px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+        .forecast-block h3 {
+            font-size: 17px;
+            font-weight: 500;
+            color: #b0d4f0;
+            margin-bottom: 12px;
+        }
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .forecast-item {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+        .forecast-item .f-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #8ab4d4;
+            margin-bottom: 2px;
+        }
+        .forecast-item .f-desc {
+            font-size: 13px;
+            color: #b0c4de;
+            line-height: 1.5;
+        }
+        .forecast-item .f-desc strong {
+            color: #f5b041;
+        }
+
+        /* ----- версия ----- */
+        .version {
+            text-align: center;
+            font-size: 12px;
+            color: #3a5a6a;
+            padding: 16px 0 8px;
+            border-top: 1px solid rgba(74, 142, 196, 0.05);
+            margin-top: 12px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ----- адаптив ----- */
         @media (max-width: 820px) {
-            .forecast-grid { grid-template-columns: 1fr; }
-            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap: 8px; }
-            .top-menu .nav-links { justify-content: center; }
-            .analysis-content h1 { font-size: 28px; }
+            .top-menu {
+                padding: 10px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .top-menu .nav-links {
+                justify-content: center;
+            }
+            .analysis-content {
+                padding: 20px 12px;
+            }
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .forecast-grid {
+                grid-template-columns: 1fr;
+            }
+            .fullscreen-overlay .fs-content {
+                padding: 16px;
+                max-height: 90vh;
+            }
+            .fullscreen-overlay .fs-content .fs-chart-wrap {
+                height: 50vh;
+            }
+            .timeline-track {
+                gap: 12px 20px;
+            }
         }
         @media (max-width: 480px) {
-            .analysis-content { padding: 20px 12px; }
-            .forecast-card { padding: 16px; }
-            .forecast-card .event-list .event { flex-direction: column; gap: 4px; }
-            .forecast-card .event-list .event .date { min-width: auto; }
+            .analysis-content h1 {
+                font-size: 26px;
+            }
+            .timeline-section .tl-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .timeline-track .tl-item .tl-label {
+                max-width: 60px;
+                font-size: 9px;
+            }
+            .fullscreen-overlay .fs-content .fs-chart-wrap {
+                height: 40vh;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ===== ВЕРХНЕЕ МЕНЮ (логотип Analysis) ===== -->
+
+    <!-- ===== ВЕРХНЕЕ МЕНЮ ===== -->
     <header class="top-menu">
         <div class="logo analysis">Analysis</div>
         <nav class="nav-links">
@@ -229,172 +490,940 @@
         </div>
     </header>
 
-    <!-- ===== КОНТЕНТ ===== -->
+    <!-- ===== ОСНОВНОЙ КОНТЕНТ ===== -->
     <main class="analysis-content">
-        <h1>Прогнозы и аналитика</h1>
-        <div class="subhead">Сентябрь 2026 — на основе событий Закулисья, нефтяного рынка и военно-политической обстановки</div>
 
-        <div class="forecast-grid">
+        <h1>Аналитика и прогнозы</h1>
+        <div class="subhead">Закулисье, август–сентябрь 2026 — данные, тренды, прогнозы</div>
 
-            <!-- 1. Прогноз цены нефти -->
-            <div class="forecast-card">
-                <h2>🛢️ Цена нефти (USD/барр.)</h2>
-                <div class="value">788</div>
-                <div class="desc">Закрытие августа. Рост в июне–июле (266 → 704) был вызван <strong>ожиданиями скорого завершения войны</strong> между Тусовщиками и Занудами (которая фактически закончилась 1 августа). Рынок закладывал в цену восстановление стабильности и поставок, а также сезонное увеличение спроса. В августе цена выросла до 788 благодаря отсутствию новых масштабных конфликтов в нефтяных регионах и временному затишью после вторжения Эндера.</div>
+        <!-- ===== БЛОК: ЦЕНА НЕФТИ ===== -->
+        <div class="chart-card" id="oilCard" style="margin-bottom:28px;">
+            <h3>🛢️ Цена нефти (USD/барр.) — апрель–август + прогноз на сентябрь</h3>
+            <div class="chart-wrapper" style="height:200px;">
+                <canvas id="oilChart"></canvas>
+            </div>
+            <div class="expand-hint">⛶ увеличить</div>
+        </div>
 
-                <div class="scenario">
-                    <div class="s-title">📈 Базовый сценарий (вероятность 55%)</div>
-                    <div class="s-desc"><strong>780–820</strong> — консолидация. Война Смертомолей/Спортиков продолжается, но без сбоев поставок. Стабилизация после вторжения Эндера.</div>
-                    <span class="prob">Вероятность: 55%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">🚀 Оптимистичный (25%)</div>
-                    <div class="s-desc"><strong>850–900</strong> — быстрое перемирие между Смертомолями и Спортиками, полное восстановление торговли с Тусовщиками, успешное закрытие портала.</div>
-                    <span class="prob">Вероятность: 25%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">⚠️ Пессимистичный (20%)</div>
-                    <div class="s-desc"><strong>700–750</strong> — эскалация войны Смертомолей до ядерного уровня, новое вторжение Эндера, раскол «Ордена Доблести» и разрыв торговых соглашений.</div>
-                    <span class="prob">Вероятность: 20%</span>
-                </div>
-                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Вывод:</strong> существенного снижения в сентябре не ожидается — фундаментальные факторы (восстановление после завершения крупной войны, сезонный спрос) перевешивают локальные риски.</div>
+        <!-- ===== ГРАФИКИ ===== -->
+        <div class="chart-grid">
+
+            <!-- 1. Столбчатая диаграмма потерь -->
+            <div class="chart-card" id="lossesCard">
+                <h3>📊 Потери по войнам (по месяцам)</h3>
+                <div class="chart-wrapper"><canvas id="lossesChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 2. Прогноз по военным конфликтам -->
-            <div class="forecast-card">
-                <h2>⚔️ Военно-политическая обстановка</h2>
-                <div class="desc"><strong>Активный фронт:</strong> Смертомоли (31.1M убитых) против Спортиков (69.4M убитых). Бактерии предали Спортиков 26.08, создав трёхсторонний конфликт.</div>
-
-                <div class="scenario">
-                    <div class="s-title">🕊️ Базовый (60%)</div>
-                    <div class="s-desc">Спортики выигрывают кампанию, но с огромными потерями. Бактерии ограничиваются экономическими санкциями. К концу сентября — <strong>перемирие</strong> под давлением «Ордена Доблести».</div>
-                    <span class="prob">Вероятность: 60%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">💥 Эскалационный (25%)</div>
-                    <div class="s-desc">Бактерии наносят ракетный удар по городам Спортиков — конфликт перерастает в <strong>тотальную войну</strong> с применением оружия массового поражения. Вмешательство Зануд и Отстранённых.</div>
-                    <span class="prob">Вероятность: 25%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">🤝 Мирный (15%)</div>
-                    <div class="s-desc">Неожиданный компромисс: Смертомоли отдают часть территорий, Спортики снимают претензии, Бактерии отзывают ультиматум. <strong>Прекращение огня</strong> уже в первую неделю сентября.</div>
-                    <span class="prob">Вероятность: 15%</span>
-                </div>
-                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Риск:</strong> ядерная эскалация — 25%.</div>
+            <!-- 2. Линейный график динамики потерь (недели) -->
+            <div class="chart-card" id="trendCard">
+                <h3>📈 Динамика потерь (за последний понедельник)</h3>
+                <div class="chart-wrapper"><canvas id="trendChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 3. Прогноз по угрозам (Эндер, расколы) -->
-            <div class="forecast-card">
-                <h2>🌌 Угрозы и катастрофы</h2>
-                <div class="desc"><strong>Портал Эндера:</strong> вторжение 18.08 отбито благодаря возвращению Объекта 226. Однако портал не закрыт полностью — 11 Ок Эндера ещё предстоит добыть.</div>
-
-                <div class="scenario">
-                    <div class="s-title">🛡️ Базовый (70%)</div>
-                    <div class="s-desc">Временное затишье. Объект 226 помогает добыть недостающие части. <strong>Никаких новых вторжений</strong> в сентябре.</div>
-                    <span class="prob">Вероятность: 70%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">⚠️ Повторное вторжение (20%)</div>
-                    <div class="s-desc">Эндер-Существа наносят новый удар, но уже по другому городу. <strong>Частичная эвакуация</strong>, разрушения локального масштаба.</div>
-                    <span class="prob">Вероятность: 20%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">🌀 Раскол «Ордена» (30%)</div>
-                    <div class="s-desc">Выход Шахтёров ослабил союз. Возможен выход Безликих или Отстранённых, если не будут решены торговые споры. <strong>Кризис управления</strong>.</div>
-                    <span class="prob">Вероятность: 30%</span>
-                </div>
-                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Главный совет:</strong> мониторить состояние портала и переговоры в «Ордене».</div>
+            <!-- 3. Демография: малые расы -->
+            <div class="chart-card" id="demoSmallCard">
+                <h3>👥 Демография — малые расы (до 100 млн)</h3>
+                <div class="chart-wrapper"><canvas id="demoSmallChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 4. Прогноз экономики и ресурсов -->
-            <div class="forecast-card">
-                <h2>📉 Экономика и ресурсы</h2>
-                <div class="desc"><strong>Инфляция:</strong> у Тусовщиков стабилизируется после снятия санкций. <strong>Пошлины</strong> Безликих снижены до 50%, но Шахтёры ушли → <strong>дефицит руды</strong> и ископаемых.</div>
-
-                <div class="scenario">
-                    <div class="s-title">📊 Базовый (65%)</div>
-                    <div class="s-desc">Постепенное восстановление торговли между оставшимися членами «Ордена». Цены на ресурсы <strong>умеренно растут</strong>, но без скачков.</div>
-                    <span class="prob">Вероятность: 65%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">📈 Рост цен (25%)</div>
-                    <div class="s-desc">Дефицит руды из-за ухода Шахтёров приводит к <strong>росту себестоимости</strong> вооружений и топлива. Инфляция ускоряется до 2–3% в месяц.</div>
-                    <span class="prob">Вероятность: 25%</span>
-                </div>
-                <div class="scenario">
-                    <div class="s-title">📉 Стагнация (10%)</div>
-                    <div class="s-desc">Затишье в войне Смертомолей и успешное закрытие портала снижают спрос на ресурсы. Цены <strong>падают</strong> на 5–10%.</div>
-                    <span class="prob">Вероятность: 10%</span>
-                </div>
-                <div class="desc" style="margin-top:10px; font-size:13px; color:#6a8a9e;"><strong>Ключевой фактор:</strong> переговоры Шахтёров с «Орденом» — от их возвращения зависит стабильность рынка.</div>
+            <!-- 4. Демография: средние расы -->
+            <div class="chart-card" id="demoMidCard">
+                <h3>👥 Демография — средние расы (100 млн – 1 млрд)</h3>
+                <div class="chart-wrapper"><canvas id="demoMidChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
             </div>
 
-            <!-- 5. Сводный прогноз (полная ширина) + хронология ключевых событий -->
-            <div class="forecast-card full-width">
-                <h2>📋 Итоговый прогноз на сентябрь 2026</h2>
-                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:12px;">
-                    <div style="background:rgba(0,0,0,0.2); border-radius:12px; padding:14px;">
-                        <div style="font-weight:600; color:#b0d4f0;">Нефть</div>
-                        <div style="font-size:15px; font-weight:500; color:#f5b041;">$780–820</div>
-                        <div style="font-size:12px; color:#6a8a9e;">без резких падений</div>
-                    </div>
-                    <div style="background:rgba(0,0,0,0.2); border-radius:12px; padding:14px;">
-                        <div style="font-weight:600; color:#b0d4f0;">Война</div>
-                        <div style="font-size:15px; font-weight:500; color:#4cd9a0;">перемирие к концу месяца</div>
-                        <div style="font-size:12px; color:#6a8a9e;">при условии отсутствия ядерного удара</div>
-                    </div>
-                    <div style="background:rgba(0,0,0,0.2); border-radius:12px; padding:14px;">
-                        <div style="font-weight:600; color:#b0d4f0;">Угрозы</div>
-                        <div style="font-size:15px; font-weight:500; color:#f5b041;">временное затишье</div>
-                        <div style="font-size:12px; color:#6a8a9e;">портал Эндера под контролем</div>
-                    </div>
-                </div>
-                <div style="margin-top:16px; border-top:1px solid rgba(74,142,196,0.1); padding-top:14px; font-size:14px; color:#8ab4d4; line-height:1.6;">
-                    <strong style="color:#b0d4f0;">Общий вывод:</strong> сентябрь будет месяцем <strong>консолидации</strong> после бурного августа. Основные риски — ядерная эскалация (25%) и повторное вторжение Эндера (20%). Рекомендуется усилить разведку портала и следить за переговорами в «Ордене Доблести».
-                </div>
-                <div style="margin-top:8px; font-size:13px; color:#6a8a9e;">Прогноз актуален до 15 сентября 2026. Обновление по мере событий.</div>
+            <!-- 5. Демография: крупные расы -->
+            <div class="chart-card" id="demoLargeCard">
+                <h3>👥 Демография — крупные расы (1 млрд+)</h3>
+                <div class="chart-wrapper"><canvas id="demoLargeChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
+            </div>
 
-                <!-- Хронология ключевых событий августа (влияющих на прогнозы) -->
-                <div style="margin-top:20px;">
-                    <div style="font-weight:600; color:#b0d4f0; margin-bottom:8px;">Ключевые события августа, повлиявшие на прогнозы</div>
-                    <div class="event-list">
-                        <div class="event">
-                            <span class="date">01.08</span>
-                            <span class="desc">Капитуляция Тусовщиков; создан <span class="highlight">«Орден Доблести»</span> — завершение затяжной войны, что снизило геополитическую премию и позволило рынку стабилизироваться.</span>
-                        </div>
-                        <div class="event">
-                            <span class="date">13.08</span>
-                            <span class="desc">Переворот у Фогов: новый лидер — <span class="danger">бывший Рейхсфюрер СС</span> — усилил нестабильность в регионе, но не затронул нефтяные мощности.</span>
-                        </div>
-                        <div class="event">
-                            <span class="date">18.08</span>
-                            <span class="desc"><span class="danger">Вторжение Эндер-Существ</span> (48 млн), Мурино уничтожен — краткосрочный шок, но быстрое восстановление (возвращение Объекта 226) успокоило рынок.</span>
-                        </div>
-                        <div class="event">
-                            <span class="date">22.08</span>
-                            <span class="desc">Начало войны <span class="highlight">Смертомоли vs Спортики</span> — локальный конфликт, не влияющий на глобальные поставки нефти.</span>
-                        </div>
-                        <div class="event">
-                            <span class="date">29.08</span>
-                            <span class="desc">Шахтёры <span class="highlight">покидают</span> «Орден Доблести» — создаёт риск дефицита ресурсов, но пока не отразился на ценах.</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- 6. Демография: Бактерии -->
+            <div class="chart-card" id="demoBacteriaCard">
+                <h3>🦠 Демография — Бактерии (отдельный масштаб)</h3>
+                <div class="chart-wrapper"><canvas id="demoBacteriaChart"></canvas></div>
+                <div class="expand-hint">⛶ увеличить</div>
             </div>
 
         </div>
+
+        <!-- ===== ТАЙМЛАЙН ===== -->
+        <div class="timeline-section">
+            <div class="tl-header">
+                <h3>📅 Таймлайн ключевых событий</h3>
+                <div class="tl-filter">
+                    <label for="monthFilter">Показать:</label>
+                    <select id="monthFilter">
+                        <option value="all">Все месяцы</option>
+                        <option value="8">Август</option>
+                        <option value="9">Сентябрь</option>
+                    </select>
+                </div>
+            </div>
+            <div class="timeline-track" id="timelineTrack">
+                <!-- будет вставлено JS -->
+            </div>
+        </div>
+
+        <!-- ===== ПРОГНОЗЫ ===== -->
+        <div class="forecast-block">
+            <h3>🔮 Прогнозы на сентябрь</h3>
+            <div class="forecast-grid">
+                <div class="forecast-item">
+                    <div class="f-title">🛢️ Цена нефти</div>
+                    <div class="f-desc"><strong>$780–820</strong> — консолидация. Возможен рост до $850 при перемирии. Снижение маловероятно.</div>
+                </div>
+                <div class="forecast-item">
+                    <div class="f-title">⚔️ Война Смертомолей/Спортиков</div>
+                    <div class="f-desc"><strong>Перемирие к концу сентября</strong> (вероятность 60%). Риск ядерной эскалации — 25%.</div>
+                </div>
+                <div class="forecast-item">
+                    <div class="f-title">🌌 Угроза Эндера</div>
+                    <div class="f-desc"><strong>Временное затишье</strong>. Портал не закрыт полностью — требуется добыча 11 Ок Эндера.</div>
+                </div>
+                <div class="forecast-item">
+                    <div class="f-title">📉 Экономика</div>
+                    <div class="f-desc"><strong>Дефицит руды</strong> из-за ухода Шахтёров. Рост цен на ресурсы до 2–3% в месяц.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== ВЕРСИЯ ===== -->
+        <div class="version">v1.2.0</div>
+
     </main>
 
+    <!-- ===== ПОЛНОЭКРАННЫЙ ОВЕРЛЕЙ ===== -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <div class="fs-content">
+            <button class="fs-close" id="fsClose">✕</button>
+            <h3 id="fsTitle">График</h3>
+            <div class="fs-chart-wrap" id="fsChartWrap">
+                <canvas id="fsCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function updateTime() {
+        // ============================================================
+        //  VERSION (увеличиваем при каждом изменении)
+        // ============================================================
+        // Текущая версия: v1.2.0
+        // При каждом обновлении кода увеличиваем на 0.0.1
+        // ============================================================
+
+        // ============================================================
+        //  DATA
+        // ============================================================
+
+        // Цена нефти
+        const oilData = [
+            { month: 'апрель.26', value: 0 },
+            { month: 'май.26', value: 180 },
+            { month: 'июнь.26', value: 266 },
+            { month: 'июль.26', value: 704 },
+            { month: 'август.26', value: 788 }
+        ];
+
+        // Потери по войнам (для столбчатой диаграммы)
+        const lossData = [
+            { month: 'Март', race: 'Кожекрады', value: 4361 },
+            { month: 'Март', race: 'Гончие', value: 15478 },
+            { month: 'Март', race: 'Тусовщики', value: 3 },
+            { month: 'Март', race: 'Отстранённые', value: 248 },
+            { month: 'Март', race: 'Фоги', value: 143 },
+            { month: 'Март', race: 'Зануды', value: 8 },
+            { month: 'Апрель', race: 'Тусовщики', value: 879824 },
+            { month: 'Июнь', race: 'Многоруки', value: 6564 },
+            { month: 'Июнь', race: 'Безликие', value: 4262 },
+            { month: 'Июнь', race: 'Зануды', value: 1322 },
+            { month: 'Июнь', race: 'Фоги', value: 307 },
+            { month: 'Июль', race: 'Бо', value: 61 },
+            { month: 'Июль', race: 'Сели', value: 349 },
+            { month: 'Июль', race: 'Гончие', value: 9 },
+            { month: 'Июль', race: 'Тусовщики', value: 9071165 },
+            { month: 'Июль', race: 'Зануды', value: 5235767 },
+            { month: 'Июль', race: 'Безликие', value: 1053332 },
+            { month: 'Июль', race: 'Отстранённые', value: 640 },
+            { month: 'Июль', race: 'Серости', value: 3949 },
+            { month: 'Июль', race: 'Коре', value: 23 },
+            { month: 'Июль', race: 'Треножники', value: 2572 },
+            { month: 'Июль', race: 'Пуги', value: 62 },
+            { month: 'Август', race: 'Безликие', value: 1 },
+            { month: 'Август', race: 'Смертомоли', value: 32596438 },
+            { month: 'Август', race: 'Спортики', value: 96675060 },
+            { month: 'Август', race: 'Бактерии', value: 1737 }
+        ];
+
+        // Демография по месяцам
+        const demoData = {
+            '1 июня': {
+                'Бактерии': 65309890415,
+                'Тусовщики': 59213000703,
+                'Зануды': 52945126745,
+                'Отстранённые': 1256945387,
+                'Кожекрады': 599278013,
+                'Спортики': 210930452,
+                'Безликие': 63241978,
+                'Серости': 34922603,
+                'Гончие': 9177356,
+                'Фоги': 98266,
+                'Многоруки': 26105,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            '1 июля': {
+                'Бактерии': 138073643885,
+                'Тусовщики': 109249533719,
+                'Зануды': 87264309050,
+                'Отстранённые': 53856734291,
+                'Кожекрады': 37411075986,
+                'Безликие': 32923000674,
+                'Спортики': 4914492740,
+                'Серости': 4602905988,
+                'Гончие': 795636205,
+                'Многоруки': 997347,
+                'Фоги': 128304,
+                'Треножники': 653,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            '1 августа': {
+                'Бактерии': 62137940003860,
+                'Тусовщики': 306745891363,
+                'Зануды': 101050299106,
+                'Отстранённые': 78295000406,
+                'Безликие': 58123985316,
+                'Кожекрады': 52112304098,
+                'Серости': 21946876244,
+                'Спортики': 4914817980,
+                'Гончие': 1116924950,
+                'Многоруки': 7391610,
+                'Смертомоли': 850306,
+                'Фоги': 117268,
+                'Шахтёры': 9856,
+                'Джерри': 1,
+                'Объект 226': 1
+            },
+            '1 сентября': {
+                'Бактерии': 303496720210089,
+                'Тусовщики': 529000851406,
+                'Зануды': 146608194309,
+                'Безликие': 112363284987,
+                'Отстранённые': 81925416399,
+                'Кожекрады': 67665749008,
+                'Серости': 46098643712,
+                'Спортики': 4859996800,
+                'Гончие': 2512528896,
+                'Многоруки': 86945317,
+                'Смертомоли': 80492396,
+                'Душери': 193040,
+                'Фоги': 133012,
+                'Шахтёры': 89228,
+                'Транспортёры': 20103,
+                'Джерри': 1,
+                'Объект 226': 1
+            }
+        };
+
+        // Ключевые события для таймлайна (только самые важные дни)
+        const timelineEvents = [{
+            date: '2026-08-01',
+            time: '12:28',
+            title: 'Капитуляция Тусовщиков',
+            desc: 'Завершение 20-дневной войны. Тусовщики безоговорочно капитулировали. Война официально завершена.',
+            important: true
+        }, {
+            date: '2026-08-02',
+            time: '16:37',
+            title: 'Уничтожение Миротворцев',
+            desc: '86 Тусовщиков-Миротворцев ликвидированы. «Орден Доблести» вводит тотальные санкции против Тусовщиков.',
+            important: false
+        }, {
+            date: '2026-08-13',
+            time: '17:46',
+            title: 'Переворот у Фогов',
+            desc: 'Толпа растерзала Главаря Фогов и высшее командование. Новый лидер — бывший Рейхсфюрер СС.',
+            important: true,
+            danger: true
+        }, {
+            date: '2026-08-18',
+            time: '13:38',
+            title: 'Вторжение Эндер-Существ',
+            desc: '48 млн Эндер-Существ атакуют Мурино. Город стерт с лица земли. Объект 226 возвращён, портал временно закрыт.',
+            important: true,
+            danger: true
+        }, {
+            date: '2026-08-22',
+            time: '00:00',
+            title: 'Начало войны Смертомолей и Спортиков',
+            desc: 'Смертомоли вторгаются на территорию Спортиков. Начинается масштабный конфликт.',
+            important: true
+        }, {
+            date: '2026-08-26',
+            time: '12:00',
+            title: 'Бактерии предают Спортиков',
+            desc: 'Бактерии отказываются быть спонсорами Спортиков, оставляя их без поддержки в критический момент.',
+            important: true
+        }, {
+            date: '2026-08-27',
+            time: '14:00',
+            title: 'Торнадо и перелом в войне',
+            desc: 'Торнадо уничтожает 5 лагерей Тусовщиков. Спортики уничтожают последний лагерь Смертомолей.',
+            important: false
+        }, {
+            date: '2026-08-29',
+            time: '10:00',
+            title: 'Шахтёры покидают «Орден Доблести»',
+            desc: 'Шахтёры выходят из союза, уходя в полную изоляцию. Раскол в «Ордене» становится реальностью.',
+            important: true
+        }, {
+            date: '2026-08-31',
+            time: '23:59',
+            title: 'Снятие санкций с Тусовщиков',
+            desc: 'Санкции сняты, но влияние расы сведено к нулю. Reseewe вступает в «Глаза Аргоса».',
+            important: false
+        }, {
+            date: '2026-09-01',
+            time: '00:00',
+            title: 'Рекордные потери на фронте',
+            desc: 'Погибло 759 346 Смертомолей и 10 203 668 Спортиков за один день.',
+            important: true,
+            danger: true
+        }, {
+            date: '2026-09-02',
+            time: '23:59',
+            title: 'Ещё более высокие потери',
+            desc: '685 403 Смертомоли и 16 998 753 Спортика погибли. Война достигает пика жестокости.',
+            important: true,
+            danger: true
+        }];
+
+        // Данные для графика динамики потерь (пока одна точка — последний понедельник)
+        const trendData = [
+            { week: '31.08', deaths: 8118718 }
+        ];
+
+        // ============================================================
+        //  HELPERS
+        // ============================================================
+
+        function formatDate(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function formatTimeAgo(dateStr, timeStr) {
+            const eventDate = new Date(dateStr + 'T' + (timeStr || '00:00'));
             const now = new Date();
-            document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
-                day: '2-digit', month: '2-digit', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
+            let diff = (now - eventDate) / 1000;
+            let parts = [];
+            const years = Math.floor(diff / 31536000);
+            if (years > 0) { parts.push(years + ' лет');
+                diff %= 31536000; }
+            const months = Math.floor(diff / 2592000);
+            if (months > 0) { parts.push(months + ' мес');
+                diff %= 2592000; }
+            const days = Math.floor(diff / 86400);
+            if (days > 0) { parts.push(days + ' дн');
+                diff %= 86400; }
+            const hours = Math.floor(diff / 3600);
+            if (hours > 0) { parts.push(hours + ' ч');
+                diff %= 3600; }
+            const minutes = Math.floor(diff / 60);
+            if (minutes > 0) { parts.push(minutes + ' мин'); }
+            if (parts.length === 0) return 'только что';
+            return parts.join(' ') + ' назад';
+        }
+
+        // ============================================================
+        //  ГРАФИКИ
+        // ============================================================
+
+        let charts = {};
+
+        // ---- Цена нефти ----
+        function renderOilChart(canvasId) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = oilData.map(d => d.month);
+            const values = oilData.map(d => d.value);
+
+            // Прогноз на сентябрь (диапазон 780–820)
+            const forecastLabels = ['август.26', 'сентябрь.26 (прогноз)'];
+            const forecastValues = [788, 800];
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [...labels, 'сентябрь.26 (прогноз)'],
+                    datasets: [{
+                        label: 'Цена нефти',
+                        data: [...values, 800],
+                        borderColor: '#ff1493',
+                        backgroundColor: 'rgba(255,20,147,0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#ff1493',
+                        pointRadius: 5,
+                        borderWidth: 2.5,
+                        spanGaps: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' USD/барр.';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 1000,
+                            grid: { color: 'rgba(255,255,255,0.06)', drawBorder: false },
+                            ticks: { color: '#6a8a9e', stepSize: 200 }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false },
+                            ticks: { color: '#6a8a9e' }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'forecastRange',
+                    afterDraw: function(chart) {
+                        const ctx2 = chart.ctx;
+                        const meta = chart.getDatasetMeta(0);
+                        const lastPoint = meta.data[meta.data.length - 1];
+                        if (!lastPoint) return;
+                        const x = lastPoint.x;
+                        const yMin = chart.scales.y.getPixelForValue(780);
+                        const yMax = chart.scales.y.getPixelForValue(820);
+                        ctx2.save();
+                        ctx2.fillStyle = 'rgba(255,20,147,0.08)';
+                        ctx2.fillRect(x - 20, yMin, 40, yMax - yMin);
+                        ctx2.strokeStyle = 'rgba(255,20,147,0.3)';
+                        ctx2.setLineDash([4, 4]);
+                        ctx2.lineWidth = 1;
+                        ctx2.beginPath();
+                        ctx2.moveTo(x - 20, yMin);
+                        ctx2.lineTo(x + 20, yMin);
+                        ctx2.stroke();
+                        ctx2.beginPath();
+                        ctx2.moveTo(x - 20, yMax);
+                        ctx2.lineTo(x + 20, yMax);
+                        ctx2.stroke();
+                        ctx2.setLineDash([]);
+                        ctx2.fillStyle = '#6a8a9e';
+                        ctx2.font = '10px Inter, sans-serif';
+                        ctx2.textAlign = 'center';
+                        ctx2.fillText('780–820', x, yMin - 6);
+                        ctx2.restore();
+                    }
+                }]
             });
         }
-        updateTime();
-        setInterval(updateTime, 60000);
+
+        // ---- Потери (столбчатая) ----
+        function renderLossesChart(canvasId) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const months = ['Март', 'Апрель', 'Июнь', 'Июль', 'Август'];
+            const races = ['Кожекрады', 'Гончие', 'Тусовщики', 'Отстранённые', 'Фоги', 'Зануды', 'Многоруки', 'Безликие', 'Бо',
+                'Сели', 'Серости', 'Коре', 'Треножники', 'Пуги', 'Смертомоли', 'Спортики', 'Бактерии'
+            ];
+            const colors = {
+                'Кожекрады': '#e74c3c',
+                'Гончие': '#f39c12',
+                'Тусовщики': '#9b59b6',
+                'Отстранённые': '#3498db',
+                'Фоги': '#1abc9c',
+                'Зануды': '#2c3e50',
+                'Многоруки': '#e67e22',
+                'Безликие': '#34495e',
+                'Бо': '#16a085',
+                'Сели': '#27ae60',
+                'Серости': '#95a5a6',
+                'Коре': '#7f8c8d',
+                'Треножники': '#8e44ad',
+                'Пуги': '#d35400',
+                'Смертомоли': '#c0392b',
+                'Спортики': '#2980b9',
+                'Бактерии': '#2ecc71'
+            };
+
+            const datasets = races.map(race => {
+                const data = months.map(m => {
+                    const found = lossData.filter(d => d.month === m && d.race === race);
+                    return found.reduce((sum, d) => sum + d.value, 0);
+                });
+                return {
+                    label: race,
+                    data: data,
+                    backgroundColor: colors[race] || '#6a8a9e',
+                    borderRadius: 3,
+                    barPercentage: 0.6,
+                    categoryPercentage: 0.8,
+                };
+            }).filter(ds => ds.data.some(v => v > 0));
+
+            return new Chart(ctx, {
+                type: 'bar',
+                data: { labels: months, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 8 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: { color: '#6a8a9e', callback: v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v
+                                    .toLocaleString() }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ---- Динамика потерь (линейный) ----
+        function renderTrendChart(canvasId) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            // Данные: пока только одна точка — 31 августа
+            // Для сглаженной линии добавим несколько точек вокруг для лучшего отображения
+            const data = [
+                { week: '24.08', value: 0 },
+                { week: '31.08', value: 8118718 },
+                { week: '07.09', value: null }
+            ];
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.map(d => d.week),
+                    datasets: [{
+                        label: 'Потери за неделю',
+                        data: data.map(d => d.value),
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231,76,60,0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#e74c3c',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        borderWidth: 2.5,
+                        spanGaps: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y === null) return 'нет данных';
+                                    return context.parsed.y.toLocaleString() + ' погибших';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6a8a9e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: { color: '#6a8a9e', callback: v => v >= 1e6 ? (v / 1e6).toFixed(1) + 'M' : v
+                                    .toLocaleString() }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ---- Демография (общая функция) ----
+        function renderDemoChart(canvasId, races, label, color) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const labels = ['1 июня', '1 июля', '1 августа', '1 сентября'];
+
+            const datasets = races.map(race => {
+                const data = labels.map(l => {
+                    const val = demoData[l]?.[race];
+                    return val !== undefined ? val : null;
+                });
+                return {
+                    label: race,
+                    data: data,
+                    borderColor: color || '#4a8ec4',
+                    backgroundColor: 'rgba(74,142,196,0.05)',
+                    fill: false,
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: color || '#4a8ec4',
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2,
+                    spanGaps: true,
+                };
+            });
+
+            // Назначаем разные цвета
+            const colorPalette = ['#4a8ec4', '#e74c3c', '#f5b041', '#2ecc71', '#9b59b6', '#1abc9c', '#e67e22', '#3498db',
+                '#2c3e50'
+            ];
+            datasets.forEach((ds, i) => {
+                ds.borderColor = colorPalette[i % colorPalette.length];
+                ds.pointBorderColor = colorPalette[i % colorPalette.length];
+                ds.backgroundColor = colorPalette[i % colorPalette.length] + '15';
+            });
+
+            return new Chart(ctx, {
+                type: 'line',
+                data: { labels: labels, datasets: datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#8ab4d4', font: { size: 10 }, boxWidth: 12, padding: 6 }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y?.toLocaleString() ||
+                                        'нет данных';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { grid: { display: false }, ticks: { color: '#6a8a9e' } },
+                        y: {
+                            grid: { color: 'rgba(255,255,255,0.06)' },
+                            ticks: { color: '#6a8a9e', callback: v => v >= 1e9 ? (v / 1e9).toFixed(2) + 'B' : v >=
+                                    1e6 ? (v / 1e6).toFixed(1) + 'M' : v.toLocaleString() }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        //  ТАЙМЛАЙН
+        // ============================================================
+
+        function renderTimeline(filterMonth = 'all') {
+            const track = document.getElementById('timelineTrack');
+            track.innerHTML = '';
+
+            const now = new Date();
+            const filtered = timelineEvents.filter(e => {
+                const d = new Date(e.date);
+                const month = d.getMonth() + 1;
+                if (filterMonth === 'all') return true;
+                return month === parseInt(filterMonth);
+            });
+
+            filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            filtered.forEach(event => {
+                const d = new Date(event.date);
+                const day = d.getDate().toString().padStart(2, '0');
+                const month = (d.getMonth() + 1).toString().padStart(2, '0');
+
+                const item = document.createElement('div');
+                item.className = 'tl-item';
+                item.setAttribute('data-date', event.date);
+
+                const dot = document.createElement('div');
+                dot.className = 'tl-dot';
+                if (event.important) dot.classList.add('important');
+                if (event.danger) dot.classList.add('danger');
+                item.appendChild(dot);
+
+                const dateLabel = document.createElement('div');
+                dateLabel.className = 'tl-date';
+                dateLabel.textContent = day + '.' + month;
+                item.appendChild(dateLabel);
+
+                const label = document.createElement('div');
+                label.className = 'tl-label';
+                label.textContent = event.title;
+                item.appendChild(label);
+
+                // tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tl-tooltip';
+                tooltip.textContent = event.title + ' — ' + event.desc;
+                item.appendChild(tooltip);
+
+                item.addEventListener('click', function() {
+                    openTimelineModal(event);
+                });
+
+                track.appendChild(item);
+            });
+
+            // "Сейчас"
+            const nowItem = document.createElement('div');
+            nowItem.className = 'tl-now';
+            const nowDot = document.createElement('div');
+            nowDot.className = 'tl-dot';
+            nowItem.appendChild(nowDot);
+            const nowLabel = document.createElement('div');
+            nowLabel.className = 'tl-date';
+            nowLabel.textContent = 'Сейчас';
+            nowItem.appendChild(nowLabel);
+            track.appendChild(nowItem);
+        }
+
+        // ============================================================
+        //  МОДАЛЬНОЕ ОКНО ТАЙМЛАЙНА
+        // ============================================================
+
+        function openTimelineModal(event) {
+            // Создаём модалку динамически
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position:fixed; inset:0; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px);
+                z-index:10000; display:flex; justify-content:center; align-items:center; padding:20px;
+            `;
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) this.remove();
+            });
+
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background:rgba(10,22,40,0.95); border-radius:24px; padding:32px 36px;
+                max-width:600px; width:100%; border:1px solid rgba(74,142,196,0.2);
+                box-shadow:0 24px 80px rgba(0,0,0,0.8); animation:modal-in 0.3s ease;
+            `;
+
+            const title = document.createElement('h2');
+            title.style.cssText = 'font-size:22px; color:#f5b041; margin-bottom:8px;';
+            title.textContent = event.title;
+
+            const dateTime = document.createElement('div');
+            dateTime.style.cssText = 'font-size:14px; color:#6a8a9e; margin-bottom:12px;';
+            const d = new Date(event.date);
+            dateTime.textContent = formatDate(event.date) + ', ' + (event.time || '00:00');
+
+            const desc = document.createElement('p');
+            desc.style.cssText = 'font-size:15px; color:#b0c4de; line-height:1.6; margin-bottom:12px;';
+            desc.textContent = event.desc;
+
+            const ago = document.createElement('div');
+            ago.style.cssText = 'font-size:13px; color:#4a8ec4; margin-bottom:16px;';
+            ago.textContent = '⏱ ' + formatTimeAgo(event.date, event.time);
+
+            const closeBtn = document.createElement('button');
+            closeBtn.style.cssText = `
+                background:rgba(74,142,196,0.15); border:1px solid rgba(74,142,196,0.2);
+                color:#8ab4d4; padding:8px 24px; border-radius:40px; font-size:14px;
+                cursor:pointer; transition:all 0.2s; width:100%;
+            `;
+            closeBtn.textContent = 'Закрыть';
+            closeBtn.addEventListener('click', function() { overlay.remove(); });
+            closeBtn.addEventListener('mouseenter', function() {
+                this.style.borderColor = '#4a8ec4';
+                this.style.color = '#b0d4f0';
+            });
+            closeBtn.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'rgba(74,142,196,0.2)';
+                this.style.color = '#8ab4d4';
+            });
+
+            modal.appendChild(title);
+            modal.appendChild(dateTime);
+            modal.appendChild(desc);
+            modal.appendChild(ago);
+            modal.appendChild(closeBtn);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // анимация
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes modal-in { from { opacity:0; transform:scale(0.95) translateY(20px); }
+                to { opacity:1; transform:scale(1) translateY(0); } }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // ============================================================
+        //  ПОЛНОЭКРАННЫЙ РЕЖИМ
+        // ============================================================
+
+        let fullscreenChart = null;
+        let currentChartId = null;
+
+        function setupFullscreen() {
+            const overlay = document.getElementById('fullscreenOverlay');
+            const closeBtn = document.getElementById('fsClose');
+            const canvas = document.getElementById('fsCanvas');
+
+            document.querySelectorAll('.chart-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Игнорируем клик по кнопке или ссылке внутри
+                    if (e.target.closest('.expand-hint') || e.target.closest('button')) return;
+                    const canvasEl = this.querySelector('canvas');
+                    if (!canvasEl) return;
+                    const chartId = canvasEl.id;
+                    if (!charts[chartId]) return;
+
+                    const title = this.querySelector('h3')?.textContent || 'График';
+                    document.getElementById('fsTitle').textContent = title;
+
+                    // Копируем данные в полноэкранный canvas
+                    const fsCtx = canvas.getContext('2d');
+                    const originalChart = charts[chartId];
+                    const config = originalChart.config;
+                    // Создаём новый экземпляр с теми же данными, но увеличенным размером
+                    // Удаляем старый если был
+                    if (fullscreenChart) {
+                        fullscreenChart.destroy();
+                        fullscreenChart = null;
+                    }
+
+                    // Копируем данные и настройки
+                    const newConfig = JSON.parse(JSON.stringify(config));
+                    // Убираем ограничения высоты
+                    newConfig.options.responsive = true;
+                    newConfig.options.maintainAspectRatio = false;
+                    newConfig.options.plugins.legend.labels.font.size = 12;
+
+                    fullscreenChart = new Chart(fsCtx, newConfig);
+                    currentChartId = chartId;
+
+                    overlay.classList.add('active');
+                });
+            });
+
+            closeBtn.addEventListener('click', function() {
+                overlay.classList.remove('active');
+                if (fullscreenChart) {
+                    fullscreenChart.destroy();
+                    fullscreenChart = null;
+                }
+            });
+
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    overlay.classList.remove('active');
+                    if (fullscreenChart) {
+                        fullscreenChart.destroy();
+                        fullscreenChart = null;
+                    }
+                }
+            });
+
+            // Закрытие по Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                    if (fullscreenChart) {
+                        fullscreenChart.destroy();
+                        fullscreenChart = null;
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        //  ИНИЦИАЛИЗАЦИЯ
+        // ============================================================
+
+        function init() {
+            // Время в шапке
+            function updateHeaderTime() {
+                const now = new Date();
+                document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            updateHeaderTime();
+            setInterval(updateHeaderTime, 60000);
+
+            // Графики
+            charts['oilChart'] = renderOilChart('oilChart');
+            charts['lossesChart'] = renderLossesChart('lossesChart');
+            charts['trendChart'] = renderTrendChart('trendChart');
+
+            // Демография
+            const smallRaces = ['Гончие', 'Фоги', 'Многоруки', 'Смертомоли', 'Душери', 'Шахтёры', 'Транспортёры', 'Джерри',
+                'Объект 226'
+            ];
+            const midRaces = ['Кожекрады', 'Спортики', 'Безликие', 'Серости'];
+            const largeRaces = ['Тусовщики', 'Зануды', 'Отстранённые'];
+            const bacteria = ['Бактерии'];
+
+            charts['demoSmallChart'] = renderDemoChart('demoSmallChart', smallRaces, 'Малые расы');
+            charts['demoMidChart'] = renderDemoChart('demoMidChart', midRaces, 'Средние расы');
+            charts['demoLargeChart'] = renderDemoChart('demoLargeChart', largeRaces, 'Крупные расы');
+            charts['demoBacteriaChart'] = renderDemoChart('demoBacteriaChart', bacteria, 'Бактерии');
+
+            // Таймлайн
+            const filterSelect = document.getElementById('monthFilter');
+            renderTimeline('all');
+            filterSelect.addEventListener('change', function() {
+                renderTimeline(this.value);
+            });
+
+            // Полноэкранный режим
+            setupFullscreen();
+
+            // Обработка изменения размера окон для перерисовки графиков
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    Object.keys(charts).forEach(key => {
+                        if (charts[key] && charts[key].resize) {
+                            charts[key].resize();
+                        }
+                    });
+                }, 300);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+
+        // ============================================================
+        //  VERSION CONTROL
+        // ============================================================
+        // Текущая версия: v1.2.0
+        // При каждом обновлении кода увеличиваем на 0.0.1
+        // Например, следующее обновление будет v1.2.1
+        // ============================================================
     </script>
 </body>
 </html>
