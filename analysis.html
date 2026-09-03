@@ -6,7 +6,7 @@
     <title>Analysis · Прогнозы и аналитика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
-        /* ===== CSS Variables (темы) ===== */
+        /* ===== CSS Variables (темы) — полный набор ===== */
         :root {
             --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
             --bg-panel: rgba(17, 24, 34, 0.7);
@@ -839,7 +839,7 @@
             </div>
         </div>
 
-        <div class="version">v1.2.6</div>
+        <div class="version">v1.2.8</div>
 
     </main>
 
@@ -866,7 +866,7 @@
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.6
+        //  VERSION: v1.2.8
         // ============================================================
 
         // ============================================================
@@ -1379,10 +1379,12 @@
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('arion-theme', theme);
             currentTheme = theme;
+            // Перерисовываем графики
             renderOilChart();
             if (modalChart) {
                 const overlay = document.getElementById('statModal');
                 if (overlay.classList.contains('active')) {
+                    // Закрываем и открываем заново
                     const key = document.querySelector('.stat-btn:hover')?.dataset.stat || 'bacteria';
                     const config = statConfigs[key] || statConfigs.bacteria;
                     if (modalChart) {
@@ -1437,6 +1439,7 @@
             applyTheme(currentTheme);
             renderOilChart();
 
+            // Кнопки статистики
             document.querySelectorAll('.stat-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const key = this.dataset.stat;
