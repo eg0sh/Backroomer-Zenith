@@ -1529,14 +1529,12 @@
         // ============================================================
 
         function renderAnalytics() {
-            // ---- Бюджет (круговая диаграмма с 5 сегментами) ----
+            // ---- Бюджет (круговая диаграмма с 5 сегментами, разные цвета) ----
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
-            // Данные: потрачено на этап 1, этап 2, этап 3, этап 4, остаток
             const spent1 = spentByPhase.p1 || 0;
             const spent2 = spentByPhase.p2 || 0;
             const spent3 = spentByPhase.p3 || 0;
             const spent4 = spentByPhase.p4 || 0;
-            // Общий бюджет = сумма бюджетов по этапам
             const totalBudget = budgetByPhase.p1 + budgetByPhase.p2 + budgetByPhase.p3 + budgetByPhase.p4;
             const totalSpent = spent1 + spent2 + spent3 + spent4;
             const remaining = totalBudget - totalSpent;
@@ -1549,14 +1547,8 @@
                 'Этап 4 (потрачено)',
                 'Остаток бюджета'
             ];
-            // Цвета: для потраченных этапов — золотой/зелёный, для остатка — синий
-            const colors = [
-                getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim() || '#f5b041',
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
-                getComputedStyle(document.documentElement).getPropertyValue('--chart-line').trim() || '#4a8ec4'
-            ];
+            // Разные цвета для каждого сегмента
+            const colors = ['#f5b041', '#4a8ec4', '#9b59b6', '#e74c3c', '#5a6a7e'];
 
             const w = ctxBudget.canvas.width;
             const h = ctxBudget.canvas.height;
@@ -1583,23 +1575,27 @@
             }
 
             // Легенда под графиком
-            const legendY = h - 30;
+            let legendY = h - 30;
             ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
             ctxBudget.font = '11px Inter, sans-serif';
             ctxBudget.textAlign = 'left';
 
             let legendX = 10;
+            const maxWidth = w - 20;
             labels.forEach((label, i) => {
                 const val = data[i];
                 if (val > 0) {
+                    const text = label + ' $' + val + ' млн';
+                    const textWidth = ctxBudget.measureText(text).width;
+                    if (legendX + textWidth + 20 > maxWidth) {
+                        legendX = 10;
+                        legendY += 18;
+                    }
                     ctxBudget.fillStyle = colors[i % colors.length];
                     ctxBudget.fillRect(legendX, legendY, 12, 12);
                     ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
-                    const text = label + ' $' + val + ' млн';
                     ctxBudget.fillText(text, legendX + 16, legendY + 10);
-                    legendX += ctxBudget.measureText(text).width + 24;
-                    if (legendX > w - 20) { legendX = 10;
-                        legendY += 18; }
+                    legendX += textWidth + 24;
                 }
             });
 
