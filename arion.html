@@ -953,12 +953,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.3.0</div>
+        <div class="version">v1.2.8</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.3.0
+        //  VERSION: v1.2.8
         // ============================================================
 
         // ============================================================
@@ -1108,27 +1108,28 @@
         ];
 
         // ============================================================
-        //  ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ
+        //  ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ ДЛЯ БЮДЖЕТА
         // ============================================================
 
-        // Бюджеты фаз (для графика) — общий выделенный бюджет и потраченные средства по фазам
-        const phaseBudgets = {
+        // Бюджеты по этапам (в млн $)
+        const budgetByPhase = {
             p1: 500,
             p2: 750,
             p3: 0,
             p4: 0
         };
-        // Потрачено по фазам (пока только фаза 1 полностью использована)
-        const phaseSpent = {
-            p1: 500,
-            p2: 0,
+
+        // Потрачено по этапам (в млн $)
+        const spentByPhase = {
+            p1: 500,   // этап 1 полностью потрачен
+            p2: 0,     // пока 0
             p3: 0,
             p4: 0
         };
-        // Вычисляем остаток
-        const totalBudget = Object.values(phaseBudgets).reduce((a, b) => a + b, 0);
-        const totalSpent = Object.values(phaseSpent).reduce((a, b) => a + b, 0);
-        const remainingBudget = totalBudget - totalSpent;
+
+        // ============================================================
+        //  ОСТАЛЬНЫЕ ДАННЫЕ (риски, нефть)
+        // ============================================================
 
         const extraData = {
             risks: [
@@ -1348,7 +1349,7 @@
             const completed = subs.filter(s => s.pct >= 100).length;
             const start = formatDate(phase.startDate);
             const end = formatDate(phase.endDate);
-            const budget = phase.budget !== undefined && phase.budget !== null ? '$' + phase.budget + ' млн' : '—';
+            const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
 
             detailsEl.innerHTML = `
                 <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
@@ -1370,7 +1371,7 @@
                 const progress = getPhaseProgress(phase.id);
                 const start = formatDate(phase.startDate);
                 const end = formatDate(phase.endDate);
-                const budget = phase.budget !== undefined && phase.budget !== null ? '$' + phase.budget + ' млн' : '—';
+                const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
 
                 const block = document.createElement('div');
                 block.className = 'phase-block';
@@ -1524,74 +1525,81 @@
         }
 
         // ============================================================
-        //  ANALYTICS — столбчатая диаграмма бюджета
+        //  ANALYTICS
         // ============================================================
 
         function renderAnalytics() {
-            // ---- Бюджет (столбчатая диаграмма) ----
+            // ---- Бюджет (круговая диаграмма с 5 сегментами) ----
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
-            const labels = ['Фаза 1', 'Фаза 2', 'Фаза 3', 'Фаза 4', 'Не использовано'];
-            const dataValues = [
-                phaseSpent.p1,
-                phaseSpent.p2,
-                phaseSpent.p3,
-                phaseSpent.p4,
-                remainingBudget
+            // Данные: потрачено на этап 1, этап 2, этап 3, этап 4, остаток
+            const spent1 = spentByPhase.p1 || 0;
+            const spent2 = spentByPhase.p2 || 0;
+            const spent3 = spentByPhase.p3 || 0;
+            const spent4 = spentByPhase.p4 || 0;
+            // Общий бюджет = сумма бюджетов по этапам
+            const totalBudget = budgetByPhase.p1 + budgetByPhase.p2 + budgetByPhase.p3 + budgetByPhase.p4;
+            const totalSpent = spent1 + spent2 + spent3 + spent4;
+            const remaining = totalBudget - totalSpent;
+
+            const data = [spent1, spent2, spent3, spent4, remaining];
+            const labels = [
+                'Этап 1 (потрачено)',
+                'Этап 2 (потрачено)',
+                'Этап 3 (потрачено)',
+                'Этап 4 (потрачено)',
+                'Остаток бюджета'
             ];
+            // Цвета: для потраченных этапов — золотой/зелёный, для остатка — синий
             const colors = [
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
                 getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim() || '#f5b041',
-                '#6a8a9e',
-                '#8a4a5a',
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-pending').trim() || '#3a4a5e'
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
+                getComputedStyle(document.documentElement).getPropertyValue('--chart-line').trim() || '#4a8ec4'
             ];
 
-            // Удаляем старый график, если был
-            if (window.budgetChartInstance) {
-                window.budgetChartInstance.destroy();
+            const w = ctxBudget.canvas.width;
+            const h = ctxBudget.canvas.height;
+            ctxBudget.clearRect(0, 0, w, h);
+
+            const cx = w/2, cy = h/2 - 10, r = Math.min(w, h) * 0.32;
+            let startAngle = -Math.PI/2;
+            const total = data.reduce((a,b) => a+b, 0);
+
+            if (total > 0) {
+                data.forEach((val, i) => {
+                    const slice = (val / total) * 2 * Math.PI;
+                    ctxBudget.beginPath();
+                    ctxBudget.moveTo(cx, cy);
+                    ctxBudget.arc(cx, cy, r, startAngle, startAngle + slice);
+                    ctxBudget.closePath();
+                    ctxBudget.fillStyle = colors[i % colors.length];
+                    ctxBudget.shadowColor = 'rgba(0,0,0,0.2)';
+                    ctxBudget.shadowBlur = 8;
+                    ctxBudget.fill();
+                    ctxBudget.shadowBlur = 0;
+                    startAngle += slice;
+                });
             }
 
-            window.budgetChartInstance = new Chart(ctxBudget, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Бюджет ($ млн)',
-                        data: dataValues,
-                        backgroundColor: colors,
-                        borderRadius: 4,
-                        barPercentage: 0.6,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' млн $';
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e' }
-                        },
-                        y: {
-                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
-                            ticks: {
-                                color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e',
-                                callback: function(value) {
-                                    return value + 'M';
-                                }
-                            },
-                            beginAtZero: true
-                        }
-                    }
+            // Легенда под графиком
+            const legendY = h - 30;
+            ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
+            ctxBudget.font = '11px Inter, sans-serif';
+            ctxBudget.textAlign = 'left';
+
+            let legendX = 10;
+            labels.forEach((label, i) => {
+                const val = data[i];
+                if (val > 0) {
+                    ctxBudget.fillStyle = colors[i % colors.length];
+                    ctxBudget.fillRect(legendX, legendY, 12, 12);
+                    ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
+                    const text = label + ' $' + val + ' млн';
+                    ctxBudget.fillText(text, legendX + 16, legendY + 10);
+                    legendX += ctxBudget.measureText(text).width + 24;
+                    if (legendX > w - 20) { legendX = 10;
+                        legendY += 18; }
                 }
             });
 
