@@ -953,12 +953,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.2.7</div>
+        <div class="version">v1.3.0</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.7
+        //  VERSION: v1.3.0
         // ============================================================
 
         // ============================================================
@@ -967,9 +967,9 @@
 
         const phases = [
             { id: 'p1', label: 'Разведка и бурение', startDate: '2026-08-16', endDate: '2026-09-04', budget: 500 },
-            { id: 'p2', label: 'Промысел и ЦПС', startDate: null, endDate: null, budget: null },
-            { id: 'p3', label: 'Магистраль и НПЗ', startDate: null, endDate: null, budget: null },
-            { id: 'p4', label: 'СПГ, порт, энергетика', startDate: null, endDate: null, budget: null }
+            { id: 'p2', label: 'Промысел и ЦПС', startDate: null, endDate: null, budget: 750 },
+            { id: 'p3', label: 'Магистраль и НПЗ', startDate: null, endDate: null, budget: 0 },
+            { id: 'p4', label: 'СПГ, порт, энергетика', startDate: null, endDate: null, budget: 0 }
         ];
 
         const subPhases = [
@@ -994,7 +994,7 @@
                 description: 'Геодезические и инженерно-геологические изыскания на суше. Определяются оптимальные места для Центрального пункта сбора (вблизи скважин) с учётом рельефа, грунтов, логистики.',
                 characteristics: 'Изучаются 3–5 альтернативных участков, оценивается необходимость выравнивания площадок, подводящих дорог.',
                 dependencies: ['1.4'] },
-            { id: '2.1', phaseId: 'p2', name: 'Бурение эксплуатационных скважин', startDate: null, endDate: null, pct: 0,
+            { id: '2.1', phaseId: 'p2', name: 'Бурение эксплуатационных скважин', startDate: '2026-09-04', endDate: null, pct: 70,
                 description: 'Бурение основных добывающих скважин на месторождении. Используются буровые установки большего размера, чем разведочные. Стволы оборудуются обсадными трубами и цементируются.',
                 characteristics: '8–12 скважин, глубина 3 000–5 000 м, дебит планируется ~1 000–1 500 т/сут каждая.',
                 dependencies: ['1.4'] },
@@ -1015,7 +1015,7 @@
                 description: 'Установка факельной трубы для аварийного сжигания газа, а также прокладка газопроводов от сепараторов к потребителям (электростанция, завод СПГ, собственные нужды). Включает сепараторы для газа, осушители, регуляторы давления.',
                 characteristics: 'Факел высотой 50 м, система автоматического поджига, газопроводы диаметром 300 мм.',
                 dependencies: ['2.3'] },
-            { id: '2.6', phaseId: 'p2', name: 'Подъездные дороги промысла', startDate: null, endDate: null, pct: 0,
+            { id: '2.6', phaseId: 'p2', name: 'Подъездные дороги промысла', startDate: '2026-09-04', endDate: null, pct: 1,
                 description: 'Создание сети грунтово-щебёночных дорог, соединяющих кусты скважин между собой, с ЦПС и с внешней магистральной трассой. Включает отсыпку болотистых участков, строительство небольших мостов через ручьи и установку дорожных знаков.',
                 characteristics: 'Протяжённость ~30 км, ширина проезжей части 8 м (для двух большегрузов), толщина щебёночного основания 40 см, расчётная нагрузка на ось 40 тонн (для буровых установок и насосов).',
                 dependencies: ['1.5'] },
@@ -1111,9 +1111,26 @@
         //  ДОПОЛНИТЕЛЬНЫЕ ДАННЫЕ
         // ============================================================
 
+        // Бюджеты фаз (для графика) — общий выделенный бюджет и потраченные средства по фазам
+        const phaseBudgets = {
+            p1: 500,
+            p2: 750,
+            p3: 0,
+            p4: 0
+        };
+        // Потрачено по фазам (пока только фаза 1 полностью использована)
+        const phaseSpent = {
+            p1: 500,
+            p2: 0,
+            p3: 0,
+            p4: 0
+        };
+        // Вычисляем остаток
+        const totalBudget = Object.values(phaseBudgets).reduce((a, b) => a + b, 0);
+        const totalSpent = Object.values(phaseSpent).reduce((a, b) => a + b, 0);
+        const remainingBudget = totalBudget - totalSpent;
+
         const extraData = {
-            totalBudget: 500,
-            spentBudget: 5,
             risks: [
                 { name: 'Задержка поставок', probability: 0.45, impact: 0.50 },
                 { name: 'Погодные условия', probability: 0.35, impact: 0.40 },
@@ -1331,7 +1348,7 @@
             const completed = subs.filter(s => s.pct >= 100).length;
             const start = formatDate(phase.startDate);
             const end = formatDate(phase.endDate);
-            const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
+            const budget = phase.budget !== undefined && phase.budget !== null ? '$' + phase.budget + ' млн' : '—';
 
             detailsEl.innerHTML = `
                 <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
@@ -1353,7 +1370,7 @@
                 const progress = getPhaseProgress(phase.id);
                 const start = formatDate(phase.startDate);
                 const end = formatDate(phase.endDate);
-                const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
+                const budget = phase.budget !== undefined && phase.budget !== null ? '$' + phase.budget + ' млн' : '—';
 
                 const block = document.createElement('div');
                 block.className = 'phase-block';
@@ -1507,55 +1524,78 @@
         }
 
         // ============================================================
-        //  ANALYTICS
+        //  ANALYTICS — столбчатая диаграмма бюджета
         // ============================================================
 
         function renderAnalytics() {
-            // Бюджет
+            // ---- Бюджет (столбчатая диаграмма) ----
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
-            const totalBudget = extraData.totalBudget;
-            const spent = extraData.spentBudget;
-            const remaining = totalBudget - spent;
-            const data = [spent, remaining];
-            const colors = [
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-active').trim(),
-                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim()
+            const labels = ['Фаза 1', 'Фаза 2', 'Фаза 3', 'Фаза 4', 'Не использовано'];
+            const dataValues = [
+                phaseSpent.p1,
+                phaseSpent.p2,
+                phaseSpent.p3,
+                phaseSpent.p4,
+                remainingBudget
             ];
-            const w = ctxBudget.canvas.width;
-            const h = ctxBudget.canvas.height;
-            ctxBudget.clearRect(0, 0, w, h);
-            const cx = w/2, cy = h/2 - 10, r = Math.min(w, h) * 0.32;
-            let startAngle = -Math.PI/2;
-            const total = data.reduce((a,b) => a+b, 0);
-            if (total > 0) {
-                data.forEach((val, i) => {
-                    const slice = (val / total) * 2 * Math.PI;
-                    ctxBudget.beginPath();
-                    ctxBudget.moveTo(cx, cy);
-                    ctxBudget.arc(cx, cy, r, startAngle, startAngle + slice);
-                    ctxBudget.closePath();
-                    ctxBudget.fillStyle = colors[i];
-                    ctxBudget.shadowColor = 'rgba(0,0,0,0.2)';
-                    ctxBudget.shadowBlur = 8;
-                    ctxBudget.fill();
-                    ctxBudget.shadowBlur = 0;
-                    startAngle += slice;
-                });
-            }
-            const legendY = h - 30;
-            ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxBudget.font = '12px Inter, sans-serif';
-            ctxBudget.textAlign = 'left';
-            ctxBudget.fillStyle = colors[0];
-            ctxBudget.fillRect(10, legendY, 12, 12);
-            ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxBudget.fillText('Использовано $' + spent + ' млн', 28, legendY + 10);
-            ctxBudget.fillStyle = colors[1];
-            ctxBudget.fillRect(170, legendY, 12, 12);
-            ctxBudget.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
-            ctxBudget.fillText('Не использовано $' + remaining + ' млн', 188, legendY + 10);
+            const colors = [
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0',
+                getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim() || '#f5b041',
+                '#6a8a9e',
+                '#8a4a5a',
+                getComputedStyle(document.documentElement).getPropertyValue('--dot-pending').trim() || '#3a4a5e'
+            ];
 
-            // Риски
+            // Удаляем старый график, если был
+            if (window.budgetChartInstance) {
+                window.budgetChartInstance.destroy();
+            }
+
+            window.budgetChartInstance = new Chart(ctxBudget, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Бюджет ($ млн)',
+                        data: dataValues,
+                        backgroundColor: colors,
+                        borderRadius: 4,
+                        barPercentage: 0.6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' млн $';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e' }
+                        },
+                        y: {
+                            grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)' },
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#6a8a9e',
+                                callback: function(value) {
+                                    return value + 'M';
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // ---- Риски ----
             const riskList = document.getElementById('riskList');
             riskList.innerHTML = extraData.risks.map(r => {
                 const score = (r.probability * r.impact * 100).toFixed(0);
@@ -1568,7 +1608,7 @@
                 </div>`;
             }).join('');
 
-            // Нефть
+            // ---- Нефть ----
             const ctxOil = document.getElementById('oilChart').getContext('2d');
             const oilData = extraData.oilPrices;
             const wO = ctxOil.canvas.width;
