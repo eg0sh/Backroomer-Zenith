@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP Foundation — База данных объектов</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            color: #c0c0c0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #111;
+            border: 1px solid #333;
+            padding: 2rem;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        .top-nav {
+            display: flex;
+            gap: 1.5rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.8rem;
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+        .top-nav a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .top-nav a:hover {
+            color: #fff;
+        }
+        .top-nav .current {
+            color: #e0e0e0;
+            border-bottom: 1px solid #666;
+            padding-bottom: 2px;
+        }
+        h1 {
+            font-weight: normal;
+            font-size: 1.8rem;
+            color: #e0e0e0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+        .object-block {
+            margin-bottom: 0.8rem;
+            border: 1px solid #252525;
+            background: #141414;
+        }
+        .object-block summary {
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            background: #1a1a1a;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #d0d0d0;
+            transition: background 0.2s;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+        }
+        .object-block summary::-webkit-details-marker {
+            display: none;
+        }
+        .object-block summary::after {
+            content: "▶";
+            color: #555;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+            transition: transform 0.2s;
+        }
+        .object-block[open] summary::after {
+            transform: rotate(90deg);
+        }
+        .object-block summary:hover {
+            background: #222;
+        }
+        .object-block .badge {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+            border: 1px solid #444;
+            color: #aaa;
+            background: #1a1a1a;
+            margin-left: 0.5rem;
+            white-space: nowrap;
+        }
+        .object-content {
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid #222;
+        }
+        .object-content .field {
+            margin-bottom: 0.3rem;
+            color: #aaa;
+        }
+        .object-content .field strong {
+            color: #ccc;
+            display: inline-block;
+            min-width: 180px;
+        }
+        .object-content .description {
+            margin-top: 0.8rem;
+            color: #b0b0b0;
+            border-left: 2px solid #2a2a2a;
+            padding-left: 1rem;
+            white-space: pre-wrap;
+        }
+        .risk-low { color: #5f9; }
+        .risk-moderate { color: #ff9; }
+        .risk-high { color: #f96; }
+        .risk-critical { color: #f44; }
+        .risk-unknown { color: #888; }
+        .class-label {
+            display: inline-block;
+            padding: 0.1rem 0.6rem;
+            border: 1px solid #444;
+            font-size: 0.75rem;
+            background: #1a1a1a;
+            color: #ccc;
+        }
+        .footer {
+            margin-top: 2.5rem;
+            font-size: 0.7rem;
+            color: #444;
+            border-top: 1px solid #222;
+            padding-top: 1rem;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            body { padding: 0.5rem; }
+            .container { padding: 1rem; }
+            .object-content .field strong { display: block; min-width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="SCP-menu.html">Меню</a>
+            <a href="SCP-class.html">Классы</a>
+            <a href="SCP-objects.html" class="current">Объекты</a>
+        </div>
+
+        <h1>БАЗА ДАННЫХ АНОМАЛЬНЫХ ОБЪЕКТОВ</h1>
+
+        <!-- SCP-000 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-000 — Жуткий Шум</span>
+                <span>
+                    <span class="badge">Веритас</span>
+                    <span class="badge risk-moderate">Средний</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 6 марта 2026 г. | BEZL_gaming, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Веритас</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-moderate">Средний</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Объект представляет собой устойчивый звуковой фон, пронизывающий все уровни Закулисья. Состоит из хаотической смеси шёпота, криков, скрежета, стуков и обрывков речи. Не имеет источника, рождается из деформаций пространства. Вызывает тревогу, паранойю и галлюцинации, служит индикатором приближающегося безумия. Является неотъемлемой частью локальной реальности.</div>
+            </div>
+        </details>
+
+        <!-- SCP-001 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-001 — Самооткрывание дверей/люков</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 6 марта 2026 г. | BEZL_gaming, Уровень 0, База Б.И.Г #1</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Аномалия проявляется в самопроизвольном открывании и закрывании дверей и люков на уровнях (преимущественно на базах). Движения хаотичны: от медленных до многократных захлопываний за секунду. Не влияет на стрельбу и зелья, но оказывает сопротивление при попытках взлома. Железные двери не подвержены эффекту. Природа не установлена.</div>
+            </div>
+        </details>
+
+        <!-- SCP-002 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-002 — Частицы Шагов из Неоткуда</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 7 марта 2026 г. | BEZL_gaming, Уровень 0, База Б.И.Г #1</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">На любых поверхностях спонтанно появляются частицы, имитирующие следы шагов. Не являются результатом деятельности невидимой сущности. Физическое воздействие (стрельба) неэффективно; частицы рассеиваются без изменения траектории. Спектральный анализ не выявил электромагнитного излучения. Гипотезы связывают с искривлением пространства‑времени или квантовыми флуктуациями.</div>
+            </div>
+        </details>
+
+        <!-- SCP-003 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-003 — Дверь Рассудка</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 7 марта 2026 г. | BEZL_gaming, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Объект — еловая дверь, появляющаяся случайно в Закулисье. В радиусе 0–3 блоков рассудок падает с высокой скоростью; при любом взаимодействии (открытие/закрытие) падение мгновенное до 3–7%. Излучает радиацию, не блокируемую респиратором, устойчива к Аномалии 1. Рекомендуется избегать контакта.</div>
+            </div>
+        </details>
+
+        <!-- SCP-004 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-004 — Одичалые Часы</span>
+                <span>
+                    <span class="badge">Алеатор</span>
+                    <span class="badge risk-critical">Критический</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 8 марта 2026 г. | Зануда, город Зануд – Однотоново</div>
+                <div class="field"><strong>Класс:</strong> Алеатор</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-critical">Критический</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Обычные на вид часы с надписью «М4ГИЧ4СКIЕ Ч4СЫ». При удержании в левой руке через случайное время инициируют событие любого масштаба — от падения наковальни до ядерного взрыва. Удержание в правой руке нейтрализует эффект. Происхождение неизвестно.</div>
+            </div>
+        </details>
+
+        <!-- SCP-005 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-005 — Люди в Чёрном</span>
+                <span>
+                    <span class="badge">Кетер</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 8 марта 2026 г. | Зануда, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Кетер</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Сущности в виде чёрных силуэтов без различимых черт. Возникают из темноты, исчезают при прямом взгляде, но появляются вновь, когда наблюдатель отводит взгляд. Неуязвимы для огнестрельного оружия. Во время события Blackout могут задерживаться на месте дольше обычного. Зафиксированы случаи движения и сохранения видимости до 5 секунд. Их цель — наблюдение.</div>
+            </div>
+        </details>
+
+        <!-- SCP-006 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-006 — Рычаг-Призыватель</span>
+                <span>
+                    <span class="badge">Алеатор</span>
+                    <span class="badge risk-critical">Критический</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 8 марта 2026 г. | Тусовщик, за картой</div>
+                <div class="field"><strong>Класс:</strong> Алеатор</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-critical">Критический</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Рычаг, способный появляться на любых поверхностях (включая воду и лаву) и самореплицироваться. Активация приводит к случайному призыву неразумных сущностей в непредсказуемом количестве. Возможен вызов сотен опасных существ (например, Кожекрадов). Рекомендовано уничтожать все рычаги, обнаруженные в неподходящих местах.</div>
+            </div>
+        </details>
+
+        <!-- SCP-007 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-007 — Галактика в Бутылке</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 9 марта 2026 г. | Ефрейтор Зануд, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Бутылка, внутри которой находится миниатюрная галактика. Её природа (копия существующей или новая) не установлена. Эффект от употребления или использования неизвестен. Существует гипотеза о возможном высвобождении вселенной с катастрофическими последствиями.</div>
+            </div>
+        </details>
+
+        <!-- SCP-008 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-008 — Двойник</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 9 марта 2026 г. | 4 Зануд, лагерь Зануд #13</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Существо, способное принимать облик любого игрока или сущности, идеально копируя движения. Через некоторое время атакует, возвращаясь к искажённой форме. Наносимый урон предположительно зависит от скопированной жертвы. Другие свойства неизвестны.</div>
+            </div>
+        </details>
+
+        <!-- SCP-009 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-009 — Меч Самоубийства</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 9 марта 2026 г. | Зануда, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Визуально идентичен железному мечу. При контакте с эфесом вызывает неконтролируемое суицидальное поведение; наносимые раны не смертельны, клинок не изнашивается. Использование в иных целях приводит к разрушению объекта. В инвентаре может самопроизвольно переходить в основной слот и активироваться. Известен случай гибели Зануды.</div>
+            </div>
+        </details>
+
+        <!-- SCP-010 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-010 — В.Т.П.С.Г</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 11 марта 2026 г. | Зануда, лагерь Зануд #48</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Военная техника, которая в течение некоторого времени парит в воздухе, после чего исчезает. Причины и закономерности явления не установлены.</div>
+            </div>
+        </details>
+
+        <!-- SCP-011 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-011 — Привидение с Кладбища</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> Данные отсутствуют</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Данные отсутствуют.</div>
+            </div>
+        </details>
+
+        <!-- SCP-012 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-012 — Странный Дёрн</span>
+                <span>
+                    <span class="badge">Безопасный</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 13 марта 2026 г. | Зануда, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Безопасный</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Обычный блок земли, парящий над поверхностью вопреки гравитации. Сопровождается случайными звуками и частицами. Не проявляет агрессии и не представляет угрозы. Природа левитации не объяснена.</div>
+            </div>
+        </details>
+
+        <!-- SCP-013 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-013 — Странник</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 13 марта 2026 г. | BEZL_gaming, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Человекоподобная фигура в химзащите, блуждающая по уровням. Игнорирует других существ и игроков, может держать в руках предметы (фонарик, еду). Через некоторое время растворяется, как будто исчезая из матрицы. Предположительно существует несколько таких особей.</div>
+            </div>
+        </details>
+
+        <!-- SCP-014 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-014 — Летающий Поварской Колпак</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 8 марта 2026 г. | Зануда, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Летающий поварской колпак, способный проходить сквозь твёрдые поверхности и разрушать непрочные объекты (стекло). Не представляет опасности для живых существ.</div>
+            </div>
+        </details>
+
+        <!-- SCP-015 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-015 — Душа Суицидального Тусовщика</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-moderate">Средний</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 7 марта 2026 г. [?] | Серость, Уровень 53 [?]</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-moderate">Средний</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Невидимый Тусовщик, покончивший с собой на Уровне 53, считает этот уровень своим домом. Проявляется через шорохи, звуки, открывание дверей, не осознаёт своей смерти. Способен изменять уровень (закрывать окна чёрными занавесками, устанавливать ночное время) и наносить физический вред. Зафиксирован случай появления ещё одного такого объекта.</div>
+            </div>
+        </details>
+
+        <!-- SCP-016 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-016 — Кусающийся Спороцвет</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 13 марта 2026 г. | Генерал Зануд, город Зануд – Скукозона</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Спороцвет, парящий в воздухе или на потолке. Длительное вдыхание спор вызывает отравление. При попытке нанести вред — жалит с силой, пропорциональной удару. Распространяет ядовитый мох. Устойчив к холоду и молниям. Слабость: миндальная вода (и её варианты), которая останавливает мох и уничтожает объект.</div>
+            </div>
+        </details>
+
+        <!-- SCP-017 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-017 — Музыка из Неоткуда</span>
+                <span>
+                    <span class="badge">Веритас</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 13 марта 2026 г. | BEZL_gaming, Уровень 0, База Б.И.Г #1</div>
+                <div class="field"><strong>Класс:</strong> Веритас</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Фоновая музыка, периодически проигрываемая даже при отключении настроек «Музыка» (при условии, что общие звуки включены хотя бы на 1%). Не представляет угрозы, является частью звуковой среды.</div>
+            </div>
+        </details>
+
+        <!-- SCP-018 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-018 — Воздушный Щит</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 14 марта 2026 г. | Зануда, Уровень 4</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Щит, парящий в воздухе и перемещающийся, периодически исчезает. Создаётся впечатление, что его удерживает невидимая сущность. Природа и цель не установлены.</div>
+            </div>
+        </details>
+
+        <!-- SCP-019 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-019 — Фейковый Пол</span>
+                <span>
+                    <span class="badge">Кетер</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 14 марта 2026 г. | Зануда, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Кетер</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Внезапное исчезновение пола под ногами, открывающее Пустоту. Падение неизбежно. Время и место возникновения непредсказуемы.</div>
+            </div>
+        </details>
+
+        <!-- SCP-020 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-020 — Нарушители Мёртвой Тишины</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-moderate">Средний</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 17 марта 2026 г. | BEZL_gaming, Уровень 1</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-moderate">Средний</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Неразумные сущности, появляющиеся в Закулисье даже во время Мёртвой Тишины. Исследуется причина нарушения правила тишины.</div>
+            </div>
+        </details>
+
+        <!-- SCP-021 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-021 — Снеговики с Небес</span>
+                <span>
+                    <span class="badge">Тикондерога</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 18 марта 2026 г. | Тусовщик, за картой</div>
+                <div class="field"><strong>Класс:</strong> Тикондерога</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Снеговики, неожиданно падающие с неба. Причина не установлена. Объекты безвредны.</div>
+            </div>
+        </details>
+
+        <!-- SCP-022 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-022 — Бутылка..?</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 18 марта 2026 г. | Зануда, Уровень 52</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Пустая бутылка, появляющаяся на поверхностях. При приближении исчезает. Не подвержена серверной очистке и воздействию SCP-023. Предположительно телепортируется в случайное место, существует в единственном экземпляре.</div>
+            </div>
+        </details>
+
+        <!-- SCP-023 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-023 — Очистка</span>
+                <span>
+                    <span class="badge">Тикондерога</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 19 марта 2026 г. | BEZL_gaming, Уровень 1</div>
+                <div class="field"><strong>Класс:</strong> Тикондерога</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Случайная очистка сервера от выброшенных предметов, происходящая в непредсказуемый момент. Не представляет угрозы, является регулярным событием.</div>
+            </div>
+        </details>
+
+        <!-- SCP-024 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-024 — Урчащий Живот kastomminer (Гипотетически существует)</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> Данные отсутствуют</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Данные отсутствуют.</div>
+            </div>
+        </details>
+
+        <!-- SCP-025 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-025 — Инверсия</span>
+                <span>
+                    <span class="badge">Ноэтикус</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 23 марта 2026 г. | Группа из 3 Зануд, Сцена</div>
+                <div class="field"><strong>Класс:</strong> Ноэтикус</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Кратковременное изменение цветовых фильтров окружения на случайные оттенки (трава становится жёлтой, небо зелёным и т.д.). Длится 5 секунд, не оставляет следов. Каждый наблюдатель видит разные цвета. Воздействует только на восприятие, материя не меняется.</div>
+            </div>
+        </details>
+
+        <!-- SCP-026 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-026 — Фантомный Предмет</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 23 марта 2026 г. | Nastyamadness, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Предмет в инвентаре игрока с названием «############», который нельзя выбросить, использовать или переместить. Хаотично меняет позицию в инвентаре. Не подтверждён другими наблюдателями; возможно, является галлюцинацией. Исчез после перемещения на другой уровень.</div>
+            </div>
+        </details>
+
+        <!-- SCP-027 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-027 — Галлюцинации Голода</span>
+                <span>
+                    <span class="badge">Ноэтикус</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 24 марта 2026 г. | BEZL_gaming, Уровень 0</div>
+                <div class="field"><strong>Класс:</strong> Ноэтикус</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Визуальное искажение интерфейса — индикатор голода обнуляется, хотя фактическое состояние сытости не меняется. Попытки поесть не дают эффекта, урон от голода отсутствует. Длится около 30 секунд. Воздействует исключительно на восприятие.</div>
+            </div>
+        </details>
+
+        <!-- SCP-028 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-028 — Смазанный Текст</span>
+                <span>
+                    <span class="badge">Ноэтикус</span>
+                    <span class="badge risk-low">Низкий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 25 марта 2026 г. | Зануда, Уровень 52</div>
+                <div class="field"><strong>Класс:</strong> Ноэтикус</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-low">Низкий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Искажение любых текстовых элементов (чат, таблички, названия предметов): буквы перемешиваются, замещаются символами иных алфавитов. Эффект нейтрализуется миндальной, неоновой или супер-миндальной водой. Не влияет на материальные объекты.</div>
+            </div>
+        </details>
+
+        <!-- SCP-029 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-029 — Скрипун</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 26 марта 2026 г. | Зануды из «К.О.Н.Т.У.Р», Сцена, лес Кожекрадов</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Высокоскоростное человекоподобное существо ростом 3,5 блока, шириной 1 блок, серое, тощее. В пассивном состоянии стоит неподвижно под деревьями, издавая скрип. Враждебно ко всем животным (зафиксировано 63 убийства пассивных мобов). По отношению к другим сущностям агрессивен только при угрозе. Может подпускать исследователей близко, но пищу не принимает.</div>
+            </div>
+        </details>
+
+        <!-- SCP-030 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-030 — Парадокс Недосягаемости</span>
+                <span>
+                    <span class="badge">Региум</span>
+                    <span class="badge risk-moderate">Средний</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 25 марта 2026 г. | DanielDecarMosh, Уровень 0.2</div>
+                <div class="field"><strong>Класс:</strong> Региум</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-moderate">Средний</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Локация — узкий коридор с двумя комнатами, бесконечно повторяющимися при движении вперёд; при повороте назад субъект возвращается в исходную точку. Возникла после экспериментов с инфразвуковым исказителем материи, вызвавших нестабильность уровня. Впоследствии уровень стабилизировался, но структура сохранилась. Предметы, оставленные в комнатах, остаются на месте при циклическом проходе.</div>
+            </div>
+        </details>
+
+        <!-- SCP-031 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-031 — Отключение Света</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> Данные отсутствуют</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Данные отсутствуют.</div>
+            </div>
+        </details>
+
+        <!-- SCP-032 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-032 — Ветродуй</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 25 марта 2026 г. | Тусовщик, Сцена, лагерь Z.C.L</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Нестабильная воздушная аномалия, возникающая только на открытых пространствах при сильном ветре (>20 м/с). Сила потока способна привести к гибели сущности. В закрытых помещениях безопасна. Дополнительные свойства не изучены.</div>
+            </div>
+        </details>
+
+        <!-- SCP-033 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-033 — Колючий Отбрасыватель</span>
+                <span>
+                    <span class="badge">Иммутус</span>
+                    <span class="badge risk-moderate">Средний</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 21 августа 2026 г. | Неизвестно (см. новости от 21.08.2026)</div>
+                <div class="field"><strong>Класс:</strong> Иммутус</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-moderate">Средний</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Парящий кактус с китайскими иероглифами на поверхности. Отбрасывает предметы и существа, находящиеся рядом. Огнестойкий и неразрушимый. Обнаружено ещё два экземпляра; организована зона содержания.</div>
+            </div>
+        </details>
+
+        <!-- SCP-034 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-034 — Псевдоминдальная вода</span>
+                <span>
+                    <span class="badge">Евклид</span>
+                    <span class="badge risk-high">Высокий</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 21 августа 2026 г. | Неизвестно (см. новости от 21.08.2026)</div>
+                <div class="field"><strong>Класс:</strong> Евклид</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-high">Высокий</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Автомат, выдающий жидкость, внешне идентичную миндальной воде. Употребление вызывает тошноту; у животных вызывает разложение за 10–20 секунд. После периода времени автомат начал выдавать обычную воду, но затем аномальное свойство вернулось. Предположительно внешнее заражение.</div>
+            </div>
+        </details>
+
+        <!-- SCP-035 -->
+        <details class="object-block">
+            <summary>
+                <span>SCP-035 — Загадочные Таблетки</span>
+                <span>
+                    <span class="badge">Неопределённый</span>
+                    <span class="badge risk-unknown">Неизвестен</span>
+                </span>
+            </summary>
+            <div class="object-content">
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> 22 августа 2026 г. | Неизвестно (см. новости от 22.08.2026)</div>
+                <div class="field"><strong>Класс:</strong> Неопределённый</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-unknown">Неизвестен</span></div>
+                <div class="field"><strong>Особые условия содержания:</strong> —</div>
+                <div class="description">Данные отсутствуют.</div>
+            </div>
+        </details>
+
+        <div class="footer">
+            v1.3.0
+        </div>
+    </div>
+
+    <script>
+        // Небольшой скрипт для сохранения состояния открытых блоков (необязательно)
+        // Здесь просто для аккуратности — сохраняем последнее открытое состояние при перезагрузке не требуется
+    </script>
+</body>
+</html>
