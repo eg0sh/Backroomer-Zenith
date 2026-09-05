@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP Foundation — Меню</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0a;
+            color: #c0c0c0;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            border: 1px solid #333;
+            padding: 2.5rem;
+            background: #111;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+        h1 {
+            color: #e0e0e0;
+            font-weight: normal;
+            font-size: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .menu-item {
+            display: block;
+            padding: 1rem 1.5rem;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            color: #c0c0c0;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: background 0.2s, border-color 0.2s;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+        .menu-item:hover {
+            background: #222;
+            border-color: #555;
+            color: #fff;
+        }
+        .menu-item small {
+            display: block;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.2rem;
+            letter-spacing: 0;
+        }
+        .footer {
+            margin-top: 2.5rem;
+            font-size: 0.7rem;
+            color: #444;
+            text-align: center;
+            border-top: 1px solid #222;
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ФОНД SCP<br><span style="font-size:0.6rem; color:#666;">СИСТЕМА УПРАВЛЕНИЯ ДАННЫМИ</span></h1>
+        <div class="menu-grid">
+            <a href="SCP-class.html" class="menu-item">
+                КЛАССИФИКАЦИЯ ОБЪЕКТОВ
+                <small>Описание классов и рисков</small>
+            </a>
+            <a href="SCP-objects.html" class="menu-item">
+                БАЗА ДАННЫХ ОБЪЕКТОВ
+                <small>Полный реестр SCP-000 – SCP-035</small>
+            </a>
+        </div>
+        <div class="footer">
+            v1.3.0
+        </div>
+    </div>
+</body>
+</html>
