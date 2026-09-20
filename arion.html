@@ -1391,7 +1391,7 @@
                 const cardsWrap = document.createElement('div');
                 cardsWrap.className = 'phase-cards';
 
-                const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id));
+                const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
                 sorted.forEach((sub, idx) => {
                     const card = createPhaseCard(sub, idx);
                     cardsWrap.appendChild(card);
