@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCP — Терминал доступа</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            background: #050805;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #00ff41;
+            text-shadow: 0 0 4px rgba(0, 255, 65, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.18) 0px,
+                rgba(0, 0, 0, 0.18) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .terminal {
+            width: 100%;
+            max-width: 1000px;
+            height: 90vh;
+            max-height: 800px;
+            background: #0a0e0a;
+            border: 1px solid rgba(0, 255, 65, 0.25);
+            border-radius: 6px;
+            box-shadow:
+                0 0 40px rgba(0, 255, 65, 0.15),
+                inset 0 0 100px rgba(0, 255, 65, 0.03);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 14px;
+            background: #0f140f;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.13);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .terminal-header .dots {
+            display: flex;
+            gap: 6px;
+            margin-right: 14px;
+        }
+
+        .terminal-header .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #febc2e; }
+        .dot.green { background: #28c840; }
+
+        .terminal-header .title {
+            flex: 1;
+            text-align: center;
+            color: #00aa2a;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
+
+        .terminal-header .time {
+            color: #00aa2a;
+            font-size: 11px;
+            text-shadow: none;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 18px 22px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
+
+        .terminal-body::-webkit-scrollbar { width: 8px; }
+        .terminal-body::-webkit-scrollbar-track { background: transparent; }
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 65, 0.2);
+            border-radius: 4px;
+        }
+        .terminal-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 65, 0.4);
+        }
+
+        .line {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin-bottom: 2px;
+        }
+
+        .line.error    { color: #ff3333; text-shadow: 0 0 4px rgba(255, 51, 51, 0.5); }
+        .line.success  { color: #00ff41; }
+        .line.highlight{ color: #ffff00; text-shadow: 0 0 4px rgba(255, 255, 0, 0.5); }
+        .line.dim      { color: #00aa2a; }
+        .line.header   { color: #00ff41; font-weight: bold; letter-spacing: 0.05em; }
+        .line.user-input { color: #b8ffb8; }
+        .line.muted    { color: #007722; }
+
+        .file-link {
+            color: #00ff41;
+            text-decoration: none;
+            border-bottom: 1px dashed rgba(0, 255, 65, 0.5);
+            padding: 0 2px;
+            transition: all 0.15s;
+        }
+
+        .file-link:hover {
+            color: #ffffff;
+            background: rgba(0, 255, 65, 0.2);
+            border-bottom-color: #ffffff;
+        }
+
+        .terminal-input-line {
+            display: none;
+            align-items: center;
+            padding: 8px 22px;
+            border-top: 1px solid rgba(0, 255, 65, 0.13);
+            background: #0a0e0a;
+            flex-shrink: 0;
+        }
+
+        .terminal-input-line.visible { display: flex; }
+
+        .prompt {
+            color: #00ff41;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .cmd-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #00ff41;
+            font-family: inherit;
+            font-size: 14px;
+            text-shadow: 0 0 4px rgba(0, 255, 65, 0.45);
+            caret-color: #00ff41;
+        }
+
+        .back-link {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 8px;
+            font-size: 11px;
+            color: #00aa2a;
+            border-top: 1px solid rgba(0, 255, 65, 0.13);
+            text-shadow: none;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link a {
+            color: #00aa2a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link a:hover {
+            color: #00ff41;
+            text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <div class="title">SCP-SECURE-TERMINAL // HQ-LINK // [ ЗАЩИЩЕНО ]</div>
+            <div class="time" id="clock">--:--:--</div>
+        </div>
+
+        <div class="terminal-body" id="output"></div>
+
+        <div class="terminal-input-line" id="inputLine">
+            <span class="prompt">&gt;</span>
+            <input type="text" id="cmdInput" class="cmd-input" autocomplete="off" spellcheck="false">
+        </div>
+
+        <div class="back-link">
+            <a href="SCP-menu.html">← ВЕРНУТЬСЯ В МЕНЮ SCP</a>
+        </div>
+    </div>
+
+    <script>
+        const output    = document.getElementById('output');
+        const inputLine = document.getElementById('inputLine');
+        const cmdInput  = document.getElementById('cmdInput');
+
+        const sleep = (ms) => new Promise(r => setTimeout(r, ms));
+
+        function scrollDown() {
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function typeLine(text, className = '', charDelay = 12) {
+            const line = document.createElement('div');
+            line.className = 'line' + (className ? ' ' + className : '');
+            output.appendChild(line);
+            for (let i = 0; i < text.length; i++) {
+                line.textContent += text[i];
+                if (i % 3 === 0) await sleep(charDelay);
+                scrollDown();
+            }
+            scrollDown();
+            return line;
+        }
+
+        async function addLine(text, className = '') {
+            const line = document.createElement('div');
+            line.className = 'line' + (className ? ' ' + className : '');
+            line.textContent = text;
+            output.appendChild(line);
+            scrollDown();
+            return line;
+        }
+
+        async function bootSequence() {
+            await sleep(400);
+            await typeLine('> ИНИЦИАЛИЗАЦИЯ ЗАЩИЩЁННОГО КАНАЛА...', 'dim');
+            await sleep(350);
+            await typeLine('> УСТАНОВКА СОЕДИНЕНИЯ С ШТАБ-КВАРТИРОЙ...', 'dim');
+            await sleep(500);
+            await typeLine('> СИГНАТУРА ПРИНЯТА.', 'dim');
+            await sleep(250);
+            await typeLine('> УРОВЕНЬ ДОСТУПА: O5 / СПЕЦУПОЛНОМОЧЕННЫЕ', 'dim');
+            await sleep(300);
+            await addLine('');
+            await sleep(200);
+            await typeLine('ВОЕТ ЛИ ЧЁРНАЯ ЛУНА?', 'highlight', 30);
+            await sleep(400);
+            await typeLine('ВВЕДИТЕ КОДОВУЮ ФРАЗУ:', 'highlight', 30);
+            await sleep(250);
+
+            inputLine.classList.add('visible');
+            cmdInput.focus();
+        }
+
+        cmdInput.addEventListener('keydown', async (e) => {
+            if (e.key === 'Enter') {
+                const value = cmdInput.value;
+                cmdInput.value = '';
+                cmdInput.disabled = true;
+                inputLine.classList.remove('visible');
+                await handlePhrase(value);
+            }
+        });
+
+        async function handlePhrase(phrase) {
+            await addLine('> ' + phrase, 'user-input');
+            await sleep(200);
+            await typeLine('> ПРОВЕРКА...', 'dim', 30);
+            await sleep(900);
+
+            const normalized = phrase.trim().toLowerCase().replace(/\s+/g, ' ');
+            if (normalized === 'пока не светят звёзды' || normalized === 'пока не светят звезды') {
+                await typeLine('> ДОСТУП РАЗРЕШЁН.', 'success', 25);
+                await sleep(300);
+                await typeLine('> ДОБРО ПОЖАЛОВАТЬ, УПОЛНОМОЧЕННОЕ ЛИЦО.', 'success', 25);
+                await sleep(400);
+                await addLine('');
+                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К БАЗЕ ДАННЫХ ШТАБ-КВАРТИРЫ', 'dim', 15);
+                await sleep(300);
+                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К СПИСКУ ФАЙЛОВ', 'dim', 15);
+                await sleep(300);
+                await typeLine('> ОТКРЫТИЕ СПИСКА ФАЙЛОВ', 'dim', 15);
+                await sleep(400);
+                await addLine('');
+                await addLine('ДОСТУПНЫЕ ФАЙЛЫ:', 'header');
+                await addLine('');
+
+                const files = [
+                    { name: 'ПРОЕКТ X-1 — «ФУНДАМЕНТ»', href: 'terminals/X-1.html' },
+                    { name: 'ПРОЕКТ X-2 — «БЕЗМОЛВИЕ»', href: 'terminals/X-2.html' }
+                ];
+
+                files.forEach((f, i) => {
+                    const line = document.createElement('div');
+                    line.className = 'line';
+                    line.innerHTML = `  [${i + 1}] <a href="${f.href}" class="file-link">${f.name}</a>`;
+                    output.appendChild(line);
+                    scrollDown();
+                });
+
+                await sleep(400);
+                await addLine('');
+                await addLine('  [0] ВЫХОД', 'dim');
+                await addLine('');
+                await typeLine('> ВЫБЕРИТЕ ФАЙЛ:', 'highlight', 25);
+            } else {
+                await typeLine('> ДОСТУП ЗАПРЕЩЁН.', 'error', 25);
+                await sleep(300);
+                await typeLine('> НЕВЕРНАЯ КОДОВАЯ ФРАЗА.', 'error', 25);
+                await sleep(300);
+                await typeLine('> ПОПЫТКА ЗАФИКСИРОВАНА.', 'error', 25);
+                await sleep(400);
+                await addLine('');
+                await typeLine('> O5-1 УВЕДОМЛЁН.', 'error', 25);
+                await sleep(500);
+                await addLine('');
+                await typeLine('> СЕАНС ЗАВЕРШЁН.', 'dim', 20);
+                await typeLine('> ТЕРМИНАЛ ЗАБЛОКИРОВАН.', 'dim', 20);
+            }
+        }
+
+        function updateClock() {
+            const d = new Date();
+            const hh = String(d.getHours()).padStart(2, '0');
+            const mm = String(d.getMinutes()).padStart(2, '0');
+            const ss = String(d.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        bootSequence();
+    </script>
+</body>
+</html>
