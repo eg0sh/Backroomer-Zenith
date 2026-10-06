@@ -140,79 +140,12 @@
         .risk-critical { color: #f44; }
         .risk-apocalyptic { color: #ff00aa; text-shadow: 0 0 6px rgba(255, 0, 170, 0.5); }
         .risk-unknown { color: #888; }
-
-        /* ---------- Оформление удалённых данных ---------- */
-        .redacted {
-            display: inline-block;
-            background: #000;
-            color: #000;
-            padding: 0 6px;
-            border-radius: 2px;
-            letter-spacing: 0.05em;
-            user-select: none;
-            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.9);
-            position: relative;
+        .risk-redacted {
+            color: #7a2e2e;
+            text-decoration: line-through;
+            text-decoration-color: #7a2e2e;
+            text-shadow: 0 0 4px rgba(122, 46, 46, 0.4);
         }
-
-        .redacted::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.03) 0px,
-                rgba(255, 255, 255, 0.03) 1px,
-                transparent 1px,
-                transparent 4px
-            );
-            pointer-events: none;
-            border-radius: 2px;
-        }
-
-        .redacted-block {
-            display: block;
-            background: #000;
-            color: #000;
-            padding: 0.8rem 1rem;
-            border-radius: 3px;
-            margin: 0.4rem 0;
-            letter-spacing: 0.1em;
-            user-select: none;
-            box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.95);
-            position: relative;
-            min-height: 1.4em;
-        }
-
-        .redacted-block::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: repeating-linear-gradient(
-                90deg,
-                rgba(255, 255, 255, 0.02) 0px,
-                rgba(255, 255, 255, 0.02) 1px,
-                transparent 1px,
-                transparent 5px
-            );
-            pointer-events: none;
-            border-radius: 3px;
-        }
-
-        .redacted-badge {
-            display: inline-block;
-            background: #1a0000;
-            color: #661111;
-            padding: 0.15rem 0.6rem;
-            border: 1px solid #3a0a0a;
-            border-radius: 3px;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            user-select: none;
-            text-shadow: none;
-            white-space: nowrap;
-            margin-left: 0.5rem;
-        }
-
         .footer {
             margin-top: 2.5rem;
             font-size: 0.7rem;
@@ -968,19 +901,18 @@
         <!-- SCP-040 -->
         <details class="object-block">
             <summary>
-                <span>SCP-040 — <span class="redacted">[ДАННЫЕ УДАЛЕНЫ]</span></span>
+                <span>SCP-040 — [ДАННЫЕ УДАЛЕНЫ]</span>
                 <span>
-                    <span class="redacted-badge">[УДАЛЕНО]</span>
-                    <span class="redacted-badge">[УДАЛЕНО]</span>
+                    <span class="badge">[УДАЛЕНО]</span>
+                    <span class="badge risk-redacted">[УДАЛЕНО]</span>
                 </span>
             </summary>
             <div class="object-content">
-                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> <span class="redacted">[ДАННЫЕ УДАЛЕНЫ]</span></div>
-                <div class="field"><strong>Класс:</strong> <span class="redacted">[ДАННЫЕ УДАЛЕНЫ]</span></div>
-                <div class="field"><strong>Риск:</strong> <span class="redacted">[ДАННЫЕ УДАЛЕНЫ]</span></div>
+                <div class="field"><strong>Дата обнаружения и обнаружитель:</strong> Данные удалены</div>
+                <div class="field"><strong>Класс:</strong> Данные удалены</div>
+                <div class="field"><strong>Риск:</strong> <span class="risk-redacted">Данные удалены</span></div>
                 <div class="field"><strong>Особые условия содержания:</strong> —</div>
-                <div class="description"><strong>Описание:</strong></div>
-                <div class="redacted-block">&nbsp;</div>
+                <div class="description"><strong>Описание:</strong> [ДАННЫЕ УДАЛЕНЫ]</div>
             </div>
         </details>
 
