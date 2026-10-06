@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SCP — Терминал доступа</title>
+    <title>SCP — Терминал доступа O5</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -45,7 +45,7 @@
             content: '';
             position: fixed;
             inset: 0;
-            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.78) 100%);
             pointer-events: none;
             z-index: 99;
         }
@@ -53,8 +53,8 @@
         .terminal {
             width: 100%;
             max-width: 1000px;
-            height: 90vh;
-            max-height: 800px;
+            height: 92vh;
+            max-height: 900px;
             background: #0a0e0a;
             border: 1px solid rgba(0, 255, 65, 0.25);
             border-radius: 6px;
@@ -115,7 +115,6 @@
             overflow-y: auto;
             font-size: 14px;
             line-height: 1.6;
-            scroll-behavior: smooth;
         }
 
         .terminal-body::-webkit-scrollbar { width: 8px; }
@@ -134,27 +133,20 @@
             margin-bottom: 2px;
         }
 
-        .line.error    { color: #ff3333; text-shadow: 0 0 4px rgba(255, 51, 51, 0.5); }
-        .line.success  { color: #00ff41; }
-        .line.highlight{ color: #ffff00; text-shadow: 0 0 4px rgba(255, 255, 0, 0.5); }
-        .line.dim      { color: #00aa2a; }
-        .line.header   { color: #00ff41; font-weight: bold; letter-spacing: 0.05em; }
+        .line.error      { color: #ff3333; text-shadow: 0 0 4px rgba(255, 51, 51, 0.5); }
+        .line.success    { color: #00ff41; }
+        .line.highlight  { color: #ffff00; text-shadow: 0 0 4px rgba(255, 255, 0, 0.5); }
+        .line.dim        { color: #00aa2a; }
+        .line.header     { color: #00ff41; font-weight: bold; letter-spacing: 0.08em; margin-top: 12px; }
+        .line.subheader  { color: #ffff00; letter-spacing: 0.1em; margin-top: 10px; }
         .line.user-input { color: #b8ffb8; }
-        .line.muted    { color: #007722; }
-
-        .file-link {
-            color: #00ff41;
-            text-decoration: none;
-            border-bottom: 1px dashed rgba(0, 255, 65, 0.5);
-            padding: 0 2px;
-            transition: all 0.15s;
-        }
-
-        .file-link:hover {
-            color: #ffffff;
-            background: rgba(0, 255, 65, 0.2);
-            border-bottom-color: #ffffff;
-        }
+        .line.muted      { color: #007722; }
+        .line.divider    { color: #007722; margin: 6px 0; }
+        .line.meta       { color: #00aa2a; }
+        .line.meta b     { color: #b8ffb8; font-weight: normal; }
+        .line.redacted   { color: #00ff41; }
+        .line.warning    { color: #ff6666; text-shadow: 0 0 4px rgba(255, 51, 51, 0.4); }
+        .line.critical   { color: #ff3333; font-weight: bold; letter-spacing: 0.1em; }
 
         .terminal-input-line {
             display: none;
@@ -185,6 +177,10 @@
             caret-color: #00ff41;
         }
 
+        .cmd-input:disabled {
+            opacity: 0.4;
+        }
+
         .back-link {
             flex-shrink: 0;
             text-align: center;
@@ -206,6 +202,15 @@
             color: #00ff41;
             text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
         }
+
+        @media (max-width: 700px) {
+            body { padding: 6px; font-size: 12px; }
+            .terminal { height: 96vh; }
+            .terminal-body { padding: 12px 14px; font-size: 12px; }
+            .terminal-input-line { padding: 6px 14px; }
+            .cmd-input { font-size: 12px; }
+            .terminal-header .title { font-size: 9px; }
+        }
     </style>
 </head>
 <body>
@@ -223,7 +228,7 @@
         <div class="terminal-body" id="output"></div>
 
         <div class="terminal-input-line" id="inputLine">
-            <span class="prompt">&gt;</span>
+            <span class="prompt" id="promptSym">&gt;</span>
             <input type="text" id="cmdInput" class="cmd-input" autocomplete="off" spellcheck="false">
         </div>
 
@@ -233,125 +238,427 @@
     </div>
 
     <script>
+        // ============================================================
+        //  ЯДРО КОНСОЛИ
+        // ============================================================
+
         const output    = document.getElementById('output');
         const inputLine = document.getElementById('inputLine');
         const cmdInput  = document.getElementById('cmdInput');
+        const promptSym = document.getElementById('promptSym');
 
         const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
-        function scrollDown() {
-            output.scrollTop = output.scrollHeight;
-        }
+        function scrollDown() { output.scrollTop = output.scrollHeight; }
 
-        async function typeLine(text, className = '', charDelay = 12) {
+        async function addLine(text = '', cls = '') {
             const line = document.createElement('div');
-            line.className = 'line' + (className ? ' ' + className : '');
-            output.appendChild(line);
-            for (let i = 0; i < text.length; i++) {
-                line.textContent += text[i];
-                if (i % 3 === 0) await sleep(charDelay);
-                scrollDown();
-            }
-            scrollDown();
-            return line;
-        }
-
-        async function addLine(text, className = '') {
-            const line = document.createElement('div');
-            line.className = 'line' + (className ? ' ' + className : '');
+            line.className = 'line' + (cls ? ' ' + cls : '');
             line.textContent = text;
             output.appendChild(line);
             scrollDown();
             return line;
         }
 
+        async function typeLine(text, cls = '', delay = 10) {
+            const line = document.createElement('div');
+            line.className = 'line' + (cls ? ' ' + cls : '');
+            output.appendChild(line);
+            for (let i = 0; i < text.length; i++) {
+                line.textContent += text[i];
+                if (i % 2 === 0) await sleep(delay);
+                scrollDown();
+            }
+            scrollDown();
+            return line;
+        }
+
+        function enableInput(prompt = '>') {
+            promptSym.textContent = prompt;
+            inputLine.classList.add('visible');
+            cmdInput.disabled = false;
+            cmdInput.focus();
+        }
+
+        function disableInput() {
+            inputLine.classList.remove('visible');
+            cmdInput.disabled = true;
+        }
+
+        // ============================================================
+        //  БАЗА ФАЙЛОВ
+        // ============================================================
+
+        const FILES = {
+            1: {
+                code: 'PROJECT-X-1',
+                title: 'ПРОЕКТ X-1 — «ФУНДАМЕНТ»',
+                lines: [
+                    { t: 'Гриф: Секретно', c: 'meta' },
+                    { t: 'Уровень допуска: O5 / Спецуполномоченные', c: 'meta' },
+                    { t: 'Куратор: O5-6 «Механик»', c: 'meta' },
+                    { t: 'Соучастники: O5-2 «Архитектор Разума», O5-11 «Архивариус»', c: 'meta' },
+                    { t: 'Статус: Активен', c: 'meta' },
+                    { t: 'Дата основания: 2026-03-01', c: 'meta' },
+                    { t: '' },
+                    { t: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c: 'divider' },
+                    { t: 'ОПИСАНИЕ ПРОЕКТА', c: 'header' },
+                    { t: 'Проект X-1 — комплексная программа разработки и создания технологий, необходимых Фонду для сдерживания, нейтрализации и контроля аномальных объектов. В отличие от стандартных инженерных решений, технологии X-1 находятся на стыке классической физики, аномалистики и меметики.' },
+                    { t: '' },
+                    { t: 'Цель проекта — создание инструментов, позволяющих Фонду:' },
+                    { t: '  · стабилизировать реальность в зонах повышенной аномальной активности;' },
+                    { t: '  · создавать поля, изолирующие аномалии от внешней среды;' },
+                    { t: '  · разрабатывать ловушки для объектов классов Кетер, Эросус и Алеатор;' },
+                    { t: '  · обеспечивать защиту персонала от меметических и когнитивных угроз.' },
+                    { t: '' },
+                    { t: 'КЛЮЧЕВЫЕ РАЗРАБОТКИ', c: 'header' },
+                    { t: '' },
+                    { t: '1. Скрэнтонский якорь реальности', c: 'subheader' },
+                    { t: 'Тип: Стационарное устройство.' },
+                    { t: 'Назначение: Локальная стабилизация реальности в радиусе до 50 метров.' },
+                    { t: 'Принцип: Генерация поля, подавляющего аномальные флуктуации пространства-времени.' },
+                    { t: 'Статус: Прототип испытан. Успешно стабилизировал зону вокруг SCP-030 (Парадокс Недосягаемости) на 72 часа.' },
+                    { t: 'Ограничения: Требует огромного энергопотребления. Мобильная версия в разработке.' },
+                    { t: '' },
+                    { t: '2. Поля сдерживания «Клетка»', c: 'subheader' },
+                    { t: 'Тип: Переносные генераторы.' },
+                    { t: 'Назначение: Создание барьера, непроницаемого для большинства аномальных сущностей.' },
+                    { t: 'Статус: [ДАННЫЕ ЗАСЕКРЕЧЕНЫ]', c: 'redacted' },
+                    { t: '' },
+                    { t: '[ РАЗРАБОТКИ 3–5 ЗАСЕКРЕЧЕНЫ ]', c: 'warning' },
+                    { t: 'ДОСТУП РАЗРЕШЁН ТОЛЬКО O5-1, O5-2 И O5-6', c: 'warning' },
+                    { t: '' },
+                    { t: '[ СПИСОК РАЗРАБОТОК НЕПОЛНЫЙ ]', c: 'dim' },
+                    { t: 'Полный перечень содержит более 20 активных направлений. Остальные пункты доступны исключительно Совету O5.', c: 'dim' },
+                    { t: '' },
+                    { t: 'ТЕКУЩИЕ ПРИОРИТЕТЫ', c: 'header' },
+                    { t: '  ВЫСОКИЙ   · Мобильный Скрэнтонский якорь ......... В разработке' },
+                    { t: '  ВЫСОКИЙ   · Ловушка для Алеатор-объектов ......... Теоретическая стадия' },
+                    { t: '  СРЕДНИЙ   · Поле против Эросус-агентов ........... Испытания' },
+                    { t: '  СРЕДНИЙ   · Вакцина против параноициона .......... Успешно' },
+                    { t: '  НИЗКИЙ    · Глушитель для Веритас-объектов ....... Отложен' },
+                    { t: '' },
+                    { t: '⚠ ПРЕДУПРЕЖДЕНИЕ', c: 'critical' },
+                    { t: 'Данные по Проекту X-1 являются секретными. Разглашение информации за пределами круга допущенных лиц карается немедленной нейтрализацией и амнезиацией. При обнаружении утечки — активируется протокол «Чистый Лист».', c: 'warning' },
+                    { t: '' },
+                    { t: '> КОНЕЦ ФАЙЛА.', c: 'dim' }
+                ]
+            },
+            2: {
+                code: 'PROJECT-X-2',
+                title: 'ПРОЕКТ X-2 — «БЕЗМОЛВИЕ»',
+                lines: [
+                    { t: 'Гриф: Абсолютно секретно', c: 'warning' },
+                    { t: 'Уровень допуска: Только O5-1, O5-2, O5-3, O5-6', c: 'warning' },
+                    { t: 'Куратор: O5-3 «Молот»', c: 'meta' },
+                    { t: 'Соучастники: [ДАННЫЕ УДАЛЕНЫ]', c: 'warning' },
+                    { t: 'Статус: Активен', c: 'meta' },
+                    { t: 'Дата основания: [ДАННЫЕ УДАЛЕНЫ]', c: 'warning' },
+                    { t: '' },
+                    { t: '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', c: 'divider' },
+                    { t: 'ОПИСАНИЕ ПРОЕКТА', c: 'header' },
+                    { t: '' },
+                    { t: '[ ДОСТУП ОГРАНИЧЕН ]', c: 'critical' },
+                    { t: 'Проект X-2 — [ДАННЫЕ УДАЛЕНЫ].', c: 'warning' },
+                    { t: 'Цель проекта: [ДАННЫЕ УДАЛЕНЫ].', c: 'warning' },
+                    { t: 'Текущий статус: [ДАННЫЕ УДАЛЕНЫ].', c: 'warning' },
+                    { t: '[ КОНЕЦ ДОСТУПНОЙ ИНФОРМАЦИИ ]', c: 'dim' },
+                    { t: '' },
+                    { t: 'ИЗВЕСТНО ТОЛЬКО', c: 'header' },
+                    { t: '  · Проект X-2 существует.' },
+                    { t: '  · Он относится к категории «оружие сдерживания».' },
+                    { t: '  · В случае успеха — это изменит баланс сил в Закулисье.' },
+                    { t: '  · Публично будет известно лишь то, что Фонд обладает «особым оружием».' },
+                    { t: '' },
+                    { t: '⚠ ПРЕДУПРЕЖДЕНИЕ', c: 'critical' },
+                    { t: '> ВЫ ПЫТАЕТЕСЬ ПОЛУЧИТЬ ДОСТУП К ДАННЫМ, ПРЕВЫШАЮЩИМ ВАШ УРОВЕНЬ ДОПУСКА.', c: 'warning' },
+                    { t: '> ЭТО ДЕЙСТВИЕ ЗАФИКСИРОВАНО.', c: 'warning' },
+                    { t: '> ПОВТОРНАЯ ПОПЫТКА ПРИВЕДЁТ К НЕМЕДЛЕННОЙ НЕЙТРАЛИЗАЦИИ.', c: 'warning' },
+                    { t: '> O5-1 УВЕДОМЛЁН.', c: 'warning' },
+                    { t: '' },
+                    { t: '> КОНЕЦ ДОСТУПНОЙ ЧАСТИ ФАЙЛА.', c: 'dim' }
+                ]
+            }
+        };
+
+        // ============================================================
+        //  СОСТОЯНИЯ
+        // ============================================================
+
+        const STATE = {
+            INIT: 'INIT',
+            PHRASE: 'PHRASE',
+            MENU: 'MENU',
+            FILE: 'FILE',
+            LOCKED: 'LOCKED'
+        };
+
+        let currentState = STATE.INIT;
+        let currentFileId = null;
+
+        // ============================================================
+        //  ЗАГРУЗКА / ЗАСТАВКА
+        // ============================================================
+
         async function bootSequence() {
             await sleep(400);
             await typeLine('> ИНИЦИАЛИЗАЦИЯ ЗАЩИЩЁННОГО КАНАЛА...', 'dim');
-            await sleep(350);
+            await sleep(300);
             await typeLine('> УСТАНОВКА СОЕДИНЕНИЯ С ШТАБ-КВАРТИРОЙ...', 'dim');
-            await sleep(500);
+            await sleep(450);
             await typeLine('> СИГНАТУРА ПРИНЯТА.', 'dim');
-            await sleep(250);
+            await sleep(220);
             await typeLine('> УРОВЕНЬ ДОСТУПА: O5 / СПЕЦУПОЛНОМОЧЕННЫЕ', 'dim');
             await sleep(300);
             await addLine('');
             await sleep(200);
-            await typeLine('ВОЕТ ЛИ ЧЁРНАЯ ЛУНА?', 'highlight', 30);
-            await sleep(400);
-            await typeLine('ВВЕДИТЕ КОДОВУЮ ФРАЗУ:', 'highlight', 30);
+
+            await typeLine('ВОЕТ ЛИ ЧЁРНАЯ ЛУНА?', 'highlight', 28);
+            await sleep(350);
+            await typeLine('ВВЕДИТЕ КОДОВУЮ ФРАЗУ:', 'highlight', 28);
             await sleep(250);
 
-            inputLine.classList.add('visible');
-            cmdInput.focus();
+            currentState = STATE.PHRASE;
+            enableInput('>');
         }
 
+        // ============================================================
+        //  ОБРАБОТЧИК ВВОДА
+        // ============================================================
+
         cmdInput.addEventListener('keydown', async (e) => {
-            if (e.key === 'Enter') {
-                const value = cmdInput.value;
-                cmdInput.value = '';
-                cmdInput.disabled = true;
-                inputLine.classList.remove('visible');
-                await handlePhrase(value);
-            }
+            if (e.key !== 'Enter') return;
+            const value = cmdInput.value;
+            cmdInput.value = '';
+            if (!value.trim() && currentState !== STATE.FILE) return;
+            await addLine(promptSym.textContent + ' ' + value, 'user-input');
+            await handleInput(value.trim());
         });
 
-        async function handlePhrase(phrase) {
-            await addLine('> ' + phrase, 'user-input');
+        // ============================================================
+        //  ДИСПЕТЧЕР
+        // ============================================================
+
+        async function handleInput(raw) {
+            const cmd = raw.toLowerCase();
+
+            // --- PHRASE ---
+            if (currentState === STATE.PHRASE) {
+                await checkPhrase(raw);
+                return;
+            }
+
+            // --- общие команды (работают везде) ---
+            if (cmd === 'помощь' || cmd === 'help' || cmd === '?') {
+                await showHelp();
+                return;
+            }
+            if (cmd === 'очистить' || cmd === 'clear' || cmd === 'cls') {
+                output.innerHTML = '';
+                await addLine('> ЭКРАН ОЧИЩЕН.', 'dim');
+                await addLine('');
+                return;
+            }
+            if (cmd === 'выход' || cmd === 'exit' || cmd === 'quit') {
+                await endSession();
+                return;
+            }
+
+            // --- MENU ---
+            if (currentState === STATE.MENU) {
+                if (cmd === 'список' || cmd === 'list' || cmd === 'файлы') {
+                    await showFileList();
+                    return;
+                }
+                const openMatch = cmd.match(/^открыть\s+(\d+)$/);
+                if (openMatch) {
+                    await openFileById(parseInt(openMatch[1], 10));
+                    return;
+                }
+                const num = parseInt(raw, 10);
+                if (!isNaN(num) && FILES[num]) {
+                    await openFileById(num);
+                    return;
+                }
+                if (!isNaN(num) && !FILES[num]) {
+                    await addLine('> ФАЙЛ С ТАКИМ НОМЕРОМ НЕ СУЩЕСТВУЕТ.', 'error');
+                    await addLine('> ВВЕДИТЕ «СПИСОК» ДЛЯ ПРОСМОТРА ДОСТУПНЫХ ФАЙЛОВ.', 'dim');
+                    return;
+                }
+                await addLine('> НЕИЗВЕСТНАЯ КОМАНДА: ' + raw, 'error');
+                await addLine('> ВВЕДИТЕ «ПОМОЩЬ» ДЛЯ СПИСКА КОМАНД.', 'dim');
+                return;
+            }
+
+            // --- FILE ---
+            if (currentState === STATE.FILE) {
+                if (cmd === 'назад' || cmd === 'back' || cmd === 'меню' || cmd === 'список') {
+                    currentFileId = null;
+                    currentState = STATE.MENU;
+                    await addLine('');
+                    await addLine('> ВОЗВРАТ К СПИСКУ ФАЙЛОВ.', 'dim');
+                    await addLine('');
+                    await showFileList();
+                    return;
+                }
+                if (cmd === 'содержание' || cmd === 'content') {
+                    await addLine('> ТЕКУЩИЙ ФАЙЛ: ' + FILES[currentFileId].title, 'dim');
+                    return;
+                }
+                await addLine('> НЕИЗВЕСТНАЯ КОМАНДА: ' + raw, 'error');
+                await addLine('> ДОСТУПНО: «НАЗАД», «ПОМОЩЬ», «ОЧИСТИТЬ», «ВЫХОД».', 'dim');
+                return;
+            }
+
+            // --- LOCKED ---
+            if (currentState === STATE.LOCKED) {
+                await addLine('> ТЕРМИНАЛ ЗАБЛОКИРОВАН. ОБРАТИТЕСЬ К АДМИНИСТРАТОРУ.', 'error');
+                return;
+            }
+        }
+
+        // ============================================================
+        //  ПРОВЕРКА КОДОВОЙ ФРАЗЫ
+        // ============================================================
+
+        async function checkPhrase(raw) {
+            disableInput();
             await sleep(200);
             await typeLine('> ПРОВЕРКА...', 'dim', 30);
             await sleep(900);
 
-            const normalized = phrase.trim().toLowerCase().replace(/\s+/g, ' ');
-            if (normalized === 'пока не светят звёзды' || normalized === 'пока не светят звезды') {
-                await typeLine('> ДОСТУП РАЗРЕШЁН.', 'success', 25);
-                await sleep(300);
-                await typeLine('> ДОБРО ПОЖАЛОВАТЬ, УПОЛНОМОЧЕННОЕ ЛИЦО.', 'success', 25);
-                await sleep(400);
-                await addLine('');
-                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К БАЗЕ ДАННЫХ ШТАБ-КВАРТИРЫ', 'dim', 15);
-                await sleep(300);
-                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К СПИСКУ ФАЙЛОВ', 'dim', 15);
-                await sleep(300);
-                await typeLine('> ОТКРЫТИЕ СПИСКА ФАЙЛОВ', 'dim', 15);
-                await sleep(400);
-                await addLine('');
-                await addLine('ДОСТУПНЫЕ ФАЙЛЫ:', 'header');
-                await addLine('');
+            const normalized = raw.toLowerCase().replace(/\s+/g, ' ').replace('ё', 'е').trim();
+            const valid = normalized === 'пока не светят звезды' || normalized === 'пока не светят звёзды';
 
-                const files = [
-                    { name: 'ПРОЕКТ X-1 — «ФУНДАМЕНТ»', href: 'terminals/X-1.html' },
-                    { name: 'ПРОЕКТ X-2 — «БЕЗМОЛВИЕ»', href: 'terminals/X-2.html' }
-                ];
-
-                files.forEach((f, i) => {
-                    const line = document.createElement('div');
-                    line.className = 'line';
-                    line.innerHTML = `  [${i + 1}] <a href="${f.href}" class="file-link">${f.name}</a>`;
-                    output.appendChild(line);
-                    scrollDown();
-                });
-
-                await sleep(400);
+            if (valid) {
+                await typeLine('> ДОСТУП РАЗРЕШЁН.', 'success', 22);
+                await sleep(250);
+                await typeLine('> ДОБРО ПОЖАЛОВАТЬ, УПОЛНОМОЧЕННОЕ ЛИЦО.', 'success', 22);
+                await sleep(350);
                 await addLine('');
-                await addLine('  [0] ВЫХОД', 'dim');
+                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К БАЗЕ ДАННЫХ ШТАБ-КВАРТИРЫ', 'dim', 12);
+                await sleep(220);
+                await typeLine('> ПОЛУЧЕНИЕ ДОСТУПА К СПИСКУ ФАЙЛОВ', 'dim', 12);
+                await sleep(220);
+                await typeLine('> ОТКРЫТИЕ СПИСКА ФАЙЛОВ', 'dim', 12);
+                await sleep(300);
                 await addLine('');
-                await typeLine('> ВЫБЕРИТЕ ФАЙЛ:', 'highlight', 25);
+                currentState = STATE.MENU;
+                await showFileList();
+                enableInput('>');
             } else {
-                await typeLine('> ДОСТУП ЗАПРЕЩЁН.', 'error', 25);
-                await sleep(300);
-                await typeLine('> НЕВЕРНАЯ КОДОВАЯ ФРАЗА.', 'error', 25);
-                await sleep(300);
-                await typeLine('> ПОПЫТКА ЗАФИКСИРОВАНА.', 'error', 25);
+                await typeLine('> ДОСТУП ЗАПРЕЩЁН.', 'error', 22);
+                await sleep(250);
+                await typeLine('> НЕВЕРНАЯ КОДОВАЯ ФРАЗА.', 'error', 22);
+                await sleep(250);
+                await typeLine('> ПОПЫТКА ЗАФИКСИРОВАНА.', 'error', 22);
+                await sleep(350);
+                await addLine('');
+                await typeLine('> O5-1 УВЕДОМЛЁН.', 'error', 22);
                 await sleep(400);
                 await addLine('');
-                await typeLine('> O5-1 УВЕДОМЛЁН.', 'error', 25);
-                await sleep(500);
-                await addLine('');
-                await typeLine('> СЕАНС ЗАВЕРШЁН.', 'dim', 20);
-                await typeLine('> ТЕРМИНАЛ ЗАБЛОКИРОВАН.', 'dim', 20);
+                await typeLine('> СЕАНС ЗАВЕРШЁН.', 'dim', 18);
+                await typeLine('> ТЕРМИНАЛ ЗАБЛОКИРОВАН.', 'dim', 18);
+                currentState = STATE.LOCKED;
+                disableInput();
             }
         }
+
+        // ============================================================
+        //  СПИСОК ФАЙЛОВ
+        // ============================================================
+
+        async function showFileList() {
+            await addLine('ДОСТУПНЫЕ ФАЙЛЫ:', 'header');
+            await addLine('');
+            const ids = Object.keys(FILES);
+            ids.forEach(id => {
+                addLine(`  [${id}] ${FILES[id].title}`);
+            });
+            await sleep(150);
+            await addLine('');
+            await addLine('  ВВЕДИТЕ НОМЕР ФАЙЛА ИЛИ «ПОМОЩЬ» ДЛЯ СПИСКА КОМАНД.', 'dim');
+            await addLine('');
+        }
+
+        // ============================================================
+        //  ОТКРЫТИЕ ФАЙЛА
+        // ============================================================
+
+        async function openFileById(id) {
+            const file = FILES[id];
+            if (!file) {
+                await addLine('> ФАЙЛ НЕ НАЙДЕН.', 'error');
+                return;
+            }
+            disableInput();
+            await addLine('');
+            await typeLine(`> ОТКРЫТИЕ ФАЙЛА ${file.code}...`, 'dim', 18);
+            await sleep(500);
+            await addLine('');
+            await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'divider');
+            await sleep(150);
+
+            // Заголовок печатается посимвольно
+            await typeLine(file.title, 'header', 22);
+            await sleep(250);
+
+            // Остальное — построчно с задержкой
+            for (let i = 0; i < file.lines.length; i++) {
+                const l = file.lines[i];
+                await addLine(l.t || '', l.c || '');
+                await sleep(l.t === '' ? 30 : 45);
+            }
+
+            await addLine('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'divider');
+            await sleep(200);
+            await addLine('');
+            await typeLine('> КОНЕЦ ФАЙЛА. ДОСТУПНО: «НАЗАД», «ПОМОЩЬ», «ОЧИСТИТЬ», «ВЫХОД».', 'dim', 12);
+            await addLine('');
+
+            currentFileId = id;
+            currentState = STATE.FILE;
+            enableInput('>');
+        }
+
+        // ============================================================
+        //  ПОМОЩЬ
+        // ============================================================
+
+        async function showHelp() {
+            await addLine('');
+            await addLine('ДОСТУПНЫЕ КОМАНДЫ:', 'header');
+            await addLine('');
+            await addLine('  ПОМОЩЬ              — показать этот список команд');
+            await addLine('  СПИСОК              — показать список доступных файлов');
+            await addLine('  ОТКРЫТЬ [номер]     — открыть файл по номеру');
+            await addLine('  [номер]             — быстрый доступ к файлу по номеру');
+            await addLine('  НАЗАД               — вернуться к списку файлов (внутри файла)');
+            await addLine('  ОЧИСТИТЬ            — очистить экран терминала');
+            await addLine('  ВЫХОД               — завершить сеанс');
+            await addLine('');
+            await addLine('ПРИМЕЧАНИЕ: команды не чувствительны к регистру.', 'dim');
+            await addLine('');
+        }
+
+        // ============================================================
+        //  ЗАВЕРШЕНИЕ СЕАНСА
+        // ============================================================
+
+        async function endSession() {
+            disableInput();
+            await addLine('');
+            await typeLine('> ЗАВЕРШЕНИЕ СЕАНСА...', 'dim', 18);
+            await sleep(500);
+            await typeLine('> СЕАНС ЗАВЕРШЁН.', 'dim', 18);
+            await sleep(300);
+            await typeLine('> ТЕРМИНАЛ ЗАБЛОКИРОВАН.', 'dim', 18);
+            currentState = STATE.LOCKED;
+        }
+
+        // ============================================================
+        //  ЧАСЫ
+        // ============================================================
 
         function updateClock() {
             const d = new Date();
@@ -363,6 +670,10 @@
 
         updateClock();
         setInterval(updateClock, 1000);
+
+        // ============================================================
+        //  СТАРТ
+        // ============================================================
 
         bootSequence();
     </script>
