@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT X-1 — FUNDAMENT</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; background: #050805; overflow: hidden; }
+
+        body {
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #00ff41;
+            text-shadow: 0 0 4px rgba(0, 255, 65, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.18) 0px,
+                rgba(0, 0, 0, 0.18) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.75) 100%);
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .terminal {
+            width: 100%;
+            max-width: 1000px;
+            height: 92vh;
+            max-height: 900px;
+            background: #0a0e0a;
+            border: 1px solid rgba(0, 255, 65, 0.25);
+            border-radius: 6px;
+            box-shadow:
+                0 0 40px rgba(0, 255, 65, 0.15),
+                inset 0 0 100px rgba(0, 255, 65, 0.03);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 14px;
+            background: #0f140f;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.13);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .terminal-header .dots { display: flex; gap: 6px; margin-right: 14px; }
+        .terminal-header .dot {
+            width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+        }
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #febc2e; }
+        .dot.green { background: #28c840; }
+
+        .terminal-header .title {
+            flex: 1;
+            text-align: center;
+            color: #00aa2a;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 22px 26px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .terminal-body::-webkit-scrollbar { width: 8px; }
+        .terminal-body::-webkit-scrollbar-track { background: transparent; }
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 65, 0.2);
+            border-radius: 4px;
+        }
+
+        .prompt-line {
+            color: #00aa2a;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: normal;
+            color: #00ff41;
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .meta {
+            color: #00aa2a;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .meta strong { color: #00ff41; font-weight: normal; }
+
+        h2 {
+            font-size: 14px;
+            font-weight: normal;
+            color: #ffff00;
+            letter-spacing: 0.1em;
+            margin: 22px 0 10px;
+            text-transform: uppercase;
+            text-shadow: 0 0 4px rgba(255, 255, 0, 0.5);
+        }
+
+        p {
+            margin-bottom: 10px;
+            color: #00ff41;
+        }
+
+        ul { margin: 8px 0 12px 22px; }
+        ul li { margin-bottom: 4px; }
+
+        .dev {
+            border-left: 2px solid rgba(0, 255, 65, 0.3);
+            padding: 10px 16px;
+            margin: 12px 0;
+            background: rgba(0, 255, 65, 0.02);
+        }
+
+        .dev-title {
+            color: #ffff00;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-shadow: 0 0 4px rgba(255, 255, 0, 0.5);
+        }
+
+        .dev .field { color: #00aa2a; font-size: 13px; }
+        .dev .field strong { color: #b8ffb8; font-weight: normal; }
+
+        .redacted {
+            background: #000;
+            color: #00ff41;
+            padding: 2px 6px;
+            letter-spacing: 0.15em;
+            border: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .redacted-block {
+            border: 1px dashed rgba(0, 255, 65, 0.35);
+            padding: 18px 22px;
+            margin: 12px 0;
+            text-align: center;
+            color: #00aa2a;
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 13px;
+        }
+
+        th, td {
+            border: 1px solid rgba(0, 255, 65, 0.2);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(0, 255, 65, 0.06);
+            color: #ffff00;
+            font-weight: normal;
+            letter-spacing: 0.08em;
+        }
+
+        td { color: #00ff41; }
+
+        .warning {
+            border: 1px solid #ff3333;
+            background: rgba(255, 51, 51, 0.05);
+            padding: 14px 20px;
+            margin: 24px 0 12px;
+            color: #ff6666;
+            text-shadow: 0 0 4px rgba(255, 51, 51, 0.4);
+        }
+
+        .warning .w-title {
+            color: #ff3333;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+        }
+
+        .back-link {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 10px;
+            font-size: 11px;
+            color: #00aa2a;
+            border-top: 1px solid rgba(0, 255, 65, 0.13);
+            text-shadow: none;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link a {
+            color: #00aa2a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link a:hover {
+            color: #00ff41;
+            text-shadow: 0 0 6px rgba(0, 255, 65, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <div class="title">FILE://HQ/CLASSIFIED/PROJECT-X-1 // ГРИФ: СЕКРЕТНО</div>
+        </div>
+
+        <div class="terminal-body">
+            <div class="prompt-line">> ОТКРЫТИЕ ФАЙЛА: PROJECT-X-1 — «ФУНДАМЕНТ»</div>
+            <div class="prompt-line">> ДОСТУП РАЗРЕШЁН. ФАЙЛ ЗАГРУЖЕН.</div>
+            <br>
+
+            <h1>Проект X-1 — «Фундамент»</h1>
+
+            <div class="meta">
+                <strong>Гриф:</strong> Секретно<br>
+                <strong>Уровень допуска:</strong> O5 / Спецуполномоченные<br>
+                <strong>Куратор:</strong> O5-6 «Механик»<br>
+                <strong>Соучастники:</strong> O5-2 «Архитектор Разума», O5-11 «Архивариус»<br>
+                <strong>Статус:</strong> Активен<br>
+                <strong>Дата основания:</strong> 2026-03-01
+            </div>
+
+            <h2>Описание проекта</h2>
+            <p>Проект X-1 — комплексная программа разработки и создания технологий, необходимых Фонду для сдерживания, нейтрализации и контроля аномальных объектов. В отличие от стандартных инженерных решений, технологии X-1 находятся на стыке классической физики, аномалистики и меметики.</p>
+
+            <p><strong style="color:#ffff00;">Цель проекта:</strong> создание инструментов, позволяющих Фонду:</p>
+            <ul>
+                <li>стабилизировать реальность в зонах повышенной аномальной активности;</li>
+                <li>создавать поля, изолирующие аномалии от внешней среды;</li>
+                <li>разрабатывать ловушки для объектов классов Кетер, Эросус и Алеатор;</li>
+                <li>обеспечивать защиту персонала от меметических и когнитивных угроз.</li>
+            </ul>
+
+            <h2>Ключевые разработки</h2>
+
+            <div class="dev">
+                <div class="dev-title">1. Скрэнтонский якорь реальности</div>
+                <div class="field"><strong>Тип:</strong> Стационарное устройство.</div>
+                <div class="field"><strong>Назначение:</strong> Локальная стабилизация реальности в радиусе до 50 метров.</div>
+                <div class="field"><strong>Принцип:</strong> Генерация поля, подавляющего аномальные флуктуации пространства-времени.</div>
+                <div class="field"><strong>Статус:</strong> Прототип испытан. Успешно стабилизировал зону вокруг SCP-030 (Парадокс Недосягаемости) на 72 часа.</div>
+                <div class="field"><strong>Ограничения:</strong> Требует огромного энергопотребления. Мобильная версия в разработке.</div>
+            </div>
+
+            <div class="dev">
+                <div class="dev-title">2. Поля сдерживания «Клетка»</div>
+                <div class="field"><strong>Тип:</strong> Переносные генераторы.</div>
+                <div class="field"><strong>Назначение:</strong> Создание барьера, непроницаемого для большинства аномальных сущностей.</div>
+                <div class="field"><strong>Статус:</strong> <span class="redacted">[ДАННЫЕ ЗАСЕКРЕЧЕНЫ]</span></div>
+            </div>
+
+            <div class="redacted-block">
+                ⚠ РАЗРАБОТКИ 3–5 — <span class="redacted">[ДАННЫЕ ЗАСЕКРЕЧЕНЫ]</span><br>
+                ДОСТУП РАЗРЕШЁН ТОЛЬКО O5-1, O5-2 И O5-6
+            </div>
+
+            <div class="redacted-block">
+                <span class="redacted">[СПИСОК РАЗРАБОТОК НЕПОЛНЫЙ]</span><br>
+                Полный перечень содержит более 20 активных направлений.<br>
+                Остальные пункты доступны исключительно Совету O5.
+            </div>
+
+            <h2>Текущие приоритеты</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Приоритет</th>
+                        <th>Разработка</th>
+                        <th>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Высокий</td><td>Мобильный Скрэнтонский якорь</td><td>В разработке</td></tr>
+                    <tr><td>Высокий</td><td>Ловушка для Алеатор-объектов</td><td>Теоретическая стадия</td></tr>
+                    <tr><td>Средний</td><td>Поле против Эросус-агентов</td><td>Испытания</td></tr>
+                    <tr><td>Средний</td><td>Вакцина против параноициона</td><td>Успешно</td></tr>
+                    <tr><td>Низкий</td><td>Глушитель для Веритас-объектов</td><td>Отложен</td></tr>
+                </tbody>
+            </table>
+
+            <div class="warning">
+                <div class="w-title">⚠ ПРЕДУПРЕЖДЕНИЕ</div>
+                Данные по Проекту X-1 являются секретными. Разглашение информации за пределами круга допущенных лиц карается немедленной нейтрализацией и амнезиацией. При обнаружении утечки — активируется протокол «Чистый Лист».
+            </div>
+
+            <br>
+            <div class="prompt-line">> КОНЕЦ ФАЙЛА.</div>
+        </div>
+
+        <div class="back-link">
+            <a href="../SCP-console.html">← ВЕРНУТЬСЯ К СПИСКУ ФАЙЛОВ</a>
+        </div>
+    </div>
+</body>
+</html>
