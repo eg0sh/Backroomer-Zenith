@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT X-2 — SILENCE</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { height: 100%; background: #050805; overflow: hidden; }
+
+        body {
+            font-family: 'JetBrains Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #ff3333;
+            text-shadow: 0 0 4px rgba(255, 51, 51, 0.45);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.18) 0px,
+                rgba(0, 0, 0, 0.18) 1px,
+                transparent 1px,
+                transparent 3px
+            );
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(30, 0, 0, 0.85) 100%);
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .terminal {
+            width: 100%;
+            max-width: 1000px;
+            height: 92vh;
+            max-height: 900px;
+            background: #0e0a0a;
+            border: 1px solid rgba(255, 51, 51, 0.35);
+            border-radius: 6px;
+            box-shadow:
+                0 0 40px rgba(255, 51, 51, 0.15),
+                inset 0 0 100px rgba(255, 51, 51, 0.03);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            padding: 8px 14px;
+            background: #140f0f;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.13);
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .terminal-header .dots { display: flex; gap: 6px; margin-right: 14px; }
+        .terminal-header .dot {
+            width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+        }
+        .dot.red { background: #ff5f57; }
+        .dot.yellow { background: #febc2e; }
+        .dot.green { background: #28c840; }
+
+        .terminal-header .title {
+            flex: 1;
+            text-align: center;
+            color: #aa2a2a;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
+
+        .terminal-body {
+            flex: 1;
+            padding: 22px 26px;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.65;
+        }
+
+        .terminal-body::-webkit-scrollbar { width: 8px; }
+        .terminal-body::-webkit-scrollbar-track { background: transparent; }
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 51, 51, 0.2);
+            border-radius: 4px;
+        }
+
+        .prompt-line {
+            color: #aa2a2a;
+            margin-bottom: 6px;
+        }
+
+        h1 {
+            font-size: 18px;
+            font-weight: normal;
+            color: #ff3333;
+            letter-spacing: 0.15em;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.3);
+            padding-bottom: 8px;
+            margin-bottom: 18px;
+            text-transform: uppercase;
+        }
+
+        .meta {
+            color: #aa2a2a;
+            font-size: 13px;
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .meta strong { color: #ff3333; font-weight: normal; }
+
+        h2 {
+            font-size: 14px;
+            font-weight: normal;
+            color: #ff6666;
+            letter-spacing: 0.1em;
+            margin: 22px 0 10px;
+            text-transform: uppercase;
+        }
+
+        .redacted-block {
+            border: 1px dashed rgba(255, 51, 51, 0.4);
+            padding: 20px 24px;
+            margin: 16px 0;
+            text-align: center;
+            color: #aa2a2a;
+            font-size: 13px;
+            letter-spacing: 0.12em;
+            background: rgba(30, 0, 0, 0.4);
+            line-height: 2;
+        }
+
+        .warning {
+            border: 2px solid #ff3333;
+            background: rgba(255, 51, 51, 0.08);
+            padding: 18px 24px;
+            margin: 28px 0 12px;
+            color: #ff6666;
+            text-shadow: 0 0 6px rgba(255, 51, 51, 0.5);
+            animation: pulseWarning 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseWarning {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 51, 51, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(255, 51, 51, 0.5); }
+        }
+
+        .warning .w-title {
+            color: #ff3333;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .back-link {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 10px;
+            font-size: 11px;
+            color: #aa2a2a;
+            border-top: 1px solid rgba(255, 51, 51, 0.13);
+            text-shadow: none;
+            letter-spacing: 0.1em;
+        }
+
+        .back-link a {
+            color: #aa2a2a;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .back-link a:hover {
+            color: #ff3333;
+            text-shadow: 0 0 6px rgba(255, 51, 51, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="terminal">
+        <div class="terminal-header">
+            <div class="dots">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <div class="title">FILE://HQ/EYES-ONLY/PROJECT-X-2 // ГРИФ: АБСОЛЮТНО СЕКРЕТНО</div>
+        </div>
+
+        <div class="terminal-body">
+            <div class="prompt-line">> ОТКРЫТИЕ ФАЙЛА: PROJECT-X-2 — «БЕЗМОЛВИЕ»</div>
+            <div class="prompt-line">> ДОСТУП ЧАСТИЧНО ОГРАНИЧЕН.</div>
+            <br>
+
+            <h1>Проект X-2 — «Безмолвие»</h1>
+
+            <div class="meta">
+                <strong>Гриф:</strong> Абсолютно секретно<br>
+                <strong>Уровень допуска:</strong> Только O5-1, O5-2, O5-3, O5-6<br>
+                <strong>Куратор:</strong> O5-3 «Молот»<br>
+                <strong>Соучастники:</strong> [ДАННЫЕ УДАЛЕНЫ]<br>
+                <strong>Статус:</strong> Активен<br>
+                <strong>Дата основания:</strong> [ДАННЫЕ УДАЛЕНЫ]
+            </div>
+
+            <h2>Описание проекта</h2>
+
+            <div class="redacted-block">
+                [ДОСТУП ОГРАНИЧЕН]<br><br>
+                Проект X-2 — <span style="color:#ff3333;">[ДАННЫЕ УДАЛЕНЫ]</span>.<br><br>
+                Цель проекта: <span style="color:#ff3333;">[ДАННЫЕ УДАЛЕНЫ]</span>.<br><br>
+                Текущий статус: <span style="color:#ff3333;">[ДАННЫЕ УДАЛЕНЫ]</span>.<br><br>
+                <span style="color:#ff6666;">[КОНЕЦ ДОСТУПНОЙ ИНФОРМАЦИИ]</span>
+            </div>
+
+            <h2>Известно только</h2>
+            <ul style="margin-left: 22px; color: #ff6666; line-height: 1.9;">
+                <li>Проект X-2 существует.</li>
+                <li>Он относится к категории «оружие сдерживания».</li>
+                <li>В случае успеха — это изменит баланс сил в Закулисье.</li>
+                <li>Публично будет известно лишь то, что Фонд обладает «особым оружием».</li>
+            </ul>
+
+            <div class="warning">
+                <div class="w-title">⚠ ПРЕДУПРЕЖДЕНИЕ</div>
+                > ВЫ ПЫТАЕТЕСЬ ПОЛУЧИТЬ ДОСТУП К ДАННЫМ, ПРЕВЫШАЮЩИМ ВАШ УРОВЕНЬ ДОПУСКА.<br>
+                > ЭТО ДЕЙСТВИЕ ЗАФИКСИРОВАНО.<br>
+                > ПОВТОРНАЯ ПОПЫТКА ПРИВЕДЁТ К НЕМЕДЛЕННОЙ НЕЙТРАЛИЗАЦИИ.<br>
+                > O5-1 УВЕДОМЛЁН.
+            </div>
+
+            <br>
+            <div class="prompt-line">> КОНЕЦ ДОСТУПНОЙ ЧАСТИ ФАЙЛА.</div>
+        </div>
+
+        <div class="back-link">
+            <a href="../SCP-console.html">← ВЕРНУТЬСЯ К СПИСКУ ФАЙЛОВ</a>
+        </div>
+    </div>
+</body>
+</html>
