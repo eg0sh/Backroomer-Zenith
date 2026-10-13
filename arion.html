@@ -1448,11 +1448,6 @@
             labelSpan.textContent = 'Флот';
             dot.appendChild(labelSpan);
 
-            const badge = document.createElement('span');
-            badge.className = 'fleet-badge';
-            badge.textContent = 'ВНЕ ФАЗ';
-            dot.appendChild(badge);
-
             dot.addEventListener('click', function(e) {
                 e.stopPropagation();
                 showFleetInfo();
