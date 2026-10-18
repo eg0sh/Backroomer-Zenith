@@ -1344,7 +1344,7 @@
             if (sub.pct >= 100) return false;
             const fc = calculateForecast(sub);
             if (!fc) return false;
-            return fc < CURRENT_DATE;
+            return fc < new Date();
         }
 
         // ============================================================
