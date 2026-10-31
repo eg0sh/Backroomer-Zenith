@@ -566,18 +566,6 @@
             box-shadow: 0 0 45px rgba(110,198,255,0.35);
         }
         .fleet-dot:focus-visible { outline:2px solid var(--fleet-accent); outline-offset:4px; }
-        .fleet-dot .fleet-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--fleet-accent);
-            color: #0b0e14;
-            font-size: 9px;
-            padding: 2px 7px;
-            border-radius: 40px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
 
         /* Статусы флот-кружка: серый / голубой / зелёный */
         .fleet-dot.pending {
@@ -656,7 +644,6 @@
         .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent-gold); min-width:48px; text-align:right; flex-shrink:0; }
         .phase-card .card-pct.done { color:var(--dot-done); }
         .phase-card .card-pct.pending { color:var(--text-muted); }
-        /* Флот: голубые названия и % когда в процессе */
         .fleet-card .card-name.active { color: var(--fleet-accent); }
         .fleet-card .card-pct.active { color: var(--fleet-accent); }
         .phase-card .card-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; box-shadow:0 0 12px rgba(0,0,0,0.3); transition:box-shadow 0.3s; }
@@ -736,10 +723,40 @@
             font-size:20px; font-weight:600; color:var(--text-primary);
             margin-bottom:20px; letter-spacing:0.2px;
         }
-        .analytics-grid {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap:20px;
+
+        /* Нефть: карточка на всю ширину */
+        .analytics-card-full {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+        .analytics-card-full h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            letter-spacing: 0.2px;
+        }
+        .oil-chart-wrap {
+            width: 100%;
+            aspect-ratio: 3 / 1;
+            position: relative;
+        }
+        .oil-chart-wrap canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+            max-height: none !important;
+            border-radius: 10px;
+        }
+
+        .analytics-grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
         .analytics-card {
             background:var(--bg-card); border-radius:16px;
@@ -796,9 +813,23 @@
             .phase-cards { flex-direction:column; }
             .phase-card { max-width:100%; min-width:0; }
             .modal { padding:24px; }
-            .analytics-grid { grid-template-columns:1fr; }
+            .analytics-grid-two { grid-template-columns:1fr; }
             .theme-modal .theme-options { grid-template-columns:1fr 1fr; }
             .export-bar { flex-direction:column; align-items:stretch; }
+            .analytics-card-full { padding: 16px; }
+            /* На мобильных нефть — горизонтальная прокрутка, без сжатия */
+            .oil-chart-wrap {
+                aspect-ratio: auto;
+                height: 300px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+            .oil-chart-wrap canvas {
+                width: 900px !important;
+                height: 300px !important;
+                max-width: none !important;
+            }
         }
         @media (max-width: 480px) {
             .header-left h1 { font-size:30px; }
@@ -821,8 +852,8 @@
             .header { margin-bottom:16px; }
             .timeline-wrapper, .phase-block, .analytics-section { break-inside:avoid; }
             body { background:#fff; color:#000; }
-            .phase-card, .analytics-card { border:1px solid #ccc; background:#f9f9f9; }
-            .phase-card .card-name, .phase-header .phase-title, .analytics-card h3 { color:#000; }
+            .phase-card, .analytics-card, .analytics-card-full { border:1px solid #ccc; background:#f9f9f9; }
+            .phase-card .card-name, .phase-header .phase-title, .analytics-card h3, .analytics-card-full h3 { color:#000; }
             .phase-card .card-pct, .phase-header .phase-progress { color:#000; }
             .info-panel { border:1px solid #ccc; background:#f9f9f9; }
         }
@@ -898,7 +929,17 @@
 
         <div class="analytics-section" id="analyticsSection">
             <div class="analytics-title">📊 Аналитика проекта</div>
-            <div class="analytics-grid">
+
+            <!-- Нефть: на всю ширину -->
+            <div class="analytics-card-full">
+                <h3>🛢️ Цена нефти (USD/барр.) — апрель–октябрь 2026</h3>
+                <div class="oil-chart-wrap">
+                    <canvas id="oilChart" width="1200" height="400"></canvas>
+                </div>
+            </div>
+
+            <!-- Бюджет и риски в 2 колонки -->
+            <div class="analytics-grid-two">
                 <div class="analytics-card">
                     <h3>Бюджет проекта ($ млн)</h3>
                     <canvas id="budgetChart" width="400" height="160"></canvas>
@@ -906,10 +947,6 @@
                 <div class="analytics-card">
                     <h3>Оценка рисков</h3>
                     <div id="riskList"></div>
-                </div>
-                <div class="analytics-card">
-                    <h3>Цена нефти (USD/барр.)</h3>
-                    <canvas id="oilChart" width="400" height="160"></canvas>
                 </div>
             </div>
         </div>
@@ -932,12 +969,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.2.12</div>
+        <div class="version">v1.2.13</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.12
+        //  VERSION: v1.2.13
         // ============================================================
 
         const phases = [
@@ -1139,7 +1176,7 @@
                 characteristics: '20 млн м³/сут, гликолевая осушка до -20°C.',
                 dependencies: ['5.3'] },
             { id: '5.5', phaseId: 'p5', name: 'СИКГ — система измерений количества и качества газа', startDate: null, endDate: null, pct: 0,
-                description: 'Коммерческий узел учёта газа на выходе с УКПГ.',
+            description: 'Коммерческий узел учёта газа на выходе с УКПГ.',
                 characteristics: '20 млн м³/сут, точность ±0.5%, хроматограф.',
                 dependencies: ['5.4'] },
             { id: '5.6', phaseId: 'p5', name: 'Магистральный газопровод УКПГ → ГПЗ → СПГ', startDate: null, endDate: null, pct: 0,
@@ -1238,7 +1275,7 @@
                 { month: 'июль.26', value: 704 },
                 { month: 'август.26', value: 788 },
                 { month: 'сентябрь.26', value: 846 },
-                { month: 'октяюрь.26', value: 1033 }
+                { month: 'октябрь.26', value: 1033 }
             ]
         };
 
@@ -1321,7 +1358,6 @@
 
         // ============================================================
         //  РАСЧЁТ ПРОГНОЗА
-        //  Прогноз = CURRENT_DATE + (100 - pct) / (pct / дней_прошло)
         // ============================================================
 
         function calculateForecast(sub) {
@@ -1573,10 +1609,6 @@
             });
         }
 
-        // ============================================================
-        //  RENDER FLEET PHASES (отдельный блок под основными)
-        // ============================================================
-
         function renderFleetPhases() {
             const container = document.getElementById('fleetContainer');
             container.innerHTML = '';
@@ -1735,6 +1767,7 @@
         // ============================================================
 
         function renderAnalytics() {
+            // ---------- Бюджет (круговая) ----------
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
             const spent1 = spentByPhase.p1 || 0;
             const spent2 = spentByPhase.p2 || 0;
@@ -1798,6 +1831,7 @@
                 }
             });
 
+            // ---------- Риски ----------
             const riskList = document.getElementById('riskList');
             riskList.innerHTML = extraData.risks.map(r => {
                 const score = (r.probability * r.impact * 100).toFixed(0);
@@ -1807,79 +1841,108 @@
                 return `<div class="risk-item"><span class="risk-name">${r.name}</span><span class="risk-score ${cls}">${score}%</span></div>`;
             }).join('');
 
+            // ---------- Нефть (большой график) ----------
             const ctxOil = document.getElementById('oilChart').getContext('2d');
             const oilData = extraData.oilPrices;
-            const wO = ctxOil.canvas.width;
-            const hO = ctxOil.canvas.height;
+            const wO = ctxOil.canvas.width;   // 1200
+            const hO = ctxOil.canvas.height;  // 400
             ctxOil.clearRect(0, 0, wO, hO);
 
+            // Фон
             const bgGrad = ctxOil.createRadialGradient(wO/2, hO/2, 0, wO/2, hO/2, Math.max(wO, hO));
             bgGrad.addColorStop(0, '#1a1a3a');
             bgGrad.addColorStop(1, '#0a0a1a');
             ctxOil.fillStyle = bgGrad;
             ctxOil.fillRect(0, 0, wO, hO);
 
-            const pad = { top: 24, bottom: 32, left: 40, right: 30 };
+            // Отступы — широкие
+            const pad = { top: 50, bottom: 70, left: 80, right: 60 };
             const chartW = wO - pad.left - pad.right;
             const chartH = hO - pad.top - pad.bottom;
-            const minVal = 0, maxVal = 900, range = maxVal - minVal;
 
-            ctxOil.strokeStyle = 'rgba(200,200,200,0.15)';
+            // Автомасштаб по Y
+            const maxVal = Math.max(...oilData.map(d => d.value));
+            const yMax = Math.ceil(maxVal / 200) * 200;  // 1200
+            const minVal = 0;
+            const range = yMax - minVal;
+
+            // Сетка
+            ctxOil.strokeStyle = 'rgba(200,200,200,0.10)';
             ctxOil.lineWidth = 1;
-            ctxOil.setLineDash([4,6]);
-            for (let i=0; i<=4; i++) {
-                const y = pad.top + chartH - (i/4)*chartH;
-                ctxOil.beginPath(); ctxOil.moveTo(pad.left, y); ctxOil.lineTo(pad.left+chartW, y); ctxOil.stroke();
+            ctxOil.setLineDash([6, 8]);
+            for (let i = 0; i <= 6; i++) {
+                const y = pad.top + chartH - (i / 6) * chartH;
+                ctxOil.beginPath();
+                ctxOil.moveTo(pad.left, y);
+                ctxOil.lineTo(pad.left + chartW, y);
+                ctxOil.stroke();
             }
-            for (let i=0; i<oilData.length; i++) {
-                const x = pad.left + (i/(oilData.length-1))*chartW;
-                ctxOil.beginPath(); ctxOil.moveTo(x, pad.top); ctxOil.lineTo(x, pad.top+chartH); ctxOil.stroke();
+            for (let i = 0; i < oilData.length; i++) {
+                const x = pad.left + (i / (oilData.length - 1)) * chartW;
+                ctxOil.beginPath();
+                ctxOil.moveTo(x, pad.top);
+                ctxOil.lineTo(x, pad.top + chartH);
+                ctxOil.stroke();
             }
             ctxOil.setLineDash([]);
 
-            ctxOil.fillStyle = '#ffffff';
-            ctxOil.font = '11px Inter, sans-serif';
+            // Оси
+            ctxOil.fillStyle = '#e0e8f0';
+            ctxOil.font = '15px Inter, sans-serif';
+            ctxOil.textAlign = 'right';
+            ctxOil.textBaseline = 'middle';
+            for (let i = 0; i <= 6; i++) {
+                const val = minVal + (i / 6) * range;
+                const y = pad.top + chartH - (i / 6) * chartH;
+                ctxOil.fillText(Math.round(val), pad.left - 14, y);
+            }
+
+            // Подписи месяцев
             ctxOil.textAlign = 'center';
-            [100,300,500,700,900].forEach(label => {
-                const y = pad.top + chartH - ((label - minVal)/range)*chartH;
-                ctxOil.textAlign = 'right';
-                ctxOil.fillText(label, pad.left - 6, y+4);
-            });
-            oilData.forEach((d,i) => {
-                const x = pad.left + (i/(oilData.length-1))*chartW;
-                ctxOil.textAlign = 'center';
-                ctxOil.fillText(d.month, x, pad.top + chartH + 18);
+            ctxOil.textBaseline = 'top';
+            oilData.forEach((d, i) => {
+                const x = pad.left + (i / (oilData.length - 1)) * chartW;
+                ctxOil.fillText(d.month, x, pad.top + chartH + 20);
             });
 
+            // Легенда
             ctxOil.textAlign = 'left';
-            ctxOil.font = '12px Inter, sans-serif';
+            ctxOil.textBaseline = 'middle';
+            ctxOil.font = '15px Inter, sans-serif';
             ctxOil.strokeStyle = '#ff1493';
-            ctxOil.lineWidth = 2;
-            ctxOil.beginPath(); ctxOil.moveTo(8,8); ctxOil.lineTo(28,8); ctxOil.stroke();
-            ctxOil.fillStyle = '#ffffff';
-            ctxOil.fillText('цена за баррель', 34, 12);
-
-            const lineColor = '#ff1493';
-            const areaColor = 'rgba(255,20,147,0.15)';
+            ctxOil.lineWidth = 3;
             ctxOil.beginPath();
-            oilData.forEach((d,i) => {
-                const x = pad.left + (i/(oilData.length-1))*chartW;
-                const y = pad.top + chartH - ((d.value - minVal)/range)*chartH;
-                if (i===0) ctxOil.moveTo(x,y); else ctxOil.lineTo(x,y);
+            ctxOil.moveTo(20, 20);
+            ctxOil.lineTo(60, 20);
+            ctxOil.stroke();
+            ctxOil.fillStyle = '#ffffff';
+            ctxOil.fillText('цена за баррель', 72, 21);
+
+            // Линия
+            const lineColor = '#ff1493';
+            const areaColor = 'rgba(255,20,147,0.12)';
+            ctxOil.beginPath();
+            oilData.forEach((d, i) => {
+                const x = pad.left + (i / (oilData.length - 1)) * chartW;
+                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
+                if (i === 0) ctxOil.moveTo(x, y);
+                else ctxOil.lineTo(x, y);
             });
             ctxOil.strokeStyle = lineColor;
-            ctxOil.lineWidth = 2.5;
+            ctxOil.lineWidth = 4;
             ctxOil.shadowColor = lineColor;
-            ctxOil.shadowBlur = 6;
+            ctxOil.shadowBlur = 10;
             ctxOil.stroke();
             ctxOil.shadowBlur = 0;
 
-            const lastX = pad.left + ((oilData.length-1)/(oilData.length-1))*chartW;
+            // Заливка
+            const lastX = pad.left + chartW;
             ctxOil.beginPath();
-            oilData.forEach((d,i) => {
-                const x = pad.left + (i/(oilData.length-1))*chartW;
-                const y = pad.top + chartH - ((d.value - minVal)/range)*chartH;
-                if (i===0) ctxOil.moveTo(x,y); else ctxOil.lineTo(x,y);
+            oilData.forEach((d, i) => {
+                const x = pad.left + (i / (oilData.length - 1)) * chartW;
+                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
+                if (i === 0) ctxOil.moveTo(x, y);
+                else ctxOil.lineTo(x, y);
             });
             ctxOil.lineTo(lastX, pad.top + chartH);
             ctxOil.lineTo(pad.left, pad.top + chartH);
@@ -1887,22 +1950,32 @@
             ctxOil.fillStyle = areaColor;
             ctxOil.fill();
 
-            oilData.forEach((d,i) => {
-                const x = pad.left + (i/(oilData.length-1))*chartW;
-                const y = pad.top + chartH - ((d.value - minVal)/range)*chartH;
+            // Точки и значения
+            oilData.forEach((d, i) => {
+                const x = pad.left + (i / (oilData.length - 1)) * chartW;
+                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
+
+                // Белая обводка
                 ctxOil.beginPath();
-                ctxOil.arc(x, y, 6, 0, 2*Math.PI);
+                ctxOil.arc(x, y, 10, 0, 2 * Math.PI);
                 ctxOil.fillStyle = '#ffffff';
-                ctxOil.shadowBlur = 0;
+                ctxOil.shadowColor = 'rgba(0,0,0,0.6)';
+                ctxOil.shadowBlur = 6;
                 ctxOil.fill();
+                ctxOil.shadowBlur = 0;
+
+                // Розовая заливка
                 ctxOil.beginPath();
-                ctxOil.arc(x, y, 4, 0, 2*Math.PI);
+                ctxOil.arc(x, y, 7, 0, 2 * Math.PI);
                 ctxOil.fillStyle = '#ff1493';
                 ctxOil.fill();
+
+                // Значение над точкой
                 ctxOil.fillStyle = '#ffffff';
-                ctxOil.font = '10px Inter, sans-serif';
+                ctxOil.font = '16px Inter, sans-serif';
                 ctxOil.textAlign = 'center';
-                ctxOil.fillText(d.value, x, y-10);
+                ctxOil.textBaseline = 'bottom';
+                ctxOil.fillText(d.value, x, y - 18);
             });
         }
 
