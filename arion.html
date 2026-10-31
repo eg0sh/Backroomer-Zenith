@@ -307,7 +307,11 @@
             letter-spacing: -0.5px;
             text-shadow: 0 0 30px var(--accent-glow);
         }
-        .top-menu .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+        .top-menu .nav-links {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
         .top-menu .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
@@ -561,18 +565,6 @@
             box-shadow: 0 0 45px rgba(110,198,255,0.35);
         }
         .fleet-dot:focus-visible { outline:2px solid var(--fleet-accent); outline-offset:4px; }
-        .fleet-dot .fleet-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--fleet-accent);
-            color: #0b0e14;
-            font-size: 9px;
-            padding: 2px 7px;
-            border-radius: 40px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
 
         .fleet-dot.pending {
             border-color: #3a4a5e;
@@ -718,9 +710,35 @@
             margin:0 auto 6px; border:1px solid rgba(255,255,255,0.1);
         }
 
-        /* ===== ANALYTICS ===== */
+        /* ===== График нефти (перенесён из аналитики) ===== */
+        .oil-card {
+            background: var(--bg-panel);
+            backdrop-filter: blur(6px);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 18px 20px 16px;
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .oil-card h3 {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+        .oil-card .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 220px;
+        }
+        .oil-card .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
         .analytics-section {
-            margin-top:32px;
+            margin-top:0;
             background:var(--bg-panel); backdrop-filter:blur(6px);
             border-radius:24px; border:1px solid var(--border-color);
             padding:24px; box-shadow:var(--shadow);
@@ -740,25 +758,15 @@
             padding:18px; border:1px solid var(--border-color);
             box-shadow:var(--shadow);
         }
-        .analytics-card.oil-card-full {
-            grid-column: 1 / -1;
-        }
         .analytics-card h3 {
             font-size:14px; font-weight:500; color:var(--text-muted);
-            margin-bottom:14px; letter-spacing:0.2px;
+            margin-bottom:12px; letter-spacing:0.2px;
         }
-        .chart-wrap {
-            position: relative;
-            width: 100%;
-            height: 240px;
-        }
-        .chart-wrap canvas {
-            display: block;
-            width: 100% !important;
-            height: 100% !important;
-        }
-        .oil-card-full .chart-wrap {
-            height: 460px;
+        .analytics-card canvas {
+            width:100% !important;
+            height:auto !important;
+            max-height:180px;
+            border-radius:8px;
         }
         .analytics-card .risk-item {
             display:flex; justify-content:space-between;
@@ -801,8 +809,6 @@
             .phase-card { max-width:100%; min-width:0; }
             .modal { padding:24px; }
             .analytics-grid { grid-template-columns:1fr; }
-            .chart-wrap { height: 220px; }
-            .oil-card-full .chart-wrap { height: 340px; }
             .theme-modal .theme-options { grid-template-columns:1fr 1fr; }
             .export-bar { flex-direction:column; align-items:stretch; }
         }
@@ -818,16 +824,15 @@
             .fleet-dot .dot-pct { font-size: 12px; }
             .fleet-dot .dot-label { font-size: 7px; }
             .phase-block { padding:12px 14px; }
-            .chart-wrap { height: 200px; }
-            .oil-card-full .chart-wrap { height: 280px; }
             .theme-modal .theme-options { grid-template-columns:1fr; }
             .modal { padding:20px; }
+            .oil-card .chart-wrapper { height: 200px; }
         }
 
         @media print {
             .export-bar, .theme-btn, .update-time, .stat-badge .label, .top-menu { display:none; }
             .header { margin-bottom:16px; }
-            .timeline-wrapper, .phase-block, .analytics-section { break-inside:avoid; }
+            .timeline-wrapper, .phase-block, .analytics-section, .oil-card { break-inside:avoid; }
             body { background:#fff; color:#000; }
             .phase-card, .analytics-card { border:1px solid #ccc; background:#f9f9f9; }
             .phase-card .card-name, .phase-header .phase-title, .analytics-card h3 { color:#000; }
@@ -904,24 +909,24 @@
         <div class="phases-section" id="phasesContainer"></div>
         <div class="phases-section" id="fleetContainer"></div>
 
+        <!-- ===== ГРАФИК НЕФТИ (перенесён из аналитики) ===== -->
+        <div class="oil-card">
+            <h3>🛢️ Цена нефти (USD/барр.) — апрель–октябрь</h3>
+            <div class="chart-wrapper">
+                <canvas id="oilChart"></canvas>
+            </div>
+        </div>
+
         <div class="analytics-section" id="analyticsSection">
             <div class="analytics-title">📊 Аналитика проекта</div>
             <div class="analytics-grid">
                 <div class="analytics-card">
                     <h3>Бюджет проекта ($ млн)</h3>
-                    <div class="chart-wrap">
-                        <canvas id="budgetChart"></canvas>
-                    </div>
+                    <canvas id="budgetChart" width="400" height="160"></canvas>
                 </div>
                 <div class="analytics-card">
                     <h3>Оценка рисков</h3>
                     <div id="riskList"></div>
-                </div>
-                <div class="analytics-card oil-card-full">
-                    <h3>Цена нефти (USD/барр.)</h3>
-                    <div class="chart-wrap">
-                        <canvas id="oilChart"></canvas>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1193,7 +1198,7 @@
         ];
 
         // ============================================================
-        //  ОТДЕЛЬНЫЙ ТРЕК: ФЛОТ И СУДОСТРОЕНИЕ
+        //  ОТДЕЛЬНЫЙ ТРЕК: ФЛОТ И СУДОСТРОЕНИЕ (вне основных фаз)
         // ============================================================
 
         const fleetPhases = [
@@ -1244,13 +1249,13 @@
                 { name: 'Технические сбои', probability: 0.20, impact: 0.40 }
             ],
             oilPrices: [
-                { month: 'апр.26', value: 0 },
+                { month: 'апрель.26', value: 0 },
                 { month: 'май.26', value: 180 },
-                { month: 'июн.26', value: 266 },
-                { month: 'июл.26', value: 704 },
-                { month: 'авг.26', value: 788 },
-                { month: 'сен.26', value: 846 },
-                { month: 'окт.26', value: 1033 }
+                { month: 'июнь.26', value: 266 },
+                { month: 'июль.26', value: 704 },
+                { month: 'август.26', value: 788 },
+                { month: 'сентябрь.26', value: 846 },
+                { month: 'октябрь.26', value: 1033 }
             ]
         };
 
@@ -1356,7 +1361,7 @@
             if (sub.pct >= 100) return false;
             const fc = calculateForecast(sub);
             if (!fc) return false;
-            return fc < CURRENT_DATE;
+            return fc < new Date();
         }
 
         // ============================================================
@@ -1584,6 +1589,10 @@
             });
         }
 
+        // ============================================================
+        //  RENDER FLEET PHASES
+        // ============================================================
+
         function renderFleetPhases() {
             const container = document.getElementById('fleetContainer');
             container.innerHTML = '';
@@ -1621,6 +1630,10 @@
             container.appendChild(block);
         }
 
+        // ============================================================
+        //  CARD
+        // ============================================================
+
         function createPhaseCard(sub, index) {
             const status = getStatusInfo(sub.pct);
             const isFleet = sub.phaseId === 'fleet';
@@ -1648,7 +1661,7 @@
             top.appendChild(nameSpan);
 
             const pctSpan = document.createElement('span');
-            pctSpan.className = `card-pct ${status.status}`;
+            pctSpan.className = `card-pct ${status.status}` + (isFleet && status.status === 'active' ? ' active' : '');
             pctSpan.textContent = sub.pct + '%';
             top.appendChild(pctSpan);
 
@@ -1727,6 +1740,10 @@
             document.getElementById('modalClose').focus();
         }
 
+        // ============================================================
+        //  TOAST
+        // ============================================================
+
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -1738,26 +1755,121 @@
         }
 
         // ============================================================
-        //  ANALYTICS — бюджет (круговая, DPR-осознанная)
+        //  OIL CHART (Chart.js, перенесён из аналитики)
         // ============================================================
 
-        function renderBudgetChart() {
-            const canvas = document.getElementById('budgetChart');
-            const container = canvas.parentElement;
-            const dpr = window.devicePixelRatio || 1;
-            const rect = container.getBoundingClientRect();
-            const W = Math.max(rect.width, 260);
-            const H = Math.max(rect.height, 200);
+        let oilChartInstance = null;
+        let oilFullscreenChartInstance = null;
 
-            canvas.width = W * dpr;
-            canvas.height = H * dpr;
-            canvas.style.width = W + 'px';
-            canvas.style.height = H + 'px';
+        function buildOilChartConfig() {
+            const oilData = extraData.oilPrices;
+            const labels = oilData.map(d => d.month);
+            const values = oilData.map(d => d.value);
 
-            const ctx = canvas.getContext('2d');
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.clearRect(0, 0, W, H);
+            const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#b0c4de';
+            const gridColor = 'rgba(255,255,255,0.06)';
 
+            return {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Цена нефти',
+                        data: values,
+                        borderColor: '#ff1493',
+                        backgroundColor: 'rgba(255,20,147,0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#ffffff',
+                        pointBorderColor: '#ff1493',
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        borderWidth: 2.5,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '$' + context.parsed.y + ' USD/барр.';
+                                }
+                            }
+                        },
+                        afterDraw: function(chart) {
+                            const meta = chart.getDatasetMeta(0);
+                            const data = chart.data.datasets[0].data;
+                            const ctx2 = chart.ctx;
+                            ctx2.save();
+                            ctx2.font = '12px Inter, sans-serif';
+                            ctx2.textAlign = 'center';
+                            ctx2.textBaseline = 'bottom';
+                            meta.data.forEach((element, index) => {
+                                const value = data[index];
+                                if (value !== undefined) {
+                                    ctx2.fillStyle = textColor;
+                                    ctx2.fillText('$' + value, element.x, element.y - 10);
+                                }
+                            });
+                            ctx2.restore();
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 0,
+                            max: 1200,
+                            grid: { color: gridColor },
+                            ticks: { color: textColor, stepSize: 200 },
+                            offset: true
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: textColor },
+                            offset: true
+                        }
+                    }
+                }
+            };
+        }
+
+        function renderOilChart() {
+            const ctx = document.getElementById('oilChart').getContext('2d');
+            if (oilChartInstance) {
+                oilChartInstance.destroy();
+                oilChartInstance = null;
+            }
+            oilChartInstance = new Chart(ctx, buildOilChartConfig());
+        }
+
+        function openOilFullscreen() {
+            const overlay = document.getElementById('oilModalOverlay');
+            const ctx = document.getElementById('oilFullscreenChart').getContext('2d');
+            if (oilFullscreenChartInstance) {
+                oilFullscreenChartInstance.destroy();
+                oilFullscreenChartInstance = null;
+            }
+            oilFullscreenChartInstance = new Chart(ctx, buildOilChartConfig());
+            overlay.classList.add('active');
+            document.getElementById('oilModalClose').focus();
+        }
+
+        function closeOilFullscreen() {
+            document.getElementById('oilModalOverlay').classList.remove('active');
+            if (oilFullscreenChartInstance) {
+                oilFullscreenChartInstance.destroy();
+                oilFullscreenChartInstance = null;
+            }
+        }
+
+        // ============================================================
+        //  ANALYTICS (бюджет + риски)
+        // ============================================================
+
+        function renderAnalytics() {
+            const ctxBudget = document.getElementById('budgetChart').getContext('2d');
             const spent1 = spentByPhase.p1 || 0;
             const spent2 = spentByPhase.p2 || 0;
             const spent3 = spentByPhase.p3 || 0;
@@ -1769,65 +1881,60 @@
             const remaining = totalBudget - totalSpent;
 
             const data = [spent1, spent2, spent3, spent4, spent5, spentFleet, remaining];
-            const labels = ['Этап 1', 'Этап 2', 'Этап 3', 'Этап 4', 'Этап 5', 'Флот', 'Остаток'];
+            const labels = ['Этап 1 (потрачено)', 'Этап 2 (потрачено)', 'Этап 3 (потрачено)', 'Этап 4 (потрачено)', 'Этап 5 (потрачено)', 'Флот (потрачено)', 'Остаток бюджета'];
             const colors = ['#f5b041', '#4a8ec4', '#9b59b6', '#e74c3c', '#2ecc71', '#6ec6ff', '#5a6a7e'];
 
-            const cx = W / 2;
-            const cy = H / 2 - 30;
-            const r = Math.min(W, H) * 0.28;
-            let startAngle = -Math.PI / 2;
-            const total = data.reduce((a, b) => a + b, 0);
+            const w = ctxBudget.canvas.width;
+            const h = ctxBudget.canvas.height;
+            ctxBudget.clearRect(0, 0, w, h);
+
+            const cx = w/2, cy = h/2 - 10, r = Math.min(w, h) * 0.32;
+            let startAngle = -Math.PI/2;
+            const total = data.reduce((a,b) => a+b, 0);
 
             if (total > 0) {
                 data.forEach((val, i) => {
                     const slice = (val / total) * 2 * Math.PI;
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy);
-                    ctx.arc(cx, cy, r, startAngle, startAngle + slice);
-                    ctx.closePath();
-                    ctx.fillStyle = colors[i % colors.length];
-                    ctx.shadowColor = 'rgba(0,0,0,0.2)';
-                    ctx.shadowBlur = 8;
-                    ctx.fill();
-                    ctx.shadowBlur = 0;
+                    ctxBudget.beginPath();
+                    ctxBudget.moveTo(cx, cy);
+                    ctxBudget.arc(cx, cy, r, startAngle, startAngle + slice);
+                    ctxBudget.closePath();
+                    ctxBudget.fillStyle = colors[i % colors.length];
+                    ctxBudget.shadowColor = 'rgba(0,0,0,0.2)';
+                    ctxBudget.shadowBlur = 8;
+                    ctxBudget.fill();
+                    ctxBudget.shadowBlur = 0;
                     startAngle += slice;
                 });
             }
 
-            // Легенда под графиком
-            const chartText = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
-            let legendY = H - 60;
-            ctx.fillStyle = chartText;
-            ctx.font = '12px Inter, sans-serif';
-            ctx.textAlign = 'left';
+            let legendY = h - 30;
+            const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#b0c4de';
+            ctxBudget.fillStyle = textColor;
+            ctxBudget.font = '11px Inter, sans-serif';
+            ctxBudget.textAlign = 'left';
 
-            let legendX = 12;
-            const maxWidth = W - 24;
+            let legendX = 10;
+            const maxWidth = w - 20;
             labels.forEach((label, i) => {
                 const val = data[i];
                 if (val > 0) {
-                    const text = label + ': $' + val + ' млн';
-                    const textWidth = ctx.measureText(text).width;
-                    if (legendX + textWidth + 30 > maxWidth) {
-                        legendX = 12;
-                        legendY += 20;
+                    const text = label + ' $' + val + ' млн';
+                    const textWidth = ctxBudget.measureText(text).width;
+                    if (legendX + textWidth + 20 > maxWidth) {
+                        legendX = 10;
+                        legendY += 18;
                     }
-                    ctx.fillStyle = colors[i % colors.length];
-                    ctx.fillRect(legendX, legendY - 2, 12, 12);
-                    ctx.fillStyle = chartText;
-                    ctx.fillText(text, legendX + 18, legendY + 8);
-                    legendX += textWidth + 32;
+                    ctxBudget.fillStyle = colors[i % colors.length];
+                    ctxBudget.fillRect(legendX, legendY, 12, 12);
+                    ctxBudget.fillStyle = textColor;
+                    ctxBudget.fillText(text, legendX + 16, legendY + 10);
+                    legendX += textWidth + 24;
                 }
             });
-        }
 
-        // ============================================================
-        //  ANALYTICS — риски
-        // ============================================================
-
-        function renderRisks() {
-            const list = document.getElementById('riskList');
-            list.innerHTML = extraData.risks.map(r => {
+            const riskList = document.getElementById('riskList');
+            riskList.innerHTML = extraData.risks.map(r => {
                 const score = (r.probability * r.impact * 100).toFixed(0);
                 let cls = 'low';
                 if (score > 30) cls = 'medium';
@@ -1837,163 +1944,8 @@
         }
 
         // ============================================================
-        //  ANALYTICS — нефть (большой, читаемый график на всю ширину)
+        //  STATS
         // ============================================================
-
-        function renderOilChart() {
-            const canvas = document.getElementById('oilChart');
-            const container = canvas.parentElement;
-            const dpr = window.devicePixelRatio || 1;
-            const rect = container.getBoundingClientRect();
-            const W = Math.max(rect.width, 320);
-            const H = Math.max(rect.height, 280);
-
-            canvas.width = W * dpr;
-            canvas.height = H * dpr;
-            canvas.style.width = W + 'px';
-            canvas.style.height = H + 'px';
-
-            const ctx = canvas.getContext('2d');
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.clearRect(0, 0, W, H);
-
-            // Фон
-            const bgGrad = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.max(W, H));
-            bgGrad.addColorStop(0, '#1a1a3a');
-            bgGrad.addColorStop(1, '#0a0a1a');
-            ctx.fillStyle = bgGrad;
-            ctx.fillRect(0, 0, W, H);
-
-            const oilData = extraData.oilPrices;
-            const values = oilData.map(d => d.value);
-
-            // Динамическая шкала Y под максимум данных + запас
-            const dataMax = Math.max(...values, 100);
-            const yStep = dataMax > 800 ? 200 : (dataMax > 400 ? 100 : 50);
-            const maxVal = Math.ceil(dataMax / yStep) * yStep + yStep;
-            const minVal = 0;
-            const range = maxVal - minVal;
-
-            // Отступы (щедрые, чтобы всё влезло)
-            const pad = { top: 46, bottom: 56, left: 72, right: 44 };
-            const chartW = W - pad.left - pad.right;
-            const chartH = H - pad.top - pad.bottom;
-
-            // Горизонтальная сетка + подписи Y
-            const textColor = '#ffffff';
-            ctx.strokeStyle = 'rgba(200,200,200,0.15)';
-            ctx.lineWidth = 1;
-            ctx.setLineDash([4, 6]);
-            const yTicks = Math.round(maxVal / yStep);
-            ctx.font = '600 13px Inter, sans-serif';
-            ctx.fillStyle = textColor;
-            for (let i = 0; i <= yTicks; i++) {
-                const val = minVal + i * yStep;
-                const y = pad.top + chartH - (i / yTicks) * chartH;
-                ctx.beginPath();
-                ctx.moveTo(pad.left, y);
-                ctx.lineTo(pad.left + chartW, y);
-                ctx.stroke();
-                ctx.textAlign = 'right';
-                ctx.fillText(val, pad.left - 12, y + 5);
-            }
-
-            // Вертикальная сетка (по точкам)
-            for (let i = 0; i < oilData.length; i++) {
-                const x = pad.left + (i / (oilData.length - 1)) * chartW;
-                ctx.beginPath();
-                ctx.moveTo(x, pad.top);
-                ctx.lineTo(x, pad.top + chartH);
-                ctx.stroke();
-            }
-            ctx.setLineDash([]);
-
-            // Подписи месяцев под осью X (укороченные, крупные)
-            ctx.fillStyle = textColor;
-            ctx.font = '600 13px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            oilData.forEach((d, i) => {
-                const x = pad.left + (i / (oilData.length - 1)) * chartW;
-                ctx.fillText(d.month, x, pad.top + chartH + 30);
-            });
-
-            // Легенда в левом верхнем углу
-            ctx.textAlign = 'left';
-            ctx.font = '600 14px Inter, sans-serif';
-            ctx.strokeStyle = '#ff1493';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(pad.left, 18);
-            ctx.lineTo(pad.left + 28, 18);
-            ctx.stroke();
-            ctx.fillStyle = textColor;
-            ctx.fillText('цена за баррель', pad.left + 38, 23);
-
-            // Линия и заливка
-            const lineColor = '#ff1493';
-            const areaColor = 'rgba(255,20,147,0.15)';
-
-            ctx.beginPath();
-            oilData.forEach((d, i) => {
-                const x = pad.left + (i / (oilData.length - 1)) * chartW;
-                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            });
-            ctx.strokeStyle = lineColor;
-            ctx.lineWidth = 3;
-            ctx.shadowColor = lineColor;
-            ctx.shadowBlur = 8;
-            ctx.stroke();
-            ctx.shadowBlur = 0;
-
-            // Заливка под линией
-            ctx.beginPath();
-            oilData.forEach((d, i) => {
-                const x = pad.left + (i / (oilData.length - 1)) * chartW;
-                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
-                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-            });
-            const lastX = pad.left + chartW;
-            ctx.lineTo(lastX, pad.top + chartH);
-            ctx.lineTo(pad.left, pad.top + chartH);
-            ctx.closePath();
-            ctx.fillStyle = areaColor;
-            ctx.fill();
-
-            // Точки с подписями значений
-            oilData.forEach((d, i) => {
-                const x = pad.left + (i / (oilData.length - 1)) * chartW;
-                const y = pad.top + chartH - ((d.value - minVal) / range) * chartH;
-
-                // Белая обводка
-                ctx.beginPath();
-                ctx.arc(x, y, 7, 0, 2 * Math.PI);
-                ctx.fillStyle = '#ffffff';
-                ctx.fill();
-
-                // Розовый центр
-                ctx.beginPath();
-                ctx.arc(x, y, 4.5, 0, 2 * Math.PI);
-                ctx.fillStyle = '#ff1493';
-                ctx.fill();
-
-                // Значение над точкой
-                ctx.fillStyle = textColor;
-                ctx.font = '700 12px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(d.value, x, y - 16);
-            });
-        }
-
-        // ============================================================
-        //  ANALYTICS — общий рендер
-        // ============================================================
-
-        function renderAnalytics() {
-            renderBudgetChart();
-            renderRisks();
-            renderOilChart();
-        }
 
         function updateStats() {
             const total = getAllSubs().length;
@@ -2078,6 +2030,10 @@
             localStorage.setItem('arion-theme', theme);
             currentTheme = theme;
             renderAnalytics();
+            renderOilChart();
+            if (oilFullscreenChartInstance) {
+                closeOilFullscreen();
+            }
         }
 
         function openThemeModal() {
@@ -2117,12 +2073,33 @@
             renderFleetTrack();
             renderPhases();
             renderFleetPhases();
+            renderOilChart();
             updateStats();
 
             const overdueCount = getAllSubs().filter(s => isOverdue(s)).length;
             if (overdueCount > 0) {
                 showToast(`⚠️ Обнаружено ${overdueCount} подэтапов с превышением прогноза`, 'warning');
             }
+
+            // клик по карточке нефти → полноэкранный график
+            const oilCard = document.querySelector('.oil-card');
+            if (oilCard) {
+                oilCard.addEventListener('click', openOilFullscreen);
+                oilCard.setAttribute('tabindex', '0');
+                oilCard.setAttribute('role', 'button');
+                oilCard.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        openOilFullscreen();
+                    }
+                });
+            }
+
+            // закрытие полноэкранного графика
+            document.getElementById('oilModalClose').addEventListener('click', closeOilFullscreen);
+            document.getElementById('oilModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeOilFullscreen();
+            });
 
             document.getElementById('modalClose').addEventListener('click', function() {
                 document.getElementById('modalOverlay').classList.remove('active');
@@ -2145,16 +2122,8 @@
                 if (e.key === 'Escape') {
                     document.getElementById('modalOverlay').classList.remove('active');
                     document.getElementById('themeModalOverlay').classList.remove('active');
+                    closeOilFullscreen();
                 }
-            });
-
-            // Перерисовка графиков при ресайзе
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    renderAnalytics();
-                }, 200);
             });
 
             setInterval(updateStats, 60000);
