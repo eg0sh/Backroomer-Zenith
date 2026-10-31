@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Arion · Дашборд</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
             --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
@@ -25,6 +26,8 @@
             --gradient-start: #f7e05e;
             --gradient-end: #e67e22;
             --fleet-accent: #6ec6ff;
+            --chart-text: #b0c4de;
+            --chart-grid: rgba(255,255,255,0.08);
         }
         [data-theme="light"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #f0f4f8, #d9e2ec);
@@ -45,6 +48,8 @@
             --gradient-start: #b08a2c;
             --gradient-end: #8a6a1a;
             --fleet-accent: #2b6a9e;
+            --chart-text: #2a3a4e;
+            --chart-grid: rgba(0,0,0,0.08);
         }
         [data-theme="gold"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #2a1f0e, #1a1008);
@@ -65,6 +70,8 @@
             --gradient-start: #f7e05e;
             --gradient-end: #e67e22;
             --fleet-accent: #e0b060;
+            --chart-text: #d4b88a;
+            --chart-grid: rgba(255,255,255,0.06);
         }
         [data-theme="blue"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a1628, #050d1a);
@@ -85,6 +92,8 @@
             --gradient-start: #8ab4d4;
             --gradient-end: #4a6a9e;
             --fleet-accent: #8ab4d4;
+            --chart-text: #8ab4d4;
+            --chart-grid: rgba(255,255,255,0.06);
         }
         [data-theme="green"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a12, #050d08);
@@ -105,6 +114,8 @@
             --gradient-start: #80c8a8;
             --gradient-end: #4a7a62;
             --fleet-accent: #80c8a8;
+            --chart-text: #80c8a8;
+            --chart-grid: rgba(255,255,255,0.06);
         }
         [data-theme="purple"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
@@ -125,6 +136,8 @@
             --gradient-start: #b080d4;
             --gradient-end: #6a4a8a;
             --fleet-accent: #b080d4;
+            --chart-text: #b080d4;
+            --chart-grid: rgba(255,255,255,0.06);
         }
         [data-theme="red"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #2a0a0a, #180505);
@@ -145,6 +158,8 @@
             --gradient-start: #d48080;
             --gradient-end: #8a4a4a;
             --fleet-accent: #d48080;
+            --chart-text: #d48080;
+            --chart-grid: rgba(255,255,255,0.06);
         }
         [data-theme="eyecare"] {
             --bg-body: #d9d9d9;
@@ -165,6 +180,8 @@
             --gradient-start: #8a8a8a;
             --gradient-end: #6a6a6a;
             --fleet-accent: #6a8a8a;
+            --chart-text: #505050;
+            --chart-grid: rgba(80,80,80,0.1);
         }
         [data-theme="cyberpunk"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a0010, #000005);
@@ -185,6 +202,8 @@
             --gradient-start: #ff66ff;
             --gradient-end: #cc33cc;
             --fleet-accent: #00ffcc;
+            --chart-text: #ff99ff;
+            --chart-grid: rgba(255,0,255,0.1);
         }
         [data-theme="graphic"] {
             --bg-body: #f5f5f5;
@@ -205,6 +224,8 @@
             --gradient-start: #333333;
             --gradient-end: #000000;
             --fleet-accent: #444444;
+            --chart-text: #000000;
+            --chart-grid: rgba(0,0,0,0.1);
         }
         [data-theme="matrix"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #001000, #000800);
@@ -225,6 +246,8 @@
             --gradient-start: #66ff66;
             --gradient-end: #00cc00;
             --fleet-accent: #66ff66;
+            --chart-text: #66ff66;
+            --chart-grid: rgba(0,255,0,0.08);
         }
         [data-theme="space"] {
             --bg-body: radial-gradient(ellipse at 50% 20%, #0a0a2a, #000010);
@@ -245,6 +268,8 @@
             --gradient-start: #8888ff;
             --gradient-end: #4444cc;
             --fleet-accent: #8888ff;
+            --chart-text: #8888ff;
+            --chart-grid: rgba(100,100,255,0.08);
         }
         [data-theme="retro"] {
             --bg-body: #f0e8d0;
@@ -265,6 +290,8 @@
             --gradient-start: #b0a080;
             --gradient-end: #8a7a50;
             --fleet-accent: #b0a080;
+            --chart-text: #4a3a2a;
+            --chart-grid: rgba(0,0,0,0.08);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -565,7 +592,18 @@
             box-shadow: 0 0 45px rgba(110,198,255,0.35);
         }
         .fleet-dot:focus-visible { outline:2px solid var(--fleet-accent); outline-offset:4px; }
-
+        .fleet-dot .fleet-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--fleet-accent);
+            color: #0b0e14;
+            font-size: 9px;
+            padding: 2px 7px;
+            border-radius: 40px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
         .fleet-dot.pending {
             border-color: #3a4a5e;
             background: radial-gradient(circle at 50% 40%, rgba(90,106,126,0.15), rgba(26,35,50,0.95));
@@ -710,35 +748,8 @@
             margin:0 auto 6px; border:1px solid rgba(255,255,255,0.1);
         }
 
-        /* ===== График нефти (перенесён из аналитики) ===== */
-        .oil-card {
-            background: var(--bg-panel);
-            backdrop-filter: blur(6px);
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
-            padding: 18px 20px 16px;
-            box-shadow: var(--shadow);
-            margin-bottom: 28px;
-            transition: background 0.4s, border-color 0.4s;
-        }
-        .oil-card h3 {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-        }
-        .oil-card .chart-wrapper {
-            position: relative;
-            width: 100%;
-            height: 220px;
-        }
-        .oil-card .chart-wrapper canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
         .analytics-section {
-            margin-top:0;
+            margin-top:32px;
             background:var(--bg-panel); backdrop-filter:blur(6px);
             border-radius:24px; border:1px solid var(--border-color);
             padding:24px; box-shadow:var(--shadow);
@@ -750,7 +761,7 @@
         }
         .analytics-grid {
             display:grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap:20px;
         }
         .analytics-card {
@@ -767,6 +778,19 @@
             height:auto !important;
             max-height:180px;
             border-radius:8px;
+        }
+        /* Обёртка для графика нефти (Chart.js) */
+        .oil-chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+        }
+        .oil-chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+            max-height: none !important;
+            border-radius: 8px;
+            display: block;
         }
         .analytics-card .risk-item {
             display:flex; justify-content:space-between;
@@ -826,13 +850,12 @@
             .phase-block { padding:12px 14px; }
             .theme-modal .theme-options { grid-template-columns:1fr; }
             .modal { padding:20px; }
-            .oil-card .chart-wrapper { height: 200px; }
         }
 
         @media print {
             .export-bar, .theme-btn, .update-time, .stat-badge .label, .top-menu { display:none; }
             .header { margin-bottom:16px; }
-            .timeline-wrapper, .phase-block, .analytics-section, .oil-card { break-inside:avoid; }
+            .timeline-wrapper, .phase-block, .analytics-section { break-inside:avoid; }
             body { background:#fff; color:#000; }
             .phase-card, .analytics-card { border:1px solid #ccc; background:#f9f9f9; }
             .phase-card .card-name, .phase-header .phase-title, .analytics-card h3 { color:#000; }
@@ -909,14 +932,6 @@
         <div class="phases-section" id="phasesContainer"></div>
         <div class="phases-section" id="fleetContainer"></div>
 
-        <!-- ===== ГРАФИК НЕФТИ (перенесён из аналитики) ===== -->
-        <div class="oil-card">
-            <h3>🛢️ Цена нефти (USD/барр.) — апрель–октябрь</h3>
-            <div class="chart-wrapper">
-                <canvas id="oilChart"></canvas>
-            </div>
-        </div>
-
         <div class="analytics-section" id="analyticsSection">
             <div class="analytics-title">📊 Аналитика проекта</div>
             <div class="analytics-grid">
@@ -927,6 +942,12 @@
                 <div class="analytics-card">
                     <h3>Оценка рисков</h3>
                     <div id="riskList"></div>
+                </div>
+                <div class="analytics-card">
+                    <h3>Цена нефти (USD/барр.)</h3>
+                    <div class="oil-chart-wrapper">
+                        <canvas id="oilChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -955,6 +976,7 @@
     <script>
         // ============================================================
         //  VERSION: v1.2.13
+        //  Oil chart migrated from analysis.html (Chart.js implementation)
         // ============================================================
 
         const phases = [
@@ -1098,1038 +1120,4 @@
                 characteristics: 'Установленная электрическая мощность 1 000 МВт, тепловая 800 Гкал/ч.',
                 dependencies: ['2.5'] },
             { id: '4.5b', phaseId: 'p4', name: 'Газотурбинная электростанция (ГТЭС) — резервная генерация', startDate: null, endDate: null, pct: 0,
-                description: 'Резервная газотурбинная электростанция, включается при остановке ТЭЦ.',
-                characteristics: 'Установленная мощность 400 МВт, время запуска 10 минут.',
-                dependencies: ['2.5'] },
-            { id: '4.6', phaseId: 'p4', name: 'Линии электропередачи (ЛЭП) и трансформаторные подстанции', startDate: null, endDate: null, pct: 0,
-                description: 'Прокладка высоковольтных линий электропередачи от ТЭЦ и ГТЭС ко всем объектам Arion.',
-                characteristics: 'Общая протяжённость 350 км, магистральные линии 220 кВ.',
-                dependencies: ['4.5', '4.5b'] },
-            { id: '4.6b', phaseId: 'p4', name: 'Аварийные дизель-генераторы', startDate: null, endDate: null, pct: 0,
-                description: 'Установка аварийных дизель-генераторов на всех критических объектах.',
-                characteristics: '20 генераторов мощностью от 500 кВт до 5 МВт.',
-                dependencies: ['4.5', '4.6'] },
-            { id: '4.8', phaseId: 'p4', name: 'Береговая оборона', startDate: null, endDate: null, pct: 0,
-                description: 'Развёртывание средств ПВО, радиолокационных станций, береговых ракетных комплексов.',
-                characteristics: 'ЗРК С-400 (2 дивизиона), береговые комплексы.',
-                dependencies: ['4.3'] },
-            { id: '4.9', phaseId: 'p4', name: 'Берегоукрепление и портовая логистика', startDate: null, endDate: null, pct: 0,
-                description: 'Строительство подпорных стенок, бетонирование прилегающей территории порта.',
-                characteristics: 'Берегоукрепление на 600 м, складская площадь 5 000 м².',
-                dependencies: ['4.3'] },
-            { id: '4.10', phaseId: 'p4', name: 'Административно-диспетчерский центр и КПП', startDate: null, endDate: null, pct: 0,
-                description: 'Возведение капитального здания для управления всеми объектами Arion.',
-                characteristics: '3-этажное здание площадью 1 500 м², 5 КПП.',
-                dependencies: ['3.4', '4.3'] },
-            { id: '4.11', phaseId: 'p4', name: 'Нефтеналивной терминал и наливные стендеры', startDate: null, endDate: null, pct: 0,
-                description: 'Специальное оборудование на глубоководном причале для заливки нефти в танкеры.',
-                characteristics: '4 наливных стендера по 5 000 м³/час каждый.',
-                dependencies: ['4.3', '3.5'] },
-            { id: '4.12', phaseId: 'p4', name: 'Система улавливания паров (VRS) на терминале и РВС', startDate: null, endDate: null, pct: 0,
-                description: 'Система улавливания паров лёгких фракций на терминале и резервуарах.',
-                characteristics: 'Производительность 1 500 м³/час, рекуперация 99%.',
-                dependencies: ['3.5', '4.11'] },
-            { id: '4.13', phaseId: 'p4', name: 'BOG-компрессоры и система улавливания паров СПГ', startDate: null, endDate: null, pct: 0,
-                description: 'Криогенные компрессоры возвращают испарившийся газ обратно в цикл сжижения.',
-                characteristics: 'Производительность до 15 т/час.',
-                dependencies: ['4.1', '4.2'] },
-            { id: '4.14', phaseId: 'p4', name: 'Азотная станция для продувки и инертизации', startDate: null, endDate: null, pct: 0,
-                description: 'Производство азота для продувки трубопроводов и инертизации резервуаров СПГ.',
-                characteristics: '5 000 м³/час азота, чистота 99.9%.',
-                dependencies: ['4.1', '4.2'] },
-
-            // ===== ФАЗА 5 =====
-            { id: '5.1', phaseId: 'p5', name: 'Поисково-разведочное бурение на газ', startDate: null, endDate: null, pct: 0,
-                description: 'Бурение разведочных скважин на газовых структурах.',
-                characteristics: '5 разведочных скважин глубиной 2 500–4 000 м.',
-                dependencies: ['1.2', '1.3'] },
-            { id: '5.2', phaseId: 'p5', name: 'Эксплуатационные газовые скважины', startDate: null, endDate: null, pct: 0,
-                description: 'Бурение основной сетки добывающих газовых скважин.',
-                characteristics: '20 скважин, дебит 1 000 000 м³/сут каждая.',
-                dependencies: ['5.1'] },
-            { id: '5.3', phaseId: 'p5', name: 'Газосборная сеть и шлейфы', startDate: null, endDate: null, pct: 0,
-                description: 'Система трубопроводов, соединяющая каждую газовую скважину с УКПГ.',
-                characteristics: '20 шлейфов по 0.5–2 км, диаметр 150 мм.',
-                dependencies: ['5.2'] },
-            { id: '5.4', phaseId: 'p5', name: 'Установка комплексной подготовки газа (УКПГ)', startDate: null, endDate: null, pct: 0,
-                description: 'Промысловая установка первичной подготовки газа.',
-                characteristics: '20 млн м³/сут, гликолевая осушка до -20°C.',
-                dependencies: ['5.3'] },
-            { id: '5.5', phaseId: 'p5', name: 'СИКГ — система измерений количества и качества газа', startDate: null, endDate: null, pct: 0,
-                description: 'Коммерческий узел учёта газа на выходе с УКПГ.',
-                characteristics: '20 млн м³/сут, точность ±0.5%, хроматограф.',
-                dependencies: ['5.4'] },
-            { id: '5.6', phaseId: 'p5', name: 'Магистральный газопровод УКПГ → ГПЗ → СПГ', startDate: null, endDate: null, pct: 0,
-                description: 'Прокладка газопровода высокого давления от УКПГ до завода СПГ.',
-                characteristics: 'Длина 200 км, диаметр 700 мм, давление 10 МПа.',
-                dependencies: ['5.4'] },
-            { id: '5.7', phaseId: 'p5', name: 'Дожимные компрессорные станции (ДКС)', startDate: null, endDate: null, pct: 0,
-                description: 'Строительство вдоль газопровода станций с газоперекачивающими агрегатами.',
-                characteristics: '4 станции, мощность каждого ГПА 16 МВт.',
-                dependencies: ['5.6'] },
-            { id: '5.8', phaseId: 'p5', name: 'Газоперерабатывающий завод (ГПЗ)', startDate: null, endDate: null, pct: 0,
-                description: 'Завод очищает, осушает и разделяет газ на метан и ШФЛУ.',
-                characteristics: '20 млн м³/сут по сырому газу.',
-                dependencies: ['5.7'] },
-            { id: '5.9', phaseId: 'p5', name: 'Установка стабилизации газового конденсата (ШФЛУ)', startDate: null, endDate: null, pct: 0,
-                description: 'Разделение ШФЛУ на товарные продукты: пропан, бутан, стабильный конденсат.',
-                characteristics: '3 000 т/сут ШФЛУ.',
-                dependencies: ['5.8'] },
-            { id: '5.10', phaseId: 'p5', name: 'Подземное хранилище газа (ПХГ)', startDate: null, endDate: null, pct: 0,
-                description: 'Резервуар для сезонного хранения газа в выработанном пласте.',
-                characteristics: 'Активный объём 2 млрд м³.',
-                dependencies: ['5.4', '5.6'] },
-            { id: '5.11', phaseId: 'p5', name: 'Система компримирования и закачки газа в ПХГ', startDate: null, endDate: null, pct: 0,
-                description: 'Комплекс оборудования для закачки газа в ПХГ и его отбора.',
-                characteristics: '4 компрессора по 6 МВт, давление закачки 20 МПа.',
-                dependencies: ['5.10'] },
-            { id: '5.12', phaseId: 'p5', name: 'Установка извлечения гелия', startDate: null, endDate: null, pct: 0,
-                description: 'Извлечение гелия из природного газа (при содержании выше 0.05%).',
-                characteristics: '500 000 м³/сут по сырому газу.',
-                dependencies: ['5.8'] },
-            { id: '5.14', phaseId: 'p5', name: 'Линии электропередачи (ЛЭП) газового кластера', startDate: null, endDate: null, pct: 0,
-                description: 'Расширение магистральной сети ЛЭП для питания объектов газового дивизиона.',
-                characteristics: 'Протяжённость 250 км, напряжение 110 кВ.',
-                dependencies: ['4.6', '5.4', '5.6'] },
-            { id: '5.15', phaseId: 'p5', name: 'Аварийные дизель-генераторы газового кластера', startDate: null, endDate: null, pct: 0,
-                description: 'Резервное питание для всех объектов Фазы 5.',
-                characteristics: '12 генераторов мощностью 1–5 МВт каждый.',
-                dependencies: ['5.14'] }
-        ];
-
-        // ============================================================
-        //  ОТДЕЛЬНЫЙ ТРЕК: ФЛОТ И СУДОСТРОЕНИЕ (вне основных фаз)
-        // ============================================================
-
-        const fleetPhases = [
-            { id: 'Ф.1', phaseId: 'fleet', name: 'Постройка судостроительной верфи', startDate: '2026-10-14', endDate: '2026-10-30', pct: 100,
-                description: 'Строительство собственной верфи на побережье рядом с будущим портом Arion. Включает сухие доки, стапели, крановое хозяйство, цеха сборки корпусов, трубогибочные и сварочные участки, склады металла, административно-бытовой корпус и причальную стенку для достройки судов на плаву. Верфь строится первой — без неё танкеры и газовозы придётся заказывать на чужих заводах с очередью 24–30 месяцев и полной предоплатой. Своя верфь даёт ускорение в 2–3 раза и позволяет в будущем строить новые суда без внешних подрядчиков.',
-                characteristics: 'Площадь 40 га. Два сухих дока (300 × 60 м и 250 × 50 м). Стапели до 4 корпусов одновременно. Краны 2 × 600 т, 4 × 150 т. Цеха: корпусосборочный, трубомонтажный, окрасочный, электромонтажный, криогенный. Причальная стенка 400 м. Пропускная способность: 2 корабля одновременно.',
-                dependencies: ['1.5'] },
-            { id: 'Ф.2', phaseId: 'fleet', name: 'Нефтяной танкер №1 (Aframax)', startDate: '2026-10-14', endDate: null, pct: 10,
-                description: 'Постройка первого нефтяного танкера класса Aframax на собственной верфи (Ф.1). Предназначен для вывоза сырой нефти и нефтепродуктов с НПЗ Arion. Корпус двойной, с двойным дном и двойными бортами (по требованиям MARPOL). Оборудован системами инертных газов, подогрева груза, мойки танков, насосными отделениями, системой аварийной остановки грузовых операций.',
-                characteristics: 'Дедвейт 100 000 т. Длина 250 м, ширина 44 м, осадка 15 м. 12 грузовых танков, суммарный объём 115 000 м³. Скорость 14 узлов, дальность 12 000 миль. Экипаж 25 человек. Грузовые насосы 4 × 5 000 м³/час.',
-                dependencies: ['Ф.1'] },
-            { id: 'Ф.3', phaseId: 'fleet', name: 'Нефтяной танкер №2 (Aframax)', startDate: null, endDate: null, pct: 0,
-                description: 'Постройка второго нефтяного танкера того же класса, что и Ф.2. Строится сразу после первого на той же верфи, с использованием уже отлаженной технологии, обученной команды и готовой оснастки. Это даёт ускорение. Нужен для ритмичной отгрузки: пока один танкер в рейсе, второй стоит под загрузкой у терминала.',
-                characteristics: 'Идентичны Ф.2: дедвейт 100 000 т, длина 250 м, 12 танков, 115 000 м³.',
-                dependencies: ['Ф.1', 'Ф.2'] },
-            { id: 'Ф.4', phaseId: 'fleet', name: 'Газовоз СПГ №1 (мембранный)', startDate: '2026-10-14', endDate: null, pct: 12,
-                description: 'Постройка первого газовоза для перевозки сжиженного природного газа с завода СПГ Arion. Мембранный тип (GTT Mark III) — грузовые танки встроены в корпус и облицованы криогенной мембраной из нержавеющей стали и теплоизоляцией. Оборудован системой удержания BOG, двумя винтами, системой динамического позиционирования для швартовки к криогенному терминалу.',
-                characteristics: 'Вместимость 170 000 м³ СПГ. Длина 290 м, ширина 46 м, осадка 12 м. 4 мембранных танка, температура груза -162°C. Скорость 19 узлов, дальность 15 000 миль. Экипаж 35 человек.',
-                dependencies: ['Ф.1'] },
-            { id: 'Ф.5', phaseId: 'fleet', name: 'Газовоз СПГ №2 (мембранный)', startDate: null, endDate: null, pct: 0,
-                description: 'Постройка второго газовоза СПГ того же класса. Аналогично Ф.3 — использует отлаженную технологию и команду после первого газовоза, что ускоряет стройку на 30–40%. Нужен для регулярных рейсов и закрытия всей логистики завода с запасом на ремонт и непогоду.',
-                characteristics: 'Идентичны Ф.4: 170 000 м³, длина 290 м, 4 мембранных танка, -162°C.',
-                dependencies: ['Ф.1', 'Ф.4'] }
-        ];
-
-        // ============================================================
-        //  КОНСТАНТА ДАТЫ РАСЧЁТА
-        // ============================================================
-        const CURRENT_DATE = new Date('2026-10-30');
-
-        // ============================================================
-        //  БЮДЖЕТ
-        // ============================================================
-
-        const budgetByPhase = { p1: 500, p2: 294, p3: 456, p4: 0, p5: 0, fleet: 0 };
-        const spentByPhase = { p1: 500, p2: 294, p3: 0, p4: 0, p5: 0, fleet: 0 };
-
-        // ============================================================
-        //  РИСКИ И НЕФТЬ
-        // ============================================================
-
-        const extraData = {
-            risks: [
-                { name: 'Задержка поставок', probability: 0.40, impact: 0.55 },
-                { name: 'Погодные условия', probability: 0.25, impact: 0.35 },
-                { name: 'Финансирование', probability: 0.05, impact: 0.40 },
-                { name: 'Кадровый дефицит', probability: 0.20, impact: 0.45 },
-                { name: 'Технические сбои', probability: 0.20, impact: 0.40 }
-            ],
-            oilPrices: [
-                { month: 'апрель.26', value: 0 },
-                { month: 'май.26', value: 180 },
-                { month: 'июнь.26', value: 266 },
-                { month: 'июль.26', value: 704 },
-                { month: 'август.26', value: 788 },
-                { month: 'сентябрь.26', value: 846 },
-                { month: 'октябрь.26', value: 1033 }
-            ]
-        };
-
-        const themes = [
-            { id: 'dark', label: 'Тёмная', color: '#141c28' },
-            { id: 'light', label: 'Светлая', color: '#f0f4f8' },
-            { id: 'gold', label: 'Золотая', color: '#2a1f0e' },
-            { id: 'blue', label: 'Синяя', color: '#0a1628' },
-            { id: 'green', label: 'Зелёная', color: '#0a1a12' },
-            { id: 'purple', label: 'Фиолетовая', color: '#1a0a2a' },
-            { id: 'red', label: 'Красная', color: '#2a0a0a' },
-            { id: 'eyecare', label: 'Защита глаз', color: '#d9d9d9' },
-            { id: 'cyberpunk', label: 'Киберпанк', color: '#0a0010' },
-            { id: 'graphic', label: 'Графическая', color: '#f5f5f5' },
-            { id: 'matrix', label: 'Матрица', color: '#001000' },
-            { id: 'space', label: 'Космос', color: '#0a0a2a' },
-            { id: 'retro', label: 'Ретро', color: '#f0e8d0' }
-        ];
-
-        let currentTheme = localStorage.getItem('arion-theme') || 'dark';
-
-        // ============================================================
-        //  HELPERS
-        // ============================================================
-
-        function getPhaseById(id) { return phases.find(p => p.id === id); }
-        function getSubsByPhase(phaseId) { return subPhases.filter(s => s.phaseId === phaseId); }
-
-        function getAllSubs() {
-            return subPhases.concat(fleetPhases);
-        }
-
-        function getPhaseProgress(phaseId) {
-            const subs = getSubsByPhase(phaseId);
-            if (!subs.length) return 0;
-            const sum = subs.reduce((acc, s) => acc + s.pct, 0);
-            return Math.round(sum / subs.length);
-        }
-
-        function getFleetProgress() {
-            if (!fleetPhases.length) return 0;
-            const sum = fleetPhases.reduce((acc, s) => acc + s.pct, 0);
-            return Math.round(sum / fleetPhases.length);
-        }
-
-        function getOverallProgress() {
-            const all = getAllSubs();
-            if (!all.length) return 0;
-            const sum = all.reduce((acc, s) => acc + s.pct, 0);
-            return Math.round(sum / all.length);
-        }
-
-        function getCompletedCount() { return getAllSubs().filter(s => s.pct >= 100).length; }
-
-        function getStatusInfo(pct) {
-            if (pct >= 100) return { status: 'done', label: 'Завершён' };
-            if (pct > 0) return { status: 'active', label: 'В процессе' };
-            return { status: 'pending', label: 'Не начат' };
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '—';
-            const d = new Date(dateStr);
-            if (isNaN(d.getTime())) return dateStr;
-            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function getSubName(id) {
-            const all = getAllSubs();
-            const sub = all.find(s => s.id === id);
-            return sub ? sub.name : id;
-        }
-
-        function getPhaseLabel(phaseId) {
-            const phase = getPhaseById(phaseId);
-            if (phase) return phase.label;
-            if (phaseId === 'fleet') return 'Флот и судостроение';
-            return '—';
-        }
-
-        // ============================================================
-        //  РАСЧЁТ ПРОГНОЗА
-        // ============================================================
-
-        function calculateForecast(sub) {
-            if (!sub.startDate || sub.pct <= 0 || sub.pct >= 100) return null;
-            const start = new Date(sub.startDate);
-            const elapsed = (CURRENT_DATE - start) / (1000 * 60 * 60 * 24);
-            if (elapsed <= 0) return null;
-            const rate = sub.pct / elapsed;
-            if (rate <= 0) return null;
-            const daysLeft = (100 - sub.pct) / rate;
-            return new Date(CURRENT_DATE.getTime() + daysLeft * 86400000);
-        }
-
-        function formatForecast(sub) {
-            const fc = calculateForecast(sub);
-            if (!fc) return '—';
-            return fc.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-        }
-
-        function isOverdue(sub) {
-            if (sub.pct >= 100) return false;
-            const fc = calculateForecast(sub);
-            if (!fc) return false;
-            return fc < new Date();
-        }
-
-        // ============================================================
-        //  RENDER TIMELINE
-        // ============================================================
-
-        function renderTimeline() {
-            const track = document.getElementById('timelineTrack');
-            track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
-
-            let line = document.getElementById('timelineLine');
-            if (!line) {
-                line = document.createElement('div');
-                line.id = 'timelineLine';
-                line.className = 'timeline-line';
-                track.appendChild(line);
-            }
-            line.querySelectorAll('.seg-fill').forEach(el => el.remove());
-
-            const n = phases.length;
-            const leftMargin = 6, rightMargin = 6, range = 100 - leftMargin - rightMargin;
-            const dotPositions = phases.map((_, i) => leftMargin + (i / (n - 1)) * range);
-
-            phases.forEach((phase, index) => {
-                const progress = getPhaseProgress(phase.id);
-                const status = getStatusInfo(progress);
-                const x = dotPositions[index];
-                const dot = document.createElement('div');
-                dot.className = `timeline-dot ${status.status}`;
-                dot.style.left = x + '%';
-                dot.dataset.phaseId = phase.id;
-                dot.setAttribute('tabindex', '0');
-                dot.setAttribute('role', 'button');
-                dot.setAttribute('aria-label', `Фаза ${phase.label}, прогресс ${progress}%`);
-
-                const pctSpan = document.createElement('span');
-                pctSpan.className = 'dot-pct';
-                pctSpan.textContent = progress + '%';
-                dot.appendChild(pctSpan);
-
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'dot-label';
-                labelSpan.textContent = phase.label.split(' ')[0];
-                dot.appendChild(labelSpan);
-
-                dot.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    showPhaseInfo(phase.id);
-                });
-                dot.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        showPhaseInfo(phase.id);
-                    }
-                });
-
-                track.appendChild(dot);
-            });
-
-            for (let i = 0; i < n - 1; i++) {
-                const leftPos = dotPositions[i];
-                const rightPos = dotPositions[i + 1];
-                const segmentWidth = rightPos - leftPos;
-                const progress = getPhaseProgress(phases[i].id);
-                const fillWidth = (progress / 100) * segmentWidth;
-                if (fillWidth > 0) {
-                    const fill = document.createElement('div');
-                    fill.className = 'seg-fill';
-                    fill.style.left = leftPos + '%';
-                    fill.style.width = fillWidth + '%';
-                    line.appendChild(fill);
-                }
-            }
-        }
-
-        // ============================================================
-        //  RENDER FLEET TRACK
-        // ============================================================
-
-        function renderFleetTrack() {
-            const fleetTrack = document.getElementById('fleetTrack');
-            if (!fleetTrack) return;
-            fleetTrack.innerHTML = '';
-
-            const fleetProgress = getFleetProgress();
-            const status = getStatusInfo(fleetProgress);
-
-            const dot = document.createElement('div');
-            dot.className = `fleet-dot ${status.status}`;
-            dot.setAttribute('tabindex', '0');
-            dot.setAttribute('role', 'button');
-            dot.setAttribute('aria-label', `Флот и судостроение, прогресс ${fleetProgress}%`);
-
-            const pctSpan = document.createElement('span');
-            pctSpan.className = 'dot-pct';
-            pctSpan.textContent = fleetProgress + '%';
-            dot.appendChild(pctSpan);
-
-            const labelSpan = document.createElement('span');
-            labelSpan.className = 'dot-label';
-            labelSpan.textContent = 'Флот';
-            dot.appendChild(labelSpan);
-
-            dot.addEventListener('click', function(e) {
-                e.stopPropagation();
-                showFleetInfo();
-            });
-            dot.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    showFleetInfo();
-                }
-            });
-
-            fleetTrack.appendChild(dot);
-        }
-
-        function showFleetInfo() {
-            const panel = document.getElementById('infoPanel');
-            const placeholder = panel.querySelector('.info-placeholder');
-            const nameEl = document.getElementById('infoName');
-            const detailsEl = document.getElementById('infoDetails');
-
-            placeholder.style.display = 'none';
-            nameEl.style.display = 'block';
-            detailsEl.style.display = 'flex';
-
-            const progress = getFleetProgress();
-            const status = getStatusInfo(progress);
-            nameEl.textContent = 'Флот и судостроение';
-            nameEl.className = 'info-name fleet-' + status.status;
-
-            const total = fleetPhases.length;
-            const completed = fleetPhases.filter(s => s.pct >= 100).length;
-            const start = formatDate(fleetPhases[0].startDate);
-            const end = formatDate(fleetPhases[0].endDate);
-            const budget = budgetByPhase.fleet ? '$' + budgetByPhase.fleet + ' млн' : '—';
-
-            detailsEl.innerHTML = `
-                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
-                <div class="detail-item"><span class="label">Подэтапов:</span> ${total}</div>
-                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
-                <div class="detail-item"><span class="label">Окончание:</span> ${end}</div>
-                <div class="detail-item"><span class="label">Бюджет:</span> ${budget}</div>
-            `;
-        }
-
-        function showPhaseInfo(phaseId) {
-            const phase = getPhaseById(phaseId);
-            if (!phase) return;
-            const panel = document.getElementById('infoPanel');
-            const placeholder = panel.querySelector('.info-placeholder');
-            const nameEl = document.getElementById('infoName');
-            const detailsEl = document.getElementById('infoDetails');
-
-            placeholder.style.display = 'none';
-            nameEl.style.display = 'block';
-            detailsEl.style.display = 'flex';
-
-            const progress = getPhaseProgress(phaseId);
-            const status = getStatusInfo(progress);
-            nameEl.textContent = phase.label;
-            nameEl.className = 'info-name status-' + status.status;
-
-            const subs = getSubsByPhase(phaseId);
-            const completed = subs.filter(s => s.pct >= 100).length;
-            const start = formatDate(phase.startDate);
-            const end = formatDate(phase.endDate);
-            const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
-
-            detailsEl.innerHTML = `
-                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
-                <div class="detail-item"><span class="label">Подэтапов:</span> ${subs.length}</div>
-                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
-                <div class="detail-item"><span class="label">Окончание:</span> ${end}</div>
-                <div class="detail-item"><span class="label">Бюджет:</span> ${budget}</div>
-            `;
-        }
-
-        // ============================================================
-        //  RENDER PHASES
-        // ============================================================
-
-        function renderPhases() {
-            const container = document.getElementById('phasesContainer');
-            container.innerHTML = '';
-
-            phases.forEach(phase => {
-                const subs = getSubsByPhase(phase.id);
-                if (!subs.length) return;
-                const progress = getPhaseProgress(phase.id);
-                const start = formatDate(phase.startDate);
-                const end = formatDate(phase.endDate);
-                const budget = phase.budget ? '$' + phase.budget + ' млн' : '—';
-
-                const block = document.createElement('div');
-                block.className = 'phase-block';
-
-                const header = document.createElement('div');
-                header.className = 'phase-header';
-                header.innerHTML = `
-                    <span class="phase-title">${phase.label}</span>
-                    <div class="phase-meta">
-                        <span>Начало: ${start}</span>
-                        <span>Окончание: ${end}</span>
-                        <span>Бюджет: ${budget}</span>
-                    </div>
-                    <span class="phase-progress">${progress}%</span>
-                `;
-                block.appendChild(header);
-
-                const cardsWrap = document.createElement('div');
-                cardsWrap.className = 'phase-cards';
-
-                const sorted = [...subs].sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
-                sorted.forEach((sub, idx) => {
-                    const card = createPhaseCard(sub, idx);
-                    cardsWrap.appendChild(card);
-                });
-
-                block.appendChild(cardsWrap);
-                container.appendChild(block);
-            });
-        }
-
-        // ============================================================
-        //  RENDER FLEET PHASES
-        // ============================================================
-
-        function renderFleetPhases() {
-            const container = document.getElementById('fleetContainer');
-            container.innerHTML = '';
-
-            const fleetProgress = getFleetProgress();
-            const start = formatDate(fleetPhases[0].startDate);
-            const end = formatDate(fleetPhases[0].endDate);
-            const budget = budgetByPhase.fleet ? '$' + budgetByPhase.fleet + ' млн' : '—';
-
-            const block = document.createElement('div');
-            block.className = 'phase-block fleet-block';
-
-            const header = document.createElement('div');
-            header.className = 'phase-header';
-            header.innerHTML = `
-                <span class="phase-title">Флот и судостроение</span>
-                <div class="phase-meta">
-                    <span>Начало: ${start}</span>
-                    <span>Окончание: ${end}</span>
-                    <span>Бюджет: ${budget}</span>
-                </div>
-                <span class="phase-progress">${fleetProgress}%</span>
-            `;
-            block.appendChild(header);
-
-            const cardsWrap = document.createElement('div');
-            cardsWrap.className = 'phase-cards';
-
-            fleetPhases.forEach((sub, idx) => {
-                const card = createPhaseCard(sub, idx);
-                cardsWrap.appendChild(card);
-            });
-
-            block.appendChild(cardsWrap);
-            container.appendChild(block);
-        }
-
-        // ============================================================
-        //  CARD
-        // ============================================================
-
-        function createPhaseCard(sub, index) {
-            const status = getStatusInfo(sub.pct);
-            const isFleet = sub.phaseId === 'fleet';
-            const card = document.createElement('div');
-            card.className = 'phase-card' + (isFleet ? ' fleet-card' : '');
-            card.dataset.id = sub.id;
-            card.style.setProperty('--i', index + 1);
-            card.style.animationDelay = (0.02 * (index + 1)) + 's';
-            card.setAttribute('tabindex', '0');
-            card.setAttribute('role', 'button');
-            card.setAttribute('aria-label', `Подэтап ${sub.name}, прогресс ${sub.pct}%`);
-
-            const overdue = isOverdue(sub);
-            if (overdue) {
-                card.classList.add('overdue');
-                showToast(`⚠️ Подэтап "${sub.name}" идёт дольше прогноза`, 'warning');
-            }
-
-            const top = document.createElement('div');
-            top.className = 'card-top';
-
-            const nameSpan = document.createElement('span');
-            nameSpan.className = 'card-name' + (isFleet && status.status === 'active' ? ' active' : '');
-            nameSpan.textContent = sub.name;
-            top.appendChild(nameSpan);
-
-            const pctSpan = document.createElement('span');
-            pctSpan.className = `card-pct ${status.status}` + (isFleet && status.status === 'active' ? ' active' : '');
-            pctSpan.textContent = sub.pct + '%';
-            top.appendChild(pctSpan);
-
-            const dot = document.createElement('span');
-            dot.className = `card-status-dot ${status.status}`;
-            top.appendChild(dot);
-
-            card.appendChild(top);
-
-            const meta = document.createElement('div');
-            meta.className = 'card-meta';
-            if (sub.startDate) {
-                meta.innerHTML += `<span>Старт: ${formatDate(sub.startDate)}</span>`;
-            }
-            if (sub.endDate) {
-                meta.innerHTML += `<span>Финиш: ${formatDate(sub.endDate)}</span>`;
-            }
-            if (sub.pct > 0 && sub.pct < 100) {
-                const forecast = formatForecast(sub);
-                if (forecast !== '—') {
-                    meta.innerHTML += `<span class="eta">Прогноз: ${forecast}</span>`;
-                }
-            }
-            card.appendChild(meta);
-
-            card.addEventListener('click', function() { openModal(sub); });
-            card.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    openModal(sub);
-                }
-            });
-
-            return card;
-        }
-
-        // ============================================================
-        //  MODAL
-        // ============================================================
-
-        function openModal(sub) {
-            const overlay = document.getElementById('modalOverlay');
-            const title = document.getElementById('modalTitle');
-            const status = getStatusInfo(sub.pct);
-            const isFleet = sub.phaseId === 'fleet';
-            title.textContent = sub.name;
-            title.className = 'modal-title status-' + status.status + (isFleet && status.status === 'active' ? ' fleet-active' : '');
-
-            const body = document.getElementById('modalBody');
-            body.innerHTML = '';
-
-            const fields = [
-                { key: 'Фаза / Трек', value: getPhaseLabel(sub.phaseId) },
-                { key: 'Статус', value: status.label },
-                { key: 'Прогресс', value: sub.pct + '%' },
-                { key: 'Начало', value: formatDate(sub.startDate) },
-                { key: 'Окончание', value: formatDate(sub.endDate) },
-                { key: 'Прогноз завершения', value: (sub.pct > 0 && sub.pct < 100) ? formatForecast(sub) : '—' },
-                { key: 'Превышение прогноза', value: isOverdue(sub) ? 'Да' : 'Нет' },
-                { key: 'Описание', value: sub.description || '—' },
-                { key: 'Характеристики', value: sub.characteristics || '—' }
-            ];
-            if (sub.dependencies && sub.dependencies.length) {
-                const depNames = sub.dependencies.map(id => getSubName(id)).join(', ');
-                fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
-            }
-            fields.forEach(f => {
-                const row = document.createElement('div');
-                row.className = 'row';
-                const valueClass = f.extraClass ? `value ${f.extraClass}` : 'value';
-                row.innerHTML = `<span class="key">${f.key}</span><span class="${valueClass}">${f.value}</span>`;
-                body.appendChild(row);
-            });
-
-            overlay.classList.add('active');
-            document.getElementById('modalClose').focus();
-        }
-
-        // ============================================================
-        //  TOAST
-        // ============================================================
-
-        function showToast(message, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerHTML = `<span>${message}</span><button class="toast-close">&times;</button>`;
-            container.appendChild(toast);
-            toast.querySelector('.toast-close').addEventListener('click', () => toast.remove());
-            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 5000);
-        }
-
-        // ============================================================
-        //  OIL CHART (Chart.js, перенесён из аналитики)
-        // ============================================================
-
-        let oilChartInstance = null;
-        let oilFullscreenChartInstance = null;
-
-        function buildOilChartConfig() {
-            const oilData = extraData.oilPrices;
-            const labels = oilData.map(d => d.month);
-            const values = oilData.map(d => d.value);
-
-            const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#b0c4de';
-            const gridColor = 'rgba(255,255,255,0.06)';
-
-            return {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Цена нефти',
-                        data: values,
-                        borderColor: '#ff1493',
-                        backgroundColor: 'rgba(255,20,147,0.15)',
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#ff1493',
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        borderWidth: 2.5,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return '$' + context.parsed.y + ' USD/барр.';
-                                }
-                            }
-                        },
-                        afterDraw: function(chart) {
-                            const meta = chart.getDatasetMeta(0);
-                            const data = chart.data.datasets[0].data;
-                            const ctx2 = chart.ctx;
-                            ctx2.save();
-                            ctx2.font = '12px Inter, sans-serif';
-                            ctx2.textAlign = 'center';
-                            ctx2.textBaseline = 'bottom';
-                            meta.data.forEach((element, index) => {
-                                const value = data[index];
-                                if (value !== undefined) {
-                                    ctx2.fillStyle = textColor;
-                                    ctx2.fillText('$' + value, element.x, element.y - 10);
-                                }
-                            });
-                            ctx2.restore();
-                        }
-                    },
-                    scales: {
-                        y: {
-                            min: 0,
-                            max: 1200,
-                            grid: { color: gridColor },
-                            ticks: { color: textColor, stepSize: 200 },
-                            offset: true
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: textColor },
-                            offset: true
-                        }
-                    }
-                }
-            };
-        }
-
-        function renderOilChart() {
-            const ctx = document.getElementById('oilChart').getContext('2d');
-            if (oilChartInstance) {
-                oilChartInstance.destroy();
-                oilChartInstance = null;
-            }
-            oilChartInstance = new Chart(ctx, buildOilChartConfig());
-        }
-
-        function openOilFullscreen() {
-            const overlay = document.getElementById('oilModalOverlay');
-            const ctx = document.getElementById('oilFullscreenChart').getContext('2d');
-            if (oilFullscreenChartInstance) {
-                oilFullscreenChartInstance.destroy();
-                oilFullscreenChartInstance = null;
-            }
-            oilFullscreenChartInstance = new Chart(ctx, buildOilChartConfig());
-            overlay.classList.add('active');
-            document.getElementById('oilModalClose').focus();
-        }
-
-        function closeOilFullscreen() {
-            document.getElementById('oilModalOverlay').classList.remove('active');
-            if (oilFullscreenChartInstance) {
-                oilFullscreenChartInstance.destroy();
-                oilFullscreenChartInstance = null;
-            }
-        }
-
-        // ============================================================
-        //  ANALYTICS (бюджет + риски)
-        // ============================================================
-
-        function renderAnalytics() {
-            const ctxBudget = document.getElementById('budgetChart').getContext('2d');
-            const spent1 = spentByPhase.p1 || 0;
-            const spent2 = spentByPhase.p2 || 0;
-            const spent3 = spentByPhase.p3 || 0;
-            const spent4 = spentByPhase.p4 || 0;
-            const spent5 = spentByPhase.p5 || 0;
-            const spentFleet = spentByPhase.fleet || 0;
-            const totalBudget = budgetByPhase.p1 + budgetByPhase.p2 + budgetByPhase.p3 + budgetByPhase.p4 + budgetByPhase.p5 + budgetByPhase.fleet;
-            const totalSpent = spent1 + spent2 + spent3 + spent4 + spent5 + spentFleet;
-            const remaining = totalBudget - totalSpent;
-
-            const data = [spent1, spent2, spent3, spent4, spent5, spentFleet, remaining];
-            const labels = ['Этап 1 (потрачено)', 'Этап 2 (потрачено)', 'Этап 3 (потрачено)', 'Этап 4 (потрачено)', 'Этап 5 (потрачено)', 'Флот (потрачено)', 'Остаток бюджета'];
-            const colors = ['#f5b041', '#4a8ec4', '#9b59b6', '#e74c3c', '#2ecc71', '#6ec6ff', '#5a6a7e'];
-
-            const w = ctxBudget.canvas.width;
-            const h = ctxBudget.canvas.height;
-            ctxBudget.clearRect(0, 0, w, h);
-
-            const cx = w/2, cy = h/2 - 10, r = Math.min(w, h) * 0.32;
-            let startAngle = -Math.PI/2;
-            const total = data.reduce((a,b) => a+b, 0);
-
-            if (total > 0) {
-                data.forEach((val, i) => {
-                    const slice = (val / total) * 2 * Math.PI;
-                    ctxBudget.beginPath();
-                    ctxBudget.moveTo(cx, cy);
-                    ctxBudget.arc(cx, cy, r, startAngle, startAngle + slice);
-                    ctxBudget.closePath();
-                    ctxBudget.fillStyle = colors[i % colors.length];
-                    ctxBudget.shadowColor = 'rgba(0,0,0,0.2)';
-                    ctxBudget.shadowBlur = 8;
-                    ctxBudget.fill();
-                    ctxBudget.shadowBlur = 0;
-                    startAngle += slice;
-                });
-            }
-
-            let legendY = h - 30;
-            const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#b0c4de';
-            ctxBudget.fillStyle = textColor;
-            ctxBudget.font = '11px Inter, sans-serif';
-            ctxBudget.textAlign = 'left';
-
-            let legendX = 10;
-            const maxWidth = w - 20;
-            labels.forEach((label, i) => {
-                const val = data[i];
-                if (val > 0) {
-                    const text = label + ' $' + val + ' млн';
-                    const textWidth = ctxBudget.measureText(text).width;
-                    if (legendX + textWidth + 20 > maxWidth) {
-                        legendX = 10;
-                        legendY += 18;
-                    }
-                    ctxBudget.fillStyle = colors[i % colors.length];
-                    ctxBudget.fillRect(legendX, legendY, 12, 12);
-                    ctxBudget.fillStyle = textColor;
-                    ctxBudget.fillText(text, legendX + 16, legendY + 10);
-                    legendX += textWidth + 24;
-                }
-            });
-
-            const riskList = document.getElementById('riskList');
-            riskList.innerHTML = extraData.risks.map(r => {
-                const score = (r.probability * r.impact * 100).toFixed(0);
-                let cls = 'low';
-                if (score > 30) cls = 'medium';
-                if (score > 60) cls = 'high';
-                return `<div class="risk-item"><span class="risk-name">${r.name}</span><span class="risk-score ${cls}">${score}%</span></div>`;
-            }).join('');
-        }
-
-        // ============================================================
-        //  STATS
-        // ============================================================
-
-        function updateStats() {
-            const total = getAllSubs().length;
-            const completed = getCompletedCount();
-            const overall = getOverallProgress();
-            document.getElementById('totalProgress').textContent = overall + '%';
-            document.getElementById('completedCount').textContent = completed;
-            document.getElementById('totalCount').textContent = total;
-
-            const now = new Date();
-            const timeStr = now.toLocaleString('ru-RU', {
-                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-            });
-            document.getElementById('lastUpdate').textContent = timeStr;
-
-            const overdue = getAllSubs().filter(s => isOverdue(s)).length;
-            const badge = document.getElementById('overdueBadge');
-            const countEl = document.getElementById('overdueCount');
-            if (overdue > 0) {
-                badge.style.display = 'flex';
-                countEl.textContent = overdue;
-            } else {
-                badge.style.display = 'none';
-            }
-
-            renderAnalytics();
-        }
-
-        // ============================================================
-        //  EXPORT
-        // ============================================================
-
-        function exportPDF() { window.print(); }
-
-        function exportPNG() {
-            const body = document.body;
-            const originalBg = body.style.background;
-            const originalBgColor = getComputedStyle(body).backgroundColor;
-            body.style.background = originalBgColor;
-            const element = document.getElementById('dashboard');
-            html2canvas(element, {
-                scale: 2, backgroundColor: originalBgColor, useCORS: true, allowTaint: true,
-            }).then(canvas => {
-                body.style.background = originalBg;
-                const link = document.createElement('a');
-                link.download = 'Arion_dashboard.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            }).catch(err => {
-                body.style.background = originalBg;
-                showToast('Ошибка экспорта PNG: ' + err.message, 'warning');
-            });
-        }
-
-        function exportCSV() {
-            const headers = ['ID', 'Фаза/Трек', 'Название', 'Прогресс (%)', 'Начало', 'Окончание', 'Статус', 'Превышение прогноза'];
-            const rows = getAllSubs().map(s => [
-                s.id,
-                getPhaseLabel(s.phaseId),
-                s.name,
-                s.pct,
-                formatDate(s.startDate),
-                formatDate(s.endDate),
-                getStatusInfo(s.pct).label,
-                isOverdue(s) ? 'Да' : 'Нет'
-            ]);
-            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'Arion_status.csv';
-            link.click();
-            showToast('CSV экспортирован успешно', 'success');
-        }
-
-        // ============================================================
-        //  THEME
-        // ============================================================
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('arion-theme', theme);
-            currentTheme = theme;
-            renderAnalytics();
-            renderOilChart();
-            if (oilFullscreenChartInstance) {
-                closeOilFullscreen();
-            }
-        }
-
-        function openThemeModal() {
-            const overlay = document.getElementById('themeModalOverlay');
-            const optionsContainer = document.getElementById('themeOptions');
-            optionsContainer.innerHTML = '';
-            themes.forEach(t => {
-                const div = document.createElement('div');
-                div.className = 'theme-option' + (t.id === currentTheme ? ' active' : '');
-                div.innerHTML = `<div class="color-preview" style="background:${t.color};"></div>${t.label}`;
-                div.addEventListener('click', () => {
-                    applyTheme(t.id);
-                    overlay.classList.remove('active');
-                });
-                optionsContainer.appendChild(div);
-            });
-            overlay.classList.add('active');
-            document.getElementById('themeModalClose').focus();
-        }
-
-        // ============================================================
-        //  INIT
-        // ============================================================
-
-        function init() {
-            function updateHeaderTime() {
-                const now = new Date();
-                document.getElementById('headerTime').textContent = now.toLocaleString('ru-RU', {
-                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
-            }
-            updateHeaderTime();
-            setInterval(updateHeaderTime, 60000);
-
-            applyTheme(currentTheme);
-            renderTimeline();
-            renderFleetTrack();
-            renderPhases();
-            renderFleetPhases();
-            renderOilChart();
-            updateStats();
-
-            const overdueCount = getAllSubs().filter(s => isOverdue(s)).length;
-            if (overdueCount > 0) {
-                showToast(`⚠️ Обнаружено ${overdueCount} подэтапов с превышением прогноза`, 'warning');
-            }
-
-            // клик по карточке нефти → полноэкранный график
-            const oilCard = document.querySelector('.oil-card');
-            if (oilCard) {
-                oilCard.addEventListener('click', openOilFullscreen);
-                oilCard.setAttribute('tabindex', '0');
-                oilCard.setAttribute('role', 'button');
-                oilCard.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        openOilFullscreen();
-                    }
-                });
-            }
-
-            // закрытие полноэкранного графика
-            document.getElementById('oilModalClose').addEventListener('click', closeOilFullscreen);
-            document.getElementById('oilModalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) closeOilFullscreen();
-            });
-
-            document.getElementById('modalClose').addEventListener('click', function() {
-                document.getElementById('modalOverlay').classList.remove('active');
-            });
-            document.getElementById('modalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) this.classList.remove('active');
-            });
-            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
-            document.getElementById('themeModalClose').addEventListener('click', function() {
-                document.getElementById('themeModalOverlay').classList.remove('active');
-            });
-            document.getElementById('themeModalOverlay').addEventListener('click', function(e) {
-                if (e.target === this) this.classList.remove('active');
-            });
-            document.getElementById('exportPDF').addEventListener('click', exportPDF);
-            document.getElementById('exportPNG').addEventListener('click', exportPNG);
-            document.getElementById('exportCSV').addEventListener('click', exportCSV);
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    document.getElementById('modalOverlay').classList.remove('active');
-                    document.getElementById('themeModalOverlay').classList.remove('active');
-                    closeOilFullscreen();
-                }
-            });
-
-            setInterval(updateStats, 60000);
-        }
-
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
-</body>
-</html>
+                description: 'Резервная газотурби
