@@ -508,9 +508,9 @@
             box-shadow:var(--shadow); overflow:hidden;
             transition:background 0.4s, border-color 0.4s;
         }
-        .timeline-track { position:relative; height:100px; width:100%; padding:0 6%; }
+        .timeline-track { position:relative; height:100px; width:100%; padding:0 40px; }
         .timeline-line {
-            position:absolute; top:50%; left:6%; right:6%; height:5px;
+            position:absolute; top:50%; left:40px; right:40px; height:5px;
             background:var(--line-bg); border-radius:4px; transform:translateY(-50%);
             z-index:1; box-shadow:0 0 20px rgba(255,255,255,0.05), inset 0 0 8px rgba(0,0,0,0.5);
             overflow:visible;
@@ -779,7 +779,6 @@
             max-height:180px;
             border-radius:8px;
         }
-        /* Обёртка для графика нефти (Chart.js) */
         .oil-chart-wrapper {
             position: relative;
             width: 100%;
@@ -819,7 +818,8 @@
             .dashboard { padding: 16px 12px; }
             .header-left h1 { font-size:38px; }
             .header-right { justify-content:flex-start; gap:12px; }
-            .timeline-track { height:80px; padding:0 4%; }
+            .timeline-track { height:80px; padding:0 30px; }
+            .timeline-line { left:30px; right:30px; }
             .timeline-dot { width:52px; height:52px; }
             .timeline-dot .dot-pct { font-size:14px; }
             .timeline-dot .dot-label { font-size:7px; max-width:44px; }
@@ -840,7 +840,8 @@
             .header-left h1 { font-size:30px; }
             .stat-badge { padding:4px 12px; font-size:12px; }
             .stat-badge .num { font-size:15px; }
-            .timeline-track { height:70px; padding:0 2%; }
+            .timeline-track { height:70px; padding:0 24px; }
+            .timeline-line { left:24px; right:24px; }
             .timeline-dot { width:44px; height:44px; }
             .timeline-dot .dot-pct { font-size:12px; }
             .timeline-dot .dot-label { font-size:6px; max-width:36px; }
@@ -970,13 +971,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.2.13</div>
+        <div class="version">v1.2.14</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.13
-        //  Oil chart migrated from analysis.html (Chart.js implementation)
+        //  VERSION: v1.2.14
         // ============================================================
 
         const phases = [
@@ -1053,7 +1053,7 @@
                 description: 'Станция на конечной точке трубопровода перед входом на завод.',
                 characteristics: 'Производительность 500 000 т/сут, насосы с давлением 7 МПа, резервуары-отстойники на 10 000 м³.',
                 dependencies: ['3.1'] },
-            { id: '3.4', phaseId: 'p3', name: 'Строительство НПЗ', startDate: '2026-09-20', endDate: null, pct: 57,
+            { id: '3.4', phaseId: 'p3', name: 'Строительство НПЗ', startDate: '2026-09-20', endDate: null, pct: 63,
                 description: 'Возведение комплекса переработки – ректификационные колонны, крекинг, гидроочистка.',
                 characteristics: 'Мощность по сырью 10 млн т/год, колонны высотой 50 м.',
                 dependencies: ['3.3'] },
@@ -1081,7 +1081,7 @@
                 description: 'Сооружение на территории ЦПС нескольких стальных вертикальных резервуаров (РВС) для накопления и буферизации подготовленной нефти перед отправкой в магистральный трубопровод.',
                 characteristics: '5 резервуаров объёмом по 20 000 м³ каждый, общая ёмкость 100 000 м³, насосная станция перекачки на магистраль — 3 насоса по 5 МВт.',
                 dependencies: ['2.3', '2.6'] },
-            { id: '3.11', phaseId: 'p3', name: 'СИКН — система измерений количества и качества нефти', startDate: '2026-09-27', endDate: null, pct: 78,
+            { id: '3.11', phaseId: 'p3', name: 'СИКН — система измерений количества и качества нефти', startDate: '2026-09-27', endDate: null, pct: 82,
                 description: 'Коммерческий узел учёта нефти на выходе с ЦПС перед подачей в магистральный трубопровод.',
                 characteristics: 'Производительность до 500 000 т/сут, 4 измерительные линии, точность ±0.15%, АСУ ТП.',
                 dependencies: ['2.3', '3.10'] },
@@ -1220,7 +1220,7 @@
         ];
 
         // ============================================================
-        //  ОТДЕЛЬНЫЙ ТРЕК: ФЛОТ И СУДОСТРОЕНИЕ (вне основных фаз)
+        //  ОТДЕЛЬНЫЙ ТРЕК: ФЛОТ И СУДОСТРОЕНИЕ
         // ============================================================
 
         const fleetPhases = [
@@ -1228,7 +1228,7 @@
                 description: 'Строительство собственной верфи на побережье рядом с будущим портом Arion. Включает сухие доки, стапели, крановое хозяйство, цеха сборки корпусов, трубогибочные и сварочные участки, склады металла, административно-бытовой корпус и причальную стенку для достройки судов на плаву. Верфь строится первой — без неё танкеры и газовозы придётся заказывать на чужих заводах с очередью 24–30 месяцев и полной предоплатой. Своя верфь даёт ускорение в 2–3 раза и позволяет в будущем строить новые суда без внешних подрядчиков.',
                 characteristics: 'Площадь 40 га. Два сухих дока (300 × 60 м и 250 × 50 м). Стапели до 4 корпусов одновременно. Краны 2 × 600 т, 4 × 150 т. Цеха: корпусосборочный, трубомонтажный, окрасочный, электромонтажный, криогенный. Причальная стенка 400 м. Пропускная способность: 2 корабля одновременно.',
                 dependencies: ['1.5'] },
-            { id: 'Ф.2', phaseId: 'fleet', name: 'Нефтяной танкер №1 (Aframax)', startDate: '2026-10-14', endDate: null, pct: 10,
+            { id: 'Ф.2', phaseId: 'fleet', name: 'Нефтяной танкер №1 (Aframax)', startDate: '2026-10-14', endDate: null, pct: 12,
                 description: 'Постройка первого нефтяного танкера класса Aframax на собственной верфи (Ф.1). Предназначен для вывоза сырой нефти и нефтепродуктов с НПЗ Arion. Корпус двойной, с двойным дном и двойными бортами (по требованиям MARPOL). Оборудован системами инертных газов, подогрева груза, мойки танков, насосными отделениями, системой аварийной остановки грузовых операций.',
                 characteristics: 'Дедвейт 100 000 т. Длина 250 м, ширина 44 м, осадка 15 м. 12 грузовых танков, суммарный объём 115 000 м³. Скорость 14 узлов, дальность 12 000 миль. Экипаж 25 человек. Грузовые насосы 4 × 5 000 м³/час.',
                 dependencies: ['Ф.1'] },
@@ -1236,7 +1236,7 @@
                 description: 'Постройка второго нефтяного танкера того же класса, что и Ф.2. Строится сразу после первого на той же верфи, с использованием уже отлаженной технологии, обученной команды и готовой оснастки. Это даёт ускорение. Нужен для ритмичной отгрузки: пока один танкер в рейсе, второй стоит под загрузкой у терминала.',
                 characteristics: 'Идентичны Ф.2: дедвейт 100 000 т, длина 250 м, 12 танков, 115 000 м³.',
                 dependencies: ['Ф.1', 'Ф.2'] },
-            { id: 'Ф.4', phaseId: 'fleet', name: 'Газовоз СПГ №1 (мембранный)', startDate: '2026-10-14', endDate: null, pct: 12,
+            { id: 'Ф.4', phaseId: 'fleet', name: 'Газовоз СПГ №1 (мембранный)', startDate: '2026-10-14', endDate: null, pct: 14,
                 description: 'Постройка первого газовоза для перевозки сжиженного природного газа с завода СПГ Arion. Мембранный тип (GTT Mark III) — грузовые танки встроены в корпус и облицованы криогенной мембраной из нержавеющей стали и теплоизоляцией. Оборудован системой удержания BOG, двумя винтами, системой динамического позиционирования для швартовки к криогенному терминалу.',
                 characteristics: 'Вместимость 170 000 м³ СПГ. Длина 290 м, ширина 46 м, осадка 12 м. 4 мембранных танка, температура груза -162°C. Скорость 19 узлов, дальность 15 000 миль. Экипаж 35 человек.',
                 dependencies: ['Ф.1'] },
@@ -1247,9 +1247,9 @@
         ];
 
         // ============================================================
-        //  КОНСТАНТА ДАТЫ РАСЧЁТА (указывается дата, на которую актуален прогресс)
+        //  ДАТА РАСЧЁТА
         // ============================================================
-        const CURRENT_DATE = new Date('2026-10-30');
+        const CURRENT_DATE = new Date('2026-11-02');
 
         // ============================================================
         //  БЮДЖЕТ
@@ -1281,7 +1281,6 @@
             ]
         };
 
-        // Короткие подписи для графика (чтобы не наезжали друг на друга)
         const oilShortLabels = ['апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт'];
 
         const themes = [
@@ -1407,8 +1406,9 @@
             line.querySelectorAll('.seg-fill').forEach(el => el.remove());
 
             const n = phases.length;
-            const leftMargin = 6, rightMargin = 6, range = 100 - leftMargin - rightMargin;
-            const dotPositions = phases.map((_, i) => leftMargin + (i / (n - 1)) * range);
+            // Отступы в пикселях синхронизированы с CSS (.timeline-track { padding: 0 40px })
+            const leftMarginPct = 6, rightMarginPct = 6, rangePct = 100 - leftMarginPct - rightMarginPct;
+            const dotPositions = phases.map((_, i) => leftMarginPct + (i / (n - 1)) * rangePct);
 
             phases.forEach((phase, index) => {
                 const progress = getPhaseProgress(phase.id);
@@ -1850,13 +1850,9 @@
                 return `<div class="risk-item"><span class="risk-name">${r.name}</span><span class="risk-score ${cls}">${score}%</span></div>`;
             }).join('');
 
-            // ---- График нефти (Chart.js) ----
+            // ---- График нефти ----
             renderOilChart();
         }
-
-        // ============================================================
-        //  OIL CHART (Chart.js, миграция с analysis.html)
-        // ============================================================
 
         let oilChartInstance = null;
 
@@ -1865,7 +1861,6 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
-            // Уничтожаем предыдущий экземпляр, чтобы не было наложений
             if (oilChartInstance) {
                 oilChartInstance.destroy();
                 oilChartInstance = null;
@@ -2035,7 +2030,6 @@
             document.documentElement.setAttribute('data-theme', theme);
             localStorage.setItem('arion-theme', theme);
             currentTheme = theme;
-            // Перерисовываем графики под новую тему
             if (oilChartInstance) {
                 oilChartInstance.destroy();
                 oilChartInstance = null;
