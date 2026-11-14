@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentinel · Дашборд</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #141c28, #070a0e);
+            --bg-panel: rgba(17, 24, 34, 0.7);
+            --bg-card: rgba(20, 28, 40, 0.8);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --text-primary: #e8edf5;
+            --text-secondary: #b0c4de;
+            --text-muted: #5a6a7e;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245, 176, 65, 0.02);
+            --shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a4a5e;
+            --line-bg: #4a5a6e;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+            --zenith-accent: #f39c12;
+            --sentinel-accent: #e74c3c;
+            --chart-text: #b0c4de;
+            --chart-grid: rgba(255,255,255,0.08);
+        }
+        [data-theme="light"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #f0f4f8, #d9e2ec);
+            --bg-panel: rgba(255,255,255,0.85);
+            --bg-card: rgba(255,255,255,0.9);
+            --border-color: rgba(0,0,0,0.1);
+            --text-primary: #1a2332;
+            --text-secondary: #2a3a4e;
+            --text-muted: #6a7a8e;
+            --accent-gold: #d48c2c;
+            --accent-glow: rgba(212,140,44,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #2b6a9e;
+            --dot-active: #c0392b;
+            --dot-pending: #8a9bb5;
+            --line-bg: #b0c4de;
+            --gradient-start: #b08a2c;
+            --gradient-end: #8a6a1a;
+            --zenith-accent: #c08a1c;
+            --sentinel-accent: #c0392b;
+            --chart-text: #2a3a4e;
+            --chart-grid: rgba(0,0,0,0.08);
+        }
+        [data-theme="gold"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a1f0e, #1a1008);
+            --bg-panel: rgba(40,30,20,0.85);
+            --bg-card: rgba(40,30,20,0.9);
+            --border-color: rgba(212,140,44,0.25);
+            --text-primary: #f5e6c8;
+            --text-secondary: #d4b88a;
+            --text-muted: #8a7a5a;
+            --accent-gold: #f5b041;
+            --accent-glow: rgba(245,176,65,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.6);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a5a3a;
+            --line-bg: #5a4a2a;
+            --gradient-start: #f7e05e;
+            --gradient-end: #e67e22;
+            --zenith-accent: #e0b060;
+            --sentinel-accent: #e06050;
+            --chart-text: #d4b88a;
+            --chart-grid: rgba(255,255,255,0.06);
+        }
+        [data-theme="blue"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1628, #050d1a);
+            --bg-panel: rgba(10,22,40,0.8);
+            --bg-card: rgba(10,22,40,0.9);
+            --border-color: rgba(74,142,196,0.2);
+            --text-primary: #b0d4f0;
+            --text-secondary: #8ab4d4;
+            --text-muted: #4a6a8a;
+            --accent-gold: #4a8ec4;
+            --accent-glow: rgba(74,142,196,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a7a;
+            --line-bg: #2a4a6a;
+            --gradient-start: #8ab4d4;
+            --gradient-end: #4a6a9e;
+            --zenith-accent: #e0a040;
+            --sentinel-accent: #e06050;
+            --chart-text: #8ab4d4;
+            --chart-grid: rgba(255,255,255,0.06);
+        }
+        [data-theme="green"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a1a12, #050d08);
+            --bg-panel: rgba(10,26,18,0.8);
+            --bg-card: rgba(10,26,18,0.9);
+            --border-color: rgba(76,217,160,0.2);
+            --text-primary: #b0e8d0;
+            --text-secondary: #80c8a8;
+            --text-muted: #4a7a62;
+            --accent-gold: #4cd9a0;
+            --accent-glow: rgba(76,217,160,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
+            --dot-done: #2b6a9e;
+            --dot-active: #e74c3c;
+            --dot-pending: #3a5a4a;
+            --line-bg: #2a5a42;
+            --gradient-start: #80c8a8;
+            --gradient-end: #4a7a62;
+            --zenith-accent: #d0a050;
+            --sentinel-accent: #d06050;
+            --chart-text: #80c8a8;
+            --chart-grid: rgba(255,255,255,0.06);
+        }
+        [data-theme="purple"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #1a0a2a, #0d0518);
+            --bg-panel: rgba(26,10,42,0.8);
+            --bg-card: rgba(26,10,42,0.9);
+            --border-color: rgba(160,76,217,0.2);
+            --text-primary: #d8b0f0;
+            --text-secondary: #b080d4;
+            --text-muted: #6a4a8a;
+            --accent-gold: #a04cd9;
+            --accent-glow: rgba(160,76,217,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #5a3a6a;
+            --line-bg: #4a2a6a;
+            --gradient-start: #b080d4;
+            --gradient-end: #6a4a8a;
+            --zenith-accent: #d0a050;
+            --sentinel-accent: #d06050;
+            --chart-text: #b080d4;
+            --chart-grid: rgba(255,255,255,0.06);
+        }
+        [data-theme="red"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #2a0a0a, #180505);
+            --bg-panel: rgba(42,10,10,0.8);
+            --bg-card: rgba(42,10,10,0.9);
+            --border-color: rgba(217,76,76,0.2);
+            --text-primary: #f0b0b0;
+            --text-secondary: #d48080;
+            --text-muted: #8a4a4a;
+            --accent-gold: #d94c4c;
+            --accent-glow: rgba(217,76,76,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.5);
+            --dot-done: #4cd9a0;
+            --dot-active: #e74c3c;
+            --dot-pending: #6a3a3a;
+            --line-bg: #6a2a2a;
+            --gradient-start: #d48080;
+            --gradient-end: #8a4a4a;
+            --zenith-accent: #e0a040;
+            --sentinel-accent: #e05050;
+            --chart-text: #d48080;
+            --chart-grid: rgba(255,255,255,0.06);
+        }
+        [data-theme="eyecare"] {
+            --bg-body: #d9d9d9;
+            --bg-panel: rgba(220,220,220,0.85);
+            --bg-card: rgba(230,230,230,0.9);
+            --border-color: rgba(120,120,120,0.2);
+            --text-primary: #404040;
+            --text-secondary: #505050;
+            --text-muted: #707070;
+            --accent-gold: #8a8a8a;
+            --accent-glow: rgba(128,128,128,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.05);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a6a;
+            --dot-pending: #909090;
+            --line-bg: #a0a0a0;
+            --gradient-start: #8a8a8a;
+            --gradient-end: #6a6a6a;
+            --zenith-accent: #a08050;
+            --sentinel-accent: #a06050;
+            --chart-text: #505050;
+            --chart-grid: rgba(80,80,80,0.1);
+        }
+        [data-theme="cyberpunk"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0010, #000005);
+            --bg-panel: rgba(20,0,30,0.8);
+            --bg-card: rgba(20,0,30,0.9);
+            --border-color: rgba(255,0,200,0.3);
+            --text-primary: #ff66ff;
+            --text-secondary: #ff99ff;
+            --text-muted: #cc66cc;
+            --accent-gold: #ff00ff;
+            --accent-glow: rgba(255,0,255,0.1);
+            --shadow: 0 8px 40px rgba(255,0,255,0.1);
+            --dot-done: #00ffaa;
+            --dot-active: #ff0066;
+            --dot-pending: #660066;
+            --line-bg: #660066;
+            --gradient-start: #ff66ff;
+            --gradient-end: #cc33cc;
+            --zenith-accent: #ffaa00;
+            --sentinel-accent: #ff3366;
+            --chart-text: #ff99ff;
+            --chart-grid: rgba(255,0,255,0.1);
+        }
+        [data-theme="graphic"] {
+            --bg-body: #f5f5f5;
+            --bg-panel: rgba(255,255,255,0.9);
+            --bg-card: #ffffff;
+            --border-color: #cccccc;
+            --text-primary: #000000;
+            --text-secondary: #222222;
+            --text-muted: #555555;
+            --accent-gold: #000000;
+            --accent-glow: rgba(0,0,0,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #000000;
+            --dot-active: #000000;
+            --dot-pending: #999999;
+            --line-bg: #cccccc;
+            --gradient-start: #333333;
+            --gradient-end: #000000;
+            --zenith-accent: #666666;
+            --sentinel-accent: #222222;
+            --chart-text: #000000;
+            --chart-grid: rgba(0,0,0,0.1);
+        }
+        [data-theme="matrix"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #001000, #000800);
+            --bg-panel: rgba(0,20,0,0.8);
+            --bg-card: rgba(0,20,0,0.9);
+            --border-color: rgba(0,255,0,0.2);
+            --text-primary: #00ff00;
+            --text-secondary: #66ff66;
+            --text-muted: #006600;
+            --accent-gold: #00ff00;
+            --accent-glow: rgba(0,255,0,0.02);
+            --shadow: 0 8px 40px rgba(0,255,0,0.05);
+            --dot-done: #00ff00;
+            --dot-active: #ff0000;
+            --dot-pending: #006600;
+            --line-bg: #003300;
+            --gradient-start: #66ff66;
+            --gradient-end: #00cc00;
+            --zenith-accent: #aaff00;
+            --sentinel-accent: #ff6600;
+            --chart-text: #66ff66;
+            --chart-grid: rgba(0,255,0,0.08);
+        }
+        [data-theme="space"] {
+            --bg-body: radial-gradient(ellipse at 50% 20%, #0a0a2a, #000010);
+            --bg-panel: rgba(10,10,30,0.8);
+            --bg-card: rgba(10,10,30,0.9);
+            --border-color: rgba(100,100,255,0.2);
+            --text-primary: #c0c0ff;
+            --text-secondary: #8888ff;
+            --text-muted: #4444aa;
+            --accent-gold: #6666ff;
+            --accent-glow: rgba(100,100,255,0.02);
+            --shadow: 0 8px 40px rgba(100,100,255,0.05);
+            --dot-done: #00ffaa;
+            --dot-active: #ff6666;
+            --dot-pending: #333366;
+            --line-bg: #222266;
+            --gradient-start: #8888ff;
+            --gradient-end: #4444cc;
+            --zenith-accent: #ffaa66;
+            --sentinel-accent: #ff6688;
+            --chart-text: #8888ff;
+            --chart-grid: rgba(100,100,255,0.08);
+        }
+        [data-theme="retro"] {
+            --bg-body: #f0e8d0;
+            --bg-panel: rgba(240,232,208,0.85);
+            --bg-card: rgba(250,242,220,0.9);
+            --border-color: #b0a080;
+            --text-primary: #4a3a2a;
+            --text-secondary: #6a5a4a;
+            --text-muted: #8a7a6a;
+            --accent-gold: #8a7a50;
+            --accent-glow: rgba(138,122,80,0.02);
+            --shadow: 0 8px 40px rgba(0,0,0,0.1);
+            --dot-done: #6a8a6a;
+            --dot-active: #b06a5a;
+            --dot-pending: #b0a080;
+            --line-bg: #b0a080;
+            --gradient-start: #b0a080;
+            --gradient-end: #8a7a50;
+            --zenith-accent: #a08050;
+            --sentinel-accent: #a06050;
+            --chart-text: #4a3a2a;
+            --chart-grid: rgba(0,0,0,0.08);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: var(--bg-body);
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.4s, color 0.4s;
+        }
+
+        .top-menu {
+            width: 100%;
+            background: rgba(17, 24, 34, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.4);
+        }
+        .top-menu .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+        .top-menu .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
+        .top-menu .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 2px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .top-menu .nav-links a:hover,
+        .top-menu .nav-links a.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+        }
+        .top-menu .right-info {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .top-menu .right-info .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--dot-done);
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+        @keyframes pulse-dot {
+            0%,100% { opacity:1; transform:scale(1); }
+            50% { opacity:0.3; transform:scale(0.7); }
+        }
+        .header-controls { display:flex; align-items:center; gap:12px; }
+        .theme-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+        .dashboard { max-width: 1400px; width: 100%; padding: 20px 24px 40px; }
+
+        @keyframes pulse-red {
+            0%,100% { box-shadow:0 0 30px rgba(231,76,60,0.4); }
+            50% { box-shadow:0 0 80px rgba(231,76,60,0.8); }
+        }
+        @keyframes modal-in {
+            from { opacity:0; transform:scale(0.95) translateY(20px); }
+            to { opacity:1; transform:scale(1) translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity:0; transform:translateY(15px) scale(0.97); }
+            to { opacity:1; transform:translateY(0) scale(1); }
+        }
+
+        .header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:32px; gap:16px; }
+        .header-left h1 {
+            font-size:52px; font-weight:800; letter-spacing:-1px;
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin:0;
+        }
+        .header-right { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+        .stat-badge {
+            display:flex; align-items:center; gap:8px;
+            background:var(--bg-card);
+            padding:6px 14px; border-radius:40px; border:1px solid var(--border-color);
+            font-size:14px; box-shadow:var(--shadow);
+        }
+        .stat-badge .num { font-weight:700; font-size:18px; color:var(--accent-gold); }
+        .stat-badge .num.green { color:var(--dot-done); }
+        .stat-badge .label { color:var(--text-muted); font-weight:400; }
+        .update-time {
+            font-size:13px; color:var(--text-muted);
+            background:var(--bg-card);
+            padding:4px 14px; border-radius:40px; border:1px solid var(--border-color);
+            display:flex; align-items:center; gap:6px;
+        }
+        .update-time .dot {
+            display:inline-block; width:8px; height:8px; border-radius:50%;
+            background:var(--dot-done); animation:pulse-dot 2s ease-in-out infinite;
+        }
+
+        .export-bar { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+        .export-btn {
+            background:var(--bg-card); border:1px solid var(--border-color);
+            color:var(--text-secondary); padding:6px 16px; border-radius:40px;
+            font-size:13px; cursor:pointer; transition:all 0.2s;
+        }
+        .export-btn:hover { border-color:var(--accent-gold); color:var(--accent-gold); }
+
+        .timeline-wrapper {
+            background:var(--bg-panel);
+            border-radius:24px; padding:30px 20px 24px;
+            border:1px solid var(--border-color); margin-bottom:28px;
+            box-shadow:var(--shadow);
+        }
+        .extra-tracks {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 10px;
+        }
+        .track-row-extra {
+            position: relative;
+            padding: 14px 6% 6px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .track-row-extra::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 1px;
+            opacity: 0.5;
+            background: repeating-linear-gradient(90deg, var(--zenith-accent) 0 6px, transparent 6px 14px);
+        }
+        .track-row-extra.sentinel-row::before {
+            background: repeating-linear-gradient(90deg, var(--sentinel-accent) 0 6px, transparent 6px 14px);
+        }
+        .fleet-dot, .zenith-dot, .sentinel-dot {
+            position: relative;
+            width: 80px; height: 80px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; cursor: pointer; z-index: 2;
+            transition: all 0.3s; user-select: none; border: 2px dashed;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+        }
+        .zenith-dot { border-color: var(--zenith-accent); background: radial-gradient(circle at 50% 40%, rgba(243,156,18,0.15), rgba(26,35,50,0.95)); }
+        .sentinel-dot { border-color: var(--sentinel-accent); background: radial-gradient(circle at 50% 40%, rgba(231,76,60,0.15), rgba(26,35,50,0.95)); }
+        .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size:18px; line-height:1.1; }
+        .zenith-dot .dot-label, .sentinel-dot .dot-label {
+            font-size:10px; font-weight:500; text-transform:uppercase;
+            letter-spacing:0.3px; opacity:0.85; margin-top:2px; text-align:center;
+            max-width:72px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .zenith-dot:hover, .sentinel-dot:hover { transform: scale(1.08); }
+        .zenith-dot.active { animation:pulse-dot 1.8s ease-in-out infinite; }
+        .sentinel-dot.active { animation:pulse-red 1.8s ease-in-out infinite; }
+        .zenith-dot.done, .sentinel-dot.done {
+            border-style: solid;
+            border-color: var(--dot-done);
+            background: radial-gradient(circle at 50% 40%, rgba(76,217,160,0.3), rgba(26,35,50,0.95));
+        }
+        .zenith-dot.pending, .sentinel-dot.pending {
+            border-color: #3a4a5e;
+            background: radial-gradient(circle at 50% 40%, rgba(90,106,126,0.15), rgba(26,35,50,0.95));
+        }
+
+        .info-panel {
+            margin-top:18px; background:var(--bg-card);
+            border-radius:16px; border:1px solid var(--border-color);
+            padding:14px 22px; min-height:56px;
+            display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+            box-shadow:var(--shadow);
+        }
+        .info-panel .info-placeholder { color:var(--text-muted); font-size:14px; }
+        .info-panel .info-name { font-size:20px; font-weight:600; }
+        .info-panel .info-name.status-done { color:var(--dot-done); }
+        .info-panel .info-name.status-active { color:var(--accent-gold); }
+        .info-panel .info-name.status-pending { color:var(--text-muted); }
+        .info-panel .info-name.zenith-active { color: var(--zenith-accent); }
+        .info-panel .info-name.sentinel-active { color: var(--sentinel-accent); }
+        .info-panel .info-details { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); }
+        .info-panel .info-details .detail-item { display:flex; align-items:baseline; gap:6px; }
+        .info-panel .info-details .detail-item .label { color:var(--text-muted); }
+
+        .phases-section { margin-top:28px; display:flex; flex-direction:column; gap:24px; }
+        .phase-block {
+            background:var(--bg-panel);
+            border-radius:20px; border:1px solid var(--border-color);
+            padding:18px 22px 20px; box-shadow:var(--shadow);
+        }
+        .phase-block.zenith-block { border-left: 4px dashed var(--zenith-accent); }
+        .phase-block.sentinel-block { border-left: 4px dashed var(--sentinel-accent); }
+        .phase-header {
+            display:flex; align-items:center; justify-content:space-between;
+            margin-bottom:14px; flex-wrap:wrap; gap:8px;
+        }
+        .phase-header .phase-title { font-size:18px; font-weight:600; color:var(--text-primary); }
+        .phase-header .phase-meta { display:flex; align-items:center; gap:16px; font-size:13px; color:var(--text-muted); }
+        .phase-header .phase-meta span { background:var(--bg-card); padding:2px 12px; border-radius:40px; border:1px solid var(--border-color); }
+        .phase-header .phase-progress { font-size:14px; font-weight:500; color:var(--accent-gold); background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
+        .zenith-block .phase-progress { color: var(--zenith-accent); }
+        .sentinel-block .phase-progress { color: var(--sentinel-accent); }
+        .phase-cards { display:flex; flex-wrap:wrap; gap:12px; }
+        .phase-card {
+            background:var(--bg-card);
+            border-radius:14px; padding:12px 18px;
+            border:1px solid var(--border-color);
+            flex:0 1 auto; min-width:180px; max-width:320px;
+            display:flex; flex-direction:column; gap:4px;
+            cursor:pointer; transition:all 0.3s;
+            box-shadow:var(--shadow);
+            opacity:0; animation:fadeInUp 0.5s ease forwards;
+        }
+        .phase-card:hover { border-color:var(--accent-gold); transform:translateY(-3px) scale(1.02); }
+        .zenith-card:hover { border-color: var(--zenith-accent); }
+        .sentinel-card:hover { border-color: var(--sentinel-accent); }
+        .phase-card.overdue { border-color:var(--dot-active); }
+        .phase-card .card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+        .phase-card .card-name { font-size:14px; font-weight:500; color:var(--text-primary); flex:1; min-width:0; }
+        .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent-gold); min-width:48px; text-align:right; flex-shrink:0; }
+        .phase-card .card-pct.done { color:var(--dot-done); }
+        .phase-card .card-pct.pending { color:var(--text-muted); }
+        .zenith-card .card-name.active { color: var(--zenith-accent); }
+        .sentinel-card .card-name.active { color: var(--sentinel-accent); }
+        .zenith-card .card-pct.active { color: var(--zenith-accent); }
+        .sentinel-card .card-pct.active { color: var(--sentinel-accent); }
+        .phase-card .card-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+        .phase-card .card-status-dot.done { background:var(--dot-done); }
+        .phase-card .card-status-dot.active { background:var(--dot-active); }
+        .phase-card .card-status-dot.pending { background:var(--dot-pending); }
+        .zenith-card .card-status-dot.active { background: var(--zenith-accent); }
+        .sentinel-card .card-status-dot.active { background: var(--sentinel-accent); }
+        .phase-card .card-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
+        .phase-card .card-meta span { display:flex; align-items:center; gap:4px; }
+        .phase-card .card-meta .eta { color:var(--accent-gold); }
+        .zenith-card .card-meta .eta { color: var(--zenith-accent); }
+        .sentinel-card .card-meta .eta { color: var(--sentinel-accent); }
+
+        .modal-overlay {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+            z-index:1000; justify-content:center; align-items:center; padding:20px;
+        }
+        .modal-overlay.active { display:flex; }
+        .modal {
+            background:var(--bg-panel);
+            border-radius:24px; padding:32px 36px;
+            max-width:560px; width:100%;
+            border:1px solid var(--border-color);
+            box-shadow:0 24px 80px rgba(0,0,0,0.8);
+            animation:modal-in 0.4s;
+            max-height:80vh; overflow-y:auto;
+        }
+        .modal .modal-title { font-size:20px; font-weight:600; margin-bottom:8px; }
+        .modal .modal-title.status-done { color: var(--dot-done) !important; }
+        .modal .modal-title.status-active { color: var(--accent-gold) !important; }
+        .modal .modal-title.status-pending { color: var(--text-muted) !important; }
+        .modal .modal-title.zenith-active { color: var(--zenith-accent) !important; }
+        .modal .modal-title.sentinel-active { color: var(--sentinel-accent) !important; }
+        .modal .modal-close {
+            margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color);
+            color:var(--text-secondary); padding:10px 24px; border-radius:40px;
+            font-size:14px; cursor:pointer; width:100%;
+        }
+        .modal .modal-close:hover { border-color:var(--accent-gold); }
+        .modal .modal-body { display:flex; flex-direction:column; gap:10px; font-size:14px; color:var(--text-secondary); }
+        .modal .modal-body .row { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--border-color); }
+        .modal .modal-body .row .key { color:var(--text-muted); flex-shrink:0; margin-right:12px; }
+        .modal .modal-body .row .value { font-weight:500; color:var(--text-primary); text-align:right; word-break:break-word; }
+        .modal .modal-body .row .value.dependencies { font-weight:400; color:var(--text-muted); font-size:13px; }
+
+        .theme-modal .theme-options {
+            display:grid; grid-template-columns: 1fr 1fr 1fr;
+            gap:12px; margin-top:16px;
+        }
+        .theme-modal .theme-option {
+            padding:12px 8px; border-radius:12px;
+            border:2px solid var(--border-color);
+            background:var(--bg-card); cursor:pointer;
+            text-align:center; transition:all 0.2s;
+            color:var(--text-secondary); font-size:14px;
+        }
+        .theme-modal .theme-option:hover { border-color:var(--accent-gold); }
+        .theme-modal .theme-option.active { border-color:var(--accent-gold); background:var(--accent-glow); }
+        .theme-modal .theme-option .color-preview {
+            width:24px; height:24px; border-radius:50%;
+            margin:0 auto 6px; border:1px solid rgba(255,255,255,0.1);
+        }
+
+        .analytics-section {
+            margin-top:32px;
+            background:var(--bg-panel);
+            border-radius:24px; border:1px solid var(--border-color);
+            padding:24px; box-shadow:var(--shadow);
+        }
+        .analytics-section .analytics-title {
+            font-size:20px; font-weight:600; color:var(--text-primary);
+            margin-bottom:20px;
+        }
+        .analytics-grid {
+            display:grid; grid-template-columns: 1fr 1fr;
+            gap:20px;
+        }
+        .analytics-card {
+            background:var(--bg-card); border-radius:16px;
+            padding:18px; border:1px solid var(--border-color);
+            box-shadow:var(--shadow);
+        }
+        .analytics-card h3 {
+            font-size:14px; font-weight:500; color:var(--text-muted);
+            margin-bottom:12px;
+        }
+        .analytics-card canvas {
+            width:100% !important; height:auto !important;
+            max-height:200px; border-radius:8px;
+        }
+        .analytics-card .risk-item {
+            display:flex; justify-content:space-between;
+            padding:6px 0; border-bottom:1px solid var(--border-color);
+            font-size:13px;
+        }
+        .analytics-card .risk-item .risk-name { color:var(--text-secondary); }
+        .analytics-card .risk-item .risk-score { font-weight:500; }
+        .analytics-card .risk-item .risk-score.high { color:var(--dot-active); }
+        .analytics-card .risk-item .risk-score.medium { color:var(--accent-gold); }
+        .analytics-card .risk-item .risk-score.low { color:var(--dot-done); }
+
+        .version {
+            text-align: center; font-size: 12px;
+            color: var(--text-muted);
+            padding: 16px 0 8px;
+            border-top: 1px solid var(--border-color);
+            margin-top: 12px;
+        }
+
+        @media (max-width: 820px) {
+            .top-menu { padding: 10px 16px; flex-direction: column; align-items: stretch; gap:8px; }
+            .top-menu .nav-links { justify-content: center; }
+            .dashboard { padding: 16px 12px; }
+            .header-left h1 { font-size:38px; }
+            .zenith-dot, .sentinel-dot { width: 68px; height: 68px; }
+            .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size: 15px; }
+            .phase-cards { flex-direction:column; }
+            .phase-card { max-width:100%; min-width:0; }
+            .analytics-grid { grid-template-columns:1fr; }
+        }
+        @media (max-width: 480px) {
+            .header-left h1 { font-size:30px; }
+            .zenith-dot, .sentinel-dot { width: 58px; height: 58px; }
+            .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size: 13px; }
+            .zenith-dot .dot-label, .sentinel-dot .dot-label { font-size: 8px; max-width: 52px; }
+        }
+
+        @media print {
+            .export-bar, .theme-btn, .update-time, .stat-badge .label, .top-menu { display:none; }
+            body { background:#fff; color:#000; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-menu">
+        <div class="logo">Zenith</div>
+        <nav class="nav-links">
+            <a href="index.html">Главная</a>
+            <a href="arion.html">Arion</a>
+            <a href="sentinel.html" class="active">Sentinel</a>
+            <a href="analysis.html">Аналитика</a>
+        </nav>
+        <div class="right-info">
+            <span class="dot"></span>
+            <span id="headerTime">—</span>
+            <div class="header-controls">
+                <button class="theme-btn" id="themeToggle">🎨 Тема</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard" id="dashboard">
+
+        <header class="header">
+            <div class="header-left"><h1>Sentinel</h1></div>
+            <div class="header-right">
+                <div class="stat-badge">
+                    <span class="label">Общий прогресс</span>
+                    <span class="num gold" id="totalProgress">0%</span>
+                </div>
+                <div class="stat-badge">
+                    <span class="label">Завершено</span>
+                    <span class="num green" id="completedCount">0</span>
+                    <span class="label">/ <span id="totalCount">0</span></span>
+                </div>
+                <div class="update-time">
+                    <div class="time-row">
+                        <span class="dot"></span>
+                        <span>Текущее время: <span id="lastUpdate">—</span></span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="export-bar">
+            <button class="export-btn" id="exportPDF">📄 PDF</button>
+            <button class="export-btn" id="exportPNG">🖼️ PNG</button>
+            <button class="export-btn" id="exportCSV">📊 CSV</button>
+        </div>
+
+        <div class="timeline-wrapper">
+            <div class="extra-tracks">
+                <div class="track-row-extra" id="zenithTrack"></div>
+                <div class="track-row-extra sentinel-row" id="sentinelTrack"></div>
+            </div>
+            <div class="info-panel" id="infoPanel">
+                <span class="info-placeholder">Нажмите на категорию, чтобы увидеть информацию</span>
+                <span class="info-name" id="infoName" style="display:none;"></span>
+                <div class="info-details" id="infoDetails" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div class="phases-section" id="zenithContainer"></div>
+        <div class="phases-section" id="sentinelContainer"></div>
+
+        <div class="analytics-section">
+            <div class="analytics-title">📊 Аналитика Sentinel</div>
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Прогресс по категориям</h3>
+                    <canvas id="progressChart" width="400" height="200"></canvas>
+                </div>
+                <div class="analytics-card">
+                    <h3>Оценка рисков</h3>
+                    <div id="riskList"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal">
+                <div class="modal-title" id="modalTitle">Название</div>
+                <div class="modal-body" id="modalBody"></div>
+                <button class="modal-close" id="modalClose">Закрыть</button>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="themeModalOverlay">
+            <div class="modal theme-modal">
+                <div class="modal-title">Выберите тему</div>
+                <div class="theme-options" id="themeOptions"></div>
+                <button class="modal-close" id="themeModalClose">Закрыть</button>
+            </div>
+        </div>
+
+        <div class="version">v1.3.0</div>
+    </div>
+
+    <script>
+        // VERSION: v1.3.0
+
+        const CURRENT_DATE = new Date('2026-11-15');
+
+        // ===== ZENITH C (горные ангары) =====
+        const zenithPhases = [
+            { id: 'C.0', name: 'Геологическое обследование горы', startDate: '2026-11-15', endDate: null, pct: 0,
+                description: 'Инженерные изыскания в массиве между НПЗ и внешним склоном. Определение прочности породы, трещиноватости, водоносных горизонтов, зон тектонических нарушений. Без этого нельзя резать пещеры — можно получить обвал или затопление.',
+                characteristics: 'Бурение 20–30 скважин глубиной до 200 м, сейсмика массива, гидрогеология. 2 месяца.',
+                dependencies: [] },
+            { id: 'C.1', name: 'Проходка пещер и заезд техники', startDate: null, endDate: null, pct: 0,
+                description: 'Главный и самый быстрый подпункт. Проходка многоуровневых каверн в горе, пробивка въездных тоннелей для техники, черновой пол, дренаж, временная вентиляция и свет. После завершения техника заезжает своим ходом — танки, БТР, грузовики, истребители.',
+                characteristics: '5 уровней, каждый 300 × 100 × 30 м. Общий объём 4,5 млн м³. Въездные тоннели: 2 шт., 30 м ширина × 12 м высота. Ёмкость: 40 истребителей, 150 танков, 200 БТР/БМП, 30 ракетных комплексов, 300 грузовиков.',
+                dependencies: ['C.0'] },
+            { id: 'C.2', name: 'Укрепление стен, колонн и кровли', startDate: null, endDate: null, pct: 0,
+                description: 'После заезда техники — капитальное укрепление. Торкретирование стен, установка несущих колонн, анкеровка кровли, гидроизоляция.',
+                characteristics: 'Торкрет 20 см, 200+ анкеров глубиной 10 м, стальные арки в тоннелях.',
+                dependencies: ['C.1'] },
+            { id: 'C.3', name: 'Гермодвери и защитные затворы', startDate: null, endDate: null, pct: 0,
+                description: 'Установка массивных blast-дверей на въездах и между уровнями. Защита от ударной волны, проникновения, радиации.',
+                characteristics: '4 двери по 30 × 12 м, вес 200 т каждая, гидравлический привод, открытие за 60 с.',
+                dependencies: ['C.2'] },
+            { id: 'C.4', name: 'Лифты и вертикальный транспорт', startDate: null, endDate: null, pct: 0,
+                description: 'Тяжёлые грузовые лифты между уровнями для техники и персонала.',
+                characteristics: '4 лифта грузоподъёмностью 60 т, платформа 20 × 6 м. 2 пассажирских лифта.',
+                dependencies: ['C.2'] },
+            { id: 'C.5', name: 'Вентиляция, климат, пожаротушение', startDate: null, endDate: null, pct: 0,
+                description: 'Постоянная система жизнеобеспечения. Приточная и вытяжная вентиляция, фильтрация воздуха, поддержание температуры и влажности, автоматическое пожаротушение.',
+                characteristics: '10 воздухообменов/час, HEPA-фильтры, 200 огнетушителей, 5 насосных станций.',
+                dependencies: ['C.2', 'C.4'] },
+            { id: 'C.6', name: 'Энергоснабжение и освещение', startDate: null, endDate: null, pct: 0,
+                description: 'Собственная подстанция, кабельные линии от основной сети Arion, дизель-генераторы для автономии на 30 суток.',
+                characteristics: '15 МВт, 4 генератора по 3 МВт, кабели 10 кВ, 5 000 светильников.',
+                dependencies: ['C.2'] },
+            { id: 'C.7', name: 'Внутренняя безопасность', startDate: null, endDate: null, pct: 0,
+                description: 'Камеры, датчики движения, контроль доступа, биометрия на входах. Система оповещения. Связь с Sentinel.',
+                characteristics: '300 камер, 50 биометрических турникетов, оптоволокно до ЦКП Sentinel.',
+                dependencies: ['C.6'] },
+            { id: 'C.8', name: 'Шахтные люки на вершине горы (под баллистические ракеты)', startDate: null, endDate: null, pct: 0,
+                description: 'Проходка вертикальных шахт от верхнего уровня пещер до поверхности горы, вывод люков наружу. Сейчас ракет нет — шахты стоят пустые, закрыты маскировочными крышками. Снаружи люки неотличимы от скальных выступов.',
+                characteristics: '6 шахт диаметром 10 м, глубина 120–150 м. Верхний люк: 2 створки по 12 т, гидравлический привод, открытие за 30 с. Маскировочные крышки с фальшскалой.',
+                dependencies: ['C.1', 'C.2'] },
+            { id: 'C.9', name: 'Хранилища для баллистических ракет', startDate: null, endDate: null, pct: 0,
+                description: 'Отдельные герметичные камеры под ракеты — с климат-контролем, виброизоляцией, рельсовой системой перемещения к шахтам. Ракет пока нет — хранилища пустые, готовы к приёму.',
+                characteristics: '2 камеры по 100 × 50 × 20 м. Климат 18–22°C, влажность 40%. Рельсовый путь до каждой из 6 шахт. Противоударная защита.',
+                dependencies: ['C.1', 'C.2', 'C.8'] },
+            { id: 'C.10', name: 'Научно-конструкторское бюро (R&D Center)', startDate: null, endDate: null, pct: 0,
+                description: 'Центр разработки новой военной техники: новые башни для танков, модернизация БТР, системы наведения, броня, двигатели. Офисы конструкторов, лаборатории, вычислительный кластер.',
+                characteristics: '3 этажа, 5 000 м². 200 инженеров. Суперкомпьютер для расчётов брони и аэродинамики.',
+                dependencies: ['C.2', 'C.6'] },
+            { id: 'C.11', name: 'Опытное производство и прототипирование', startDate: null, endDate: null, pct: 0,
+                description: 'Цех для изготовления прототипов: новая башня танка, усиленная броня, опытные образцы вооружения. CNC-станки, сварка, сборка, покраска.',
+                characteristics: '2 000 м². 5-осевые CNC-станки, лазерная резка, сварочные посты, 3D-принтер по металлу, покрасочная камера. Кран 20 т.',
+                dependencies: ['C.10'] },
+            { id: 'C.12', name: 'Подземный испытательный полигон', startDate: null, endDate: null, pct: 0,
+                description: 'Тоннель-тир для испытаний вооружения, брони, новых башен без выхода наружу. Мишени, бронеплиты, измерительная аппаратура, звукоизоляция.',
+                characteristics: '500 м длина, 15 м ширина, 8 м высота. Мишенная зона 50 м. Звукоизоляция 60 дБ. Вентиляция 100 000 м³/час.',
+                dependencies: ['C.11'] },
+            { id: 'C.13', name: 'Подземный командный пункт Sentinel (резервный)', startDate: null, endDate: null, pct: 0,
+                description: 'Защищённый узел связи и управления внутри горы — резервный ЦКП на случай уничтожения основного. Связь со всеми объектами через оптоволокно и спутник.',
+                characteristics: '1 000 м². Автономность 30 суток. Оптоволокно до «Цитадели» и до ЦКП Arion. 20 рабочих мест.',
+                dependencies: ['C.2', 'C.6', 'C.7'] },
+            { id: 'C.14', name: 'Склад ГСМ и топлива для бронетехники', startDate: null, endDate: null, pct: 0,
+                description: 'Подземные резервуары для дизельного топлива, бензина, масла — для заправки танков, БТР, грузовиков без выезда на поверхность.',
+                characteristics: '10 резервуаров по 500 м³ (5 000 м³ суммарно). Насосы 200 л/мин. Пенная система пожаротушения. Обваловка и датчики утечек.',
+                dependencies: ['C.1', 'C.2'] }
+        ];
+
+        // ===== SENTINEL M (внешняя база) =====
+        const sentinelPhases = [
+            { id: 'M.1', name: 'Разравнивание территории и грунтовая ВПП', startDate: null, endDate: null, pct: 0,
+                description: 'Быстрое разравнивание площадки у подножия горы. Грунтовая полоса, чтобы самолёты могли садиться и взлетать «по земле». Больше ничего не нужно — после этого база может месяцами ждать.',
+                characteristics: 'Полоса 2 000 × 60 м, грунт укатан, освещение нет, диспетчерской нет.',
+                dependencies: [] },
+            { id: 'M.2', name: 'Периметр, ограждение, КПП', startDate: null, endDate: null, pct: 0,
+                description: 'Забор по периметру базы, колючая проволока, КПП с шлагбаумами, вышки охраны.',
+                characteristics: '8 км забора, 6 вышек, 2 КПП.',
+                dependencies: ['M.1'] },
+            { id: 'M.3', name: 'Капитальная ВПП', startDate: null, endDate: null, pct: 0,
+                description: 'Бетонная или асфальтовая взлётно-посадочная полоса, рулёжные дорожки, перрон.',
+                characteristics: '2 500 × 60 м, бетон 40 см, освещение, рулёжки.',
+                dependencies: ['M.1', 'M.2'] },
+            { id: 'M.4', name: 'Командно-диспетчерский пункт и радар', startDate: null, endDate: null, pct: 0,
+                description: 'Вышка управления полётами, радиолокационные станции, связь.',
+                characteristics: 'Вышка 30 м, 2 радара (обзор и посадка), 5 радиостанций.',
+                dependencies: ['M.3'] },
+            { id: 'M.5', name: 'Казармы и бытовые здания', startDate: null, endDate: null, pct: 0,
+                description: 'Жилые модули для гарнизона, столовая, медпункт, спортзал, административный корпус.',
+                characteristics: '500 мест, столовая на 200, госпиталь на 20 коек.',
+                dependencies: ['M.2'] },
+            { id: 'M.6', name: 'Позиции ПВО', startDate: null, endDate: null, pct: 0,
+                description: 'Стационарные позиции для ЗРК, радары, укрытия для расчётов.',
+                characteristics: '4 позиции ЗРК малой/средней дальности, 2 радиолокатора.',
+                dependencies: ['M.2'] },
+            { id: 'M.7', name: 'Внешние склады боеприпасов', startDate: null, endDate: null, pct: 0,
+                description: 'Защищённые хранилища с обваловкой для боеприпасов, ракет, топлива. Отдельно от горных ангаров.',
+                characteristics: '10 хранилищ по 500 м², обваловка 2 м, молниезащита.',
+                dependencies: ['M.2'] },
+            { id: 'M.8', name: 'Парки техники и ремонтные боксы', startDate: null, endDate: null, pct: 0,
+                description: 'Открытые парковки и крытые боксы для техники, не поместившейся в горах, ремонтные мастерские.',
+                characteristics: '20 000 м² парковок, 8 боксов по 1 000 м².',
+                dependencies: ['M.3', 'M.5'] },
+            { id: 'M.9', name: 'Ангары для техники на поверхности', startDate: null, endDate: null, pct: 0,
+                description: 'Наземные ангары для техники, которую не нужно прятать в горе — текущее дежурство, быстрый выезд. Отдельно от горных пещер, ближе к ВПП и КПП.',
+                characteristics: '4 ангара по 2 000 м². Ворота 20 м. Отопление, освещение, мастерские.',
+                dependencies: ['M.2', 'M.3'] },
+            { id: 'M.10', name: 'Топливозаправочный пункт для авиации', startDate: null, endDate: null, pct: 0,
+                description: 'Склад авиационного топлива, заправщики, системы подачи к ВПП и перрону.',
+                characteristics: '3 резервуара по 1 000 м³, 4 топливозаправщика, подземные линии к перрону.',
+                dependencies: ['M.3'] }
+        ];
+
+        const extraData = {
+            risks: [
+                { name: 'Геология (обвал/затопление)', probability: 0.30, impact: 0.70 },
+                { name: 'Задержка поставок', probability: 0.40, impact: 0.55 },
+                { name: 'Финансирование', probability: 0.05, impact: 0.50 },
+                { name: 'Кадровый дефицит', probability: 0.20, impact: 0.45 },
+                { name: 'Технические сбои', probability: 0.20, impact: 0.40 }
+            ]
+        };
+
+        const themes = [
+            { id: 'dark', label: 'Тёмная', color: '#141c28' },
+            { id: 'light', label: 'Светлая', color: '#f0f4f8' },
+            { id: 'gold', label: 'Золотая', color: '#2a1f0e' },
+            { id: 'blue', label: 'Синяя', color: '#0a1628' },
+            { id: 'green', label: 'Зелёная', color: '#0a1a12' },
+            { id: 'purple', label: 'Фиолетовая', color: '#1a0a2a' },
+            { id: 'red', label: 'Красная', color: '#2a0a0a' },
+            { id: 'eyecare', label: 'Защита глаз', color: '#d9d9d9' },
+            { id: 'cyberpunk', label: 'Киберпанк', color: '#0a0010' },
+            { id: 'graphic', label: 'Графическая', color: '#f5f5f5' },
+            { id: 'matrix', label: 'Матрица', color: '#001000' },
+            { id: 'space', label: 'Космос', color: '#0a0a2a' },
+            { id: 'retro', label: 'Ретро', color: '#f0e8d0' }
+        ];
+
+        let currentTheme = localStorage.getItem('arion-theme') || 'dark';
+        let progressChartInstance = null;
+
+        // ===== HELPERS =====
+        function getStatusInfo(pct) {
+            if (pct >= 100) return { status: 'done', label: 'Завершён' };
+            if (pct > 0) return { status: 'active', label: 'В процессе' };
+            return { status: 'pending', label: 'Не начат' };
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function calcForecast(sub) {
+            if (!sub.startDate || sub.pct <= 0 || sub.pct >= 100) return null;
+            const start = new Date(sub.startDate);
+            const elapsed = (CURRENT_DATE - start) / 86400000;
+            if (elapsed <= 0) return null;
+            const rate = sub.pct / elapsed;
+            if (rate <= 0) return null;
+            return new Date(CURRENT_DATE.getTime() + ((100 - sub.pct) / rate) * 86400000);
+        }
+
+        function formatForecast(sub) {
+            const fc = calcForecast(sub);
+            if (!fc) return '—';
+            return fc.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function getProgress(arr) {
+            if (!arr.length) return 0;
+            return Math.round(arr.reduce((a, s) => a + s.pct, 0) / arr.length);
+        }
+
+        // ===== RENDER TRACKS =====
+        function renderTracks() {
+            const zTrack = document.getElementById('zenithTrack');
+            const sTrack = document.getElementById('sentinelTrack');
+            zTrack.innerHTML = '';
+            sTrack.innerHTML = '';
+
+            const zProg = getProgress(zenithPhases);
+            const sProg = getProgress(sentinelPhases);
+
+            zTrack.appendChild(createDot('zenith', 'Zenith C', zProg, showZenithInfo));
+            sTrack.appendChild(createDot('sentinel', 'Sentinel M', sProg, showSentinelInfo));
+        }
+
+        function createDot(type, label, progress, onClick) {
+            const status = getStatusInfo(progress);
+            const dot = document.createElement('div');
+            dot.className = type + '-dot';
+            if (status.status === 'active') dot.classList.add('active');
+            if (status.status === 'done') dot.classList.add('done');
+            if (status.status === 'pending') dot.classList.add('pending');
+            dot.setAttribute('tabindex', '0');
+
+            const pctSpan = document.createElement('span');
+            pctSpan.className = 'dot-pct';
+            pctSpan.textContent = progress + '%';
+            dot.appendChild(pctSpan);
+
+            const labelSpan = document.createElement('span');
+            labelSpan.className = 'dot-label';
+            labelSpan.textContent = label;
+            dot.appendChild(labelSpan);
+
+            dot.addEventListener('click', onClick);
+            return dot;
+        }
+
+        // ===== INFO PANEL =====
+        function showZenithInfo() {
+            const panel = document.getElementById('infoPanel');
+            panel.querySelector('.info-placeholder').style.display = 'none';
+            const nameEl = document.getElementById('infoName');
+            const detailsEl = document.getElementById('infoDetails');
+            nameEl.style.display = 'block';
+            detailsEl.style.display = 'flex';
+            const prog = getProgress(zenithPhases);
+            const st = getStatusInfo(prog);
+            nameEl.textContent = 'Zenith C — горные ангары';
+            nameEl.className = 'info-name zenith-' + st.status;
+            const completed = zenithPhases.filter(s => s.pct >= 100).length;
+            detailsEl.innerHTML = `
+                <div class="detail-item"><span class="label">Прогресс:</span> ${prog}%</div>
+                <div class="detail-item"><span class="label">Подэтапов:</span> ${zenithPhases.length}</div>
+                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
+            `;
+        }
+
+        function showSentinelInfo() {
+            const panel = document.getElementById('infoPanel');
+            panel.querySelector('.info-placeholder').style.display = 'none';
+            const nameEl = document.getElementById('infoName');
+            const detailsEl = document.getElementById('infoDetails');
+            nameEl.style.display = 'block';
+            detailsEl.style.display = 'flex';
+            const prog = getProgress(sentinelPhases);
+            const st = getStatusInfo(prog);
+            nameEl.textContent = 'Sentinel M — внешняя база';
+            nameEl.className = 'info-name sentinel-' + st.status;
+            const completed = sentinelPhases.filter(s => s.pct >= 100).length;
+            detailsEl.innerHTML = `
+                <div class="detail-item"><span class="label">Прогресс:</span> ${prog}%</div>
+                <div class="detail-item"><span class="label">Подэтапов:</span> ${sentinelPhases.length}</div>
+                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
+            `;
+        }
+
+        // ===== RENDER PHASE BLOCKS =====
+        function renderBlocks() {
+            const zCont = document.getElementById('zenithContainer');
+            const sCont = document.getElementById('sentinelContainer');
+            zCont.innerHTML = '';
+            sCont.innerHTML = '';
+
+            zCont.appendChild(createBlock(zenithPhases, 'zenith-block', 'zenith-card', '🏔️ Горные ангары Zenith (C)', '2026-11-15'));
+            sCont.appendChild(createBlock(sentinelPhases, 'sentinel-block', 'sentinel-card', '🛡️ Внешняя база Sentinel (M)', null));
+        }
+
+        function createBlock(list, blockClass, cardClass, title, startDate) {
+            const block = document.createElement('div');
+            block.className = 'phase-block ' + blockClass;
+            const prog = getProgress(list);
+            block.innerHTML = `
+                <div class="phase-header">
+                    <span class="phase-title">${title}</span>
+                    <div class="phase-meta">
+                        <span>Начало: ${formatDate(startDate)}</span>
+                    </div>
+                    <span class="phase-progress">${prog}%</span>
+                </div>
+            `;
+            const wrap = document.createElement('div');
+            wrap.className = 'phase-cards';
+            list.forEach((sub, idx) => {
+                wrap.appendChild(createCard(sub, idx, cardClass));
+            });
+            block.appendChild(wrap);
+            return block;
+        }
+
+        function createCard(sub, index, extraClass) {
+            const status = getStatusInfo(sub.pct);
+            const card = document.createElement('div');
+            card.className = 'phase-card ' + (extraClass || '');
+            card.style.animationDelay = (0.02 * (index + 1)) + 's';
+            card.setAttribute('tabindex', '0');
+
+            const top = document.createElement('div');
+            top.className = 'card-top';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'card-name' + (status.status === 'active' ? ' active' : '');
+            nameSpan.textContent = sub.name;
+            top.appendChild(nameSpan);
+
+            const pctSpan = document.createElement('span');
+            pctSpan.className = `card-pct ${status.status}`;
+            pctSpan.textContent = sub.pct + '%';
+            top.appendChild(pctSpan);
+
+            const dot = document.createElement('span');
+            dot.className = `card-status-dot ${status.status}`;
+            top.appendChild(dot);
+
+            card.appendChild(top);
+
+            const meta = document.createElement('div');
+            meta.className = 'card-meta';
+            if (sub.startDate) meta.innerHTML += `<span>Старт: ${formatDate(sub.startDate)}</span>`;
+            if (sub.endDate) meta.innerHTML += `<span>Финиш: ${formatDate(sub.endDate)}</span>`;
+            if (sub.pct > 0 && sub.pct < 100) {
+                const fc = formatForecast(sub);
+                if (fc !== '—') meta.innerHTML += `<span class="eta">Прогноз: ${fc}</span>`;
+            }
+            card.appendChild(meta);
+
+            card.addEventListener('click', () => openModal(sub));
+            return card;
+        }
+
+        // ===== MODAL =====
+        function openModal(sub) {
+            const overlay = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const status = getStatusInfo(sub.pct);
+            const isZenith = sub.id.startsWith('C.');
+            title.textContent = sub.name;
+            title.className = 'modal-title status-' + status.status;
+            if (isZenith && status.status === 'active') title.classList.add('zenith-active');
+            if (!isZenith && status.status === 'active') title.classList.add('sentinel-active');
+
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+
+            const all = zenithPhases.concat(sentinelPhases);
+            const fields = [
+                { key: 'Категория', value: isZenith ? 'Zenith C — горные ангары' : 'Sentinel M — внешняя база' },
+                { key: 'Статус', value: status.label },
+                { key: 'Прогресс', value: sub.pct + '%' },
+                { key: 'Начало', value: formatDate(sub.startDate) },
+                { key: 'Окончание', value: formatDate(sub.endDate) },
+                { key: 'Прогноз завершения', value: (sub.pct > 0 && sub.pct < 100) ? formatForecast(sub) : '—' },
+                { key: 'Описание', value: sub.description },
+                { key: 'Характеристики', value: sub.characteristics }
+            ];
+            if (sub.dependencies && sub.dependencies.length) {
+                const depNames = sub.dependencies.map(id => {
+                    const found = all.find(x => x.id === id);
+                    return found ? found.name : id;
+                }).join(', ');
+                fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
+            }
+            fields.forEach(f => {
+                const row = document.createElement('div');
+                row.className = 'row';
+                const vc = f.extraClass ? `value ${f.extraClass}` : 'value';
+                row.innerHTML = `<span class="key">${f.key}</span><span class="${vc}">${f.value}</span>`;
+                body.appendChild(row);
+            });
+
+            overlay.classList.add('active');
+            document.getElementById('modalClose').focus();
+        }
+
+        // ===== ANALYTICS =====
+        function renderAnalytics() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            if (progressChartInstance) progressChartInstance.destroy();
+
+            const chartText = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
+            const chartGrid = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)';
+
+            progressChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Zenith C', 'Sentinel M'],
+                    datasets: [{
+                        label: 'Прогресс, %',
+                        data: [getProgress(zenithPhases), getProgress(sentinelPhases)],
+                        backgroundColor: ['#f39c12', '#e74c3c'],
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => c.parsed.y + '%' } }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100, grid: { color: chartGrid }, ticks: { color: chartText, callback: v => v + '%' } },
+                        x: { grid: { display: false }, ticks: { color: chartText } }
+                    }
+                }
+            });
+
+            const riskList = document.getElementById('riskList');
+            riskList.innerHTML = extraData.risks.map(r => {
+                const score = (r.probability * r.impact * 100).toFixed(0);
+                let cls = 'low';
+                if (score > 30) cls = 'medium';
+                if (score > 60) cls = 'high';
+                return `<div class="risk-item"><span class="risk-name">${r.name}</span><span class="risk-score ${cls}">${score}%</span></div>`;
+            }).join('');
+        }
+
+        // ===== STATS =====
+        function updateStats() {
+            const all = zenithPhases.concat(sentinelPhases);
+            const overall = getProgress(all);
+            const completed = all.filter(s => s.pct >= 100).length;
+            document.getElementById('totalProgress').textContent = overall + '%';
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalCount').textContent = all.length;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ru-RU', {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            renderAnalytics();
+        }
+
+        // ===== THEME =====
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('arion-theme', theme);
+            currentTheme = theme;
+            renderAnalytics();
+        }
+
+        function openThemeModal() {
+            const overlay = document.getElementById('themeModalOverlay');
+            const c = document.getElementById('themeOptions');
+            c.innerHTML = '';
+            themes.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'theme-option' + (t.id === currentTheme ? ' active' : '');
+                div.innerHTML = `<div class="color-preview" style="background:${t.color};"></div>${t.label}`;
+                div.addEventListener('click', () => { applyTheme(t.id); overlay.classList.remove('active'); });
+                c.appendChild(div);
+            });
+            overlay.classList.add('active');
+        }
+
+        // ===== EXPORT =====
+        function exportPDF() { window.print(); }
+
+        function exportPNG() {
+            const bg = getComputedStyle(document.body).backgroundColor;
+            const orig = document.body.style.background;
+            document.body.style.background = bg;
+            html2canvas(document.getElementById('dashboard'), { scale: 2, backgroundColor: bg, useCORS: true })
+                .then(canvas => {
+                    document.body.style.background = orig;
+                    const a = document.createElement('a');
+                    a.download = 'Sentinel_dashboard.png';
+                    a.href = canvas.toDataURL('image/png');
+                    a.click();
+                }).catch(() => { document.body.style.background = orig; });
+        }
+
+        function exportCSV() {
+            const all = zenithPhases.concat(sentinelPhases);
+            const headers = ['ID', 'Категория', 'Название', 'Прогресс (%)', 'Начало', 'Окончание'];
+            const rows = all.map(s => [
+                s.id, s.id.startsWith('C.') ? 'Zenith C' : 'Sentinel M',
+                s.name, s.pct, formatDate(s.startDate), formatDate(s.endDate)
+            ]);
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Sentinel_status.csv';
+            a.click();
+        }
+
+        // ===== INIT =====
+        function init() {
+            function updateTime() {
+                document.getElementById('headerTime').textContent = new Date().toLocaleString('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+            }
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            applyTheme(currentTheme);
+            renderTracks();
+            renderBlocks();
+            updateStats();
+
+            document.getElementById('modalClose').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
+            document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
+            document.getElementById('themeModalClose').addEventListener('click', () => document.getElementById('themeModalOverlay').classList.remove('active'));
+            document.getElementById('themeModalOverlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+            document.getElementById('exportPDF').addEventListener('click', exportPDF);
+            document.getElementById('exportPNG').addEventListener('click', exportPNG);
+            document.getElementById('exportCSV').addEventListener('click', exportCSV);
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    document.getElementById('modalOverlay').classList.remove('active');
+                    document.getElementById('themeModalOverlay').classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
