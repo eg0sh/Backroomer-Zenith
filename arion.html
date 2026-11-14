@@ -26,8 +26,6 @@
             --gradient-start: #f7e05e;
             --gradient-end: #e67e22;
             --fleet-accent: #6ec6ff;
-            --zenith-accent: #f39c12;
-            --sentinel-accent: #e74c3c;
             --chart-text: #b0c4de;
             --chart-grid: rgba(255,255,255,0.08);
         }
@@ -50,8 +48,6 @@
             --gradient-start: #b08a2c;
             --gradient-end: #8a6a1a;
             --fleet-accent: #2b6a9e;
-            --zenith-accent: #c08a1c;
-            --sentinel-accent: #c0392b;
             --chart-text: #2a3a4e;
             --chart-grid: rgba(0,0,0,0.08);
         }
@@ -74,8 +70,6 @@
             --gradient-start: #f7e05e;
             --gradient-end: #e67e22;
             --fleet-accent: #e0b060;
-            --zenith-accent: #e0b060;
-            --sentinel-accent: #e06050;
             --chart-text: #d4b88a;
             --chart-grid: rgba(255,255,255,0.06);
         }
@@ -98,8 +92,6 @@
             --gradient-start: #8ab4d4;
             --gradient-end: #4a6a9e;
             --fleet-accent: #8ab4d4;
-            --zenith-accent: #e0a040;
-            --sentinel-accent: #e06050;
             --chart-text: #8ab4d4;
             --chart-grid: rgba(255,255,255,0.06);
         }
@@ -122,8 +114,6 @@
             --gradient-start: #80c8a8;
             --gradient-end: #4a7a62;
             --fleet-accent: #80c8a8;
-            --zenith-accent: #d0a050;
-            --sentinel-accent: #d06050;
             --chart-text: #80c8a8;
             --chart-grid: rgba(255,255,255,0.06);
         }
@@ -146,8 +136,6 @@
             --gradient-start: #b080d4;
             --gradient-end: #6a4a8a;
             --fleet-accent: #b080d4;
-            --zenith-accent: #d0a050;
-            --sentinel-accent: #d06050;
             --chart-text: #b080d4;
             --chart-grid: rgba(255,255,255,0.06);
         }
@@ -170,8 +158,6 @@
             --gradient-start: #d48080;
             --gradient-end: #8a4a4a;
             --fleet-accent: #d48080;
-            --zenith-accent: #e0a040;
-            --sentinel-accent: #e05050;
             --chart-text: #d48080;
             --chart-grid: rgba(255,255,255,0.06);
         }
@@ -194,8 +180,6 @@
             --gradient-start: #8a8a8a;
             --gradient-end: #6a6a6a;
             --fleet-accent: #6a8a8a;
-            --zenith-accent: #a08050;
-            --sentinel-accent: #a06050;
             --chart-text: #505050;
             --chart-grid: rgba(80,80,80,0.1);
         }
@@ -218,8 +202,6 @@
             --gradient-start: #ff66ff;
             --gradient-end: #cc33cc;
             --fleet-accent: #00ffcc;
-            --zenith-accent: #ffaa00;
-            --sentinel-accent: #ff3366;
             --chart-text: #ff99ff;
             --chart-grid: rgba(255,0,255,0.1);
         }
@@ -242,8 +224,6 @@
             --gradient-start: #333333;
             --gradient-end: #000000;
             --fleet-accent: #444444;
-            --zenith-accent: #666666;
-            --sentinel-accent: #222222;
             --chart-text: #000000;
             --chart-grid: rgba(0,0,0,0.1);
         }
@@ -266,8 +246,6 @@
             --gradient-start: #66ff66;
             --gradient-end: #00cc00;
             --fleet-accent: #66ff66;
-            --zenith-accent: #aaff00;
-            --sentinel-accent: #ff6600;
             --chart-text: #66ff66;
             --chart-grid: rgba(0,255,0,0.08);
         }
@@ -290,8 +268,6 @@
             --gradient-start: #8888ff;
             --gradient-end: #4444cc;
             --fleet-accent: #8888ff;
-            --zenith-accent: #ffaa66;
-            --sentinel-accent: #ff6688;
             --chart-text: #8888ff;
             --chart-grid: rgba(100,100,255,0.08);
         }
@@ -314,8 +290,6 @@
             --gradient-start: #b0a080;
             --gradient-end: #8a7a50;
             --fleet-accent: #b0a080;
-            --zenith-accent: #a08050;
-            --sentinel-accent: #a06050;
             --chart-text: #4a3a2a;
             --chart-grid: rgba(0,0,0,0.08);
         }
@@ -326,7 +300,6 @@
             font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
             color: var(--text-primary);
             min-height: 100vh;
-            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -387,13 +360,12 @@
             border-radius: 50%;
             background: var(--dot-done);
             animation: pulse-dot 2s ease-in-out infinite;
-            box-shadow: 0 0 12px rgba(76,217,160,0.4);
         }
         @keyframes pulse-dot {
             0%,100% { opacity:1; transform:scale(1); }
             50% { opacity:0.3; transform:scale(0.7); }
         }
-        .header-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .header-controls { display:flex; align-items:center; gap:12px; }
         .theme-btn {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -403,18 +375,11 @@
             font-size: 13px;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
-        .theme-btn:hover { border-color:var(--accent-gold); color:var(--accent-gold); }
+        .theme-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
         .dashboard { max-width: 1400px; width: 100%; padding: 20px 24px 40px; }
 
-        @keyframes glow-title {
-            0% { text-shadow: 0 0 40px var(--accent-glow); }
-            100% { text-shadow: 0 0 70px var(--accent-glow); }
-        }
         @keyframes pulse-red {
             0%,100% { box-shadow:0 0 30px rgba(231,76,60,0.4); }
             50% { box-shadow:0 0 80px rgba(231,76,60,0.8); }
@@ -446,7 +411,9 @@
             animation: wave 6s ease-in-out infinite;
         }
 
-        .header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:32px; gap:16px; }
+        .header {
+            display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:32px; gap:16px;
+        }
         .header-left h1 {
             font-size:52px; font-weight:800; letter-spacing:-1px;
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
@@ -454,17 +421,11 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin:0;
-            position:relative;
-            display:inline-block;
-        }
-        .header-left h1::after {
-            content:''; position:absolute; bottom:-6px; left:0; width:60%; height:3px;
-            background:linear-gradient(90deg, var(--gradient-start), transparent); border-radius:4px;
         }
         .header-right { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
         .stat-badge {
             display:flex; align-items:center; gap:8px;
-            background:var(--bg-card); backdrop-filter:blur(8px);
+            background:var(--bg-card);
             padding:6px 14px; border-radius:40px; border:1px solid var(--border-color);
             font-size:14px; box-shadow:var(--shadow);
         }
@@ -474,15 +435,13 @@
         .stat-badge .label { color:var(--text-muted); font-weight:400; }
         .update-time {
             font-size:13px; color:var(--text-muted);
-            display:flex; flex-direction:column; align-items:flex-end; line-height:1.4;
-            background:var(--bg-card); backdrop-filter:blur(4px);
+            background:var(--bg-card);
             padding:4px 14px; border-radius:40px; border:1px solid var(--border-color);
+            display:flex; align-items:center; gap:6px;
         }
-        .update-time .time-row { display:flex; align-items:center; gap:6px; }
         .update-time .dot {
             display:inline-block; width:8px; height:8px; border-radius:50%;
             background:var(--dot-done); animation:pulse-dot 2s ease-in-out infinite;
-            box-shadow:0 0 12px rgba(76,217,160,0.4);
         }
 
         .toast-container {
@@ -490,7 +449,7 @@
             display:flex; flex-direction:column; gap:10px; max-width:360px; width:100%; pointer-events:none;
         }
         .toast {
-            background:var(--bg-card); backdrop-filter:blur(8px);
+            background:var(--bg-card);
             border:1px solid var(--border-color); border-left:4px solid var(--accent-gold);
             border-radius:12px; padding:12px 16px;
             box-shadow:0 8px 30px rgba(0,0,0,0.4);
@@ -502,17 +461,16 @@
         .toast.success { border-left-color:var(--dot-done); }
         .toast .toast-close { background:none; border:none; color:var(--text-muted); font-size:18px; cursor:pointer; padding:0 4px; }
 
-        .export-bar { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-bottom:20px; }
+        .export-bar { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
         .export-btn {
             background:var(--bg-card); border:1px solid var(--border-color);
             color:var(--text-secondary); padding:6px 16px; border-radius:40px;
             font-size:13px; cursor:pointer; transition:all 0.2s;
-            display:flex; align-items:center; gap:6px;
         }
         .export-btn:hover { border-color:var(--accent-gold); color:var(--accent-gold); }
 
         .timeline-wrapper {
-            background:var(--bg-panel); backdrop-filter:blur(10px);
+            background:var(--bg-panel);
             border-radius:24px; padding:30px 20px 24px;
             border:1px solid var(--border-color); margin-bottom:28px;
             box-shadow:var(--shadow);
@@ -558,7 +516,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 40px;
         }
         .track-row-extra::before {
             content: '';
@@ -568,49 +525,26 @@
             right: 20%;
             height: 1px;
             opacity: 0.5;
-        }
-        .fleet-track::before {
             background: repeating-linear-gradient(90deg, var(--fleet-accent) 0 6px, transparent 6px 14px);
         }
-        .sentinel-track::before {
-            background: repeating-linear-gradient(90deg, var(--sentinel-accent) 0 6px, transparent 6px 14px);
-        }
-        .fleet-dot, .zenith-dot, .sentinel-dot {
+        .fleet-dot {
             position: relative;
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            color: #fff;
-            cursor: pointer;
-            z-index: 2;
-            transition: all 0.3s;
-            user-select: none;
-            border: 2px dashed;
+            width: 72px; height: 72px; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            font-weight: 700; color: #fff; cursor: pointer; z-index: 2;
+            transition: all 0.3s; user-select: none; border: 2px dashed var(--fleet-accent);
+            background: radial-gradient(circle at 50% 40%, rgba(110,198,255,0.15), rgba(26,35,50,0.95));
             text-shadow: 0 1px 6px rgba(0,0,0,0.6);
         }
-        .fleet-dot { border-color: var(--fleet-accent); background: radial-gradient(circle at 50% 40%, rgba(110,198,255,0.15), rgba(26,35,50,0.95)); }
-        .zenith-dot { border-color: var(--zenith-accent); background: radial-gradient(circle at 50% 40%, rgba(243,156,18,0.15), rgba(26,35,50,0.95)); }
-        .sentinel-dot { border-color: var(--sentinel-accent); background: radial-gradient(circle at 50% 40%, rgba(231,76,60,0.15), rgba(26,35,50,0.95)); }
-        .fleet-dot .dot-pct, .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size:17px; line-height:1.1; }
-        .fleet-dot .dot-label, .zenith-dot .dot-label, .sentinel-dot .dot-label { font-size:9px; font-weight:500; text-transform:uppercase; letter-spacing:0.3px; opacity:0.85; margin-top:1px; text-align:center; max-width:64px; }
-        .fleet-dot:hover, .zenith-dot:hover, .sentinel-dot:hover { transform: scale(1.1); }
-        .fleet-dot.active { border-color: var(--fleet-accent); animation:pulse-fleet 1.8s ease-in-out infinite; }
-        .zenith-dot.active { animation:pulse-fleet 1.8s ease-in-out infinite; }
-        .sentinel-dot.active { animation:pulse-red 1.8s ease-in-out infinite; }
-        .fleet-dot.done, .zenith-dot.done, .sentinel-dot.done {
-            border-style: solid;
-            border-color: var(--dot-done);
+        .fleet-dot .dot-pct { font-size:17px; line-height:1.1; }
+        .fleet-dot .dot-label { font-size:9px; font-weight:500; text-transform:uppercase; letter-spacing:0.3px; opacity:0.85; margin-top:1px; text-align:center; max-width:64px; }
+        .fleet-dot:hover { transform: scale(1.1); }
+        .fleet-dot.active { animation:pulse-fleet 1.8s ease-in-out infinite; }
+        .fleet-dot.done {
+            border-style: solid; border-color: var(--dot-done);
             background: radial-gradient(circle at 50% 40%, rgba(76,217,160,0.3), rgba(26,35,50,0.95));
         }
-        .fleet-dot.pending, .zenith-dot.pending, .sentinel-dot.pending {
-            border-color: #3a4a5e;
-            background: radial-gradient(circle at 50% 40%, rgba(90,106,126,0.15), rgba(26,35,50,0.95));
-        }
+        .fleet-dot.pending { border-color: #3a4a5e; background: radial-gradient(circle at 50% 40%, rgba(90,106,126,0.15), rgba(26,35,50,0.95)); }
 
         .info-panel {
             margin-top:18px; background:var(--bg-card);
@@ -625,8 +559,6 @@
         .info-panel .info-name.status-active { color:var(--accent-gold); }
         .info-panel .info-name.status-pending { color:var(--text-muted); }
         .info-panel .info-name.fleet-active { color: var(--fleet-accent); }
-        .info-panel .info-name.zenith-active { color: var(--zenith-accent); }
-        .info-panel .info-name.sentinel-active { color: var(--sentinel-accent); }
         .info-panel .info-details { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); }
         .info-panel .info-details .detail-item { display:flex; align-items:baseline; gap:6px; }
         .info-panel .info-details .detail-item .label { color:var(--text-muted); }
@@ -638,8 +570,6 @@
             padding:18px 22px 20px; box-shadow:var(--shadow);
         }
         .phase-block.fleet-block { border-left: 4px dashed var(--fleet-accent); }
-        .phase-block.zenith-block { border-left: 4px dashed var(--zenith-accent); }
-        .phase-block.sentinel-block { border-left: 4px dashed var(--sentinel-accent); }
         .phase-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom:14px; flex-wrap:wrap; gap:8px;
@@ -649,8 +579,6 @@
         .phase-header .phase-meta span { background:var(--bg-card); padding:2px 12px; border-radius:40px; border:1px solid var(--border-color); }
         .phase-header .phase-progress { font-size:14px; font-weight:500; color:var(--accent-gold); background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
         .fleet-block .phase-progress { color: var(--fleet-accent); }
-        .zenith-block .phase-progress { color: var(--zenith-accent); }
-        .sentinel-block .phase-progress { color: var(--sentinel-accent); }
         .phase-cards { display:flex; flex-wrap:wrap; gap:12px; }
         .phase-card {
             background:var(--bg-card);
@@ -659,37 +587,27 @@
             flex:0 1 auto; min-width:180px; max-width:320px;
             display:flex; flex-direction:column; gap:4px;
             cursor:pointer; transition:all 0.3s;
-            box-shadow:var(--shadow); position:relative;
+            box-shadow:var(--shadow);
             opacity:0; animation:fadeInUp 0.5s ease forwards;
         }
         .phase-card:hover { border-color:var(--accent-gold); transform:translateY(-3px) scale(1.02); }
         .phase-card.overdue { border-color:var(--dot-active); }
         .fleet-card:hover { border-color: var(--fleet-accent); }
-        .zenith-card:hover { border-color: var(--zenith-accent); }
-        .sentinel-card:hover { border-color: var(--sentinel-accent); }
         .phase-card .card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
         .phase-card .card-name { font-size:14px; font-weight:500; color:var(--text-primary); flex:1; min-width:0; }
         .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent-gold); min-width:48px; text-align:right; flex-shrink:0; }
         .phase-card .card-pct.done { color:var(--dot-done); }
         .phase-card .card-pct.pending { color:var(--text-muted); }
-        .zenith-card .card-name.active { color: var(--zenith-accent); }
-        .sentinel-card .card-name.active { color: var(--sentinel-accent); }
         .fleet-card .card-name.active { color: var(--fleet-accent); }
-        .zenith-card .card-pct.active { color: var(--zenith-accent); }
-        .sentinel-card .card-pct.active { color: var(--sentinel-accent); }
         .fleet-card .card-pct.active { color: var(--fleet-accent); }
         .phase-card .card-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
         .phase-card .card-status-dot.done { background:var(--dot-done); }
         .phase-card .card-status-dot.active { background:var(--dot-active); }
         .phase-card .card-status-dot.pending { background:var(--dot-pending); }
-        .zenith-card .card-status-dot.active { background: var(--zenith-accent); }
-        .sentinel-card .card-status-dot.active { background: var(--sentinel-accent); }
         .fleet-card .card-status-dot.active { background: var(--fleet-accent); }
         .phase-card .card-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
         .phase-card .card-meta span { display:flex; align-items:center; gap:4px; }
         .phase-card .card-meta .eta { color:var(--accent-gold); }
-        .zenith-card .card-meta .eta { color: var(--zenith-accent); }
-        .sentinel-card .card-meta .eta { color: var(--sentinel-accent); }
         .fleet-card .card-meta .eta { color: var(--fleet-accent); }
 
         .modal-overlay {
@@ -712,8 +630,6 @@
         .modal .modal-title.status-active { color: var(--accent-gold) !important; }
         .modal .modal-title.status-pending { color: var(--text-muted) !important; }
         .modal .modal-title.fleet-active { color: var(--fleet-accent) !important; }
-        .modal .modal-title.zenith-active { color: var(--zenith-accent) !important; }
-        .modal .modal-title.sentinel-active { color: var(--sentinel-accent) !important; }
         .modal .modal-close {
             margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color);
             color:var(--text-secondary); padding:10px 24px; border-radius:40px;
@@ -727,8 +643,7 @@
         .modal .modal-body .row .value.dependencies { font-weight:400; color:var(--text-muted); font-size:13px; }
 
         .theme-modal .theme-options {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display:grid; grid-template-columns: 1fr 1fr 1fr;
             gap:12px; margin-top:16px;
         }
         .theme-modal .theme-option {
@@ -756,8 +671,7 @@
             margin-bottom:20px;
         }
         .analytics-grid {
-            display:grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            display:grid; grid-template-columns: 1fr 1fr 1fr;
             gap:20px;
         }
         .analytics-card {
@@ -770,10 +684,8 @@
             margin-bottom:12px;
         }
         .analytics-card canvas {
-            width:100% !important;
-            height:auto !important;
-            max-height:180px;
-            border-radius:8px;
+            width:100% !important; height:auto !important;
+            max-height:180px; border-radius:8px;
         }
         .oil-chart-wrapper {
             position: relative;
@@ -781,10 +693,8 @@
             height: 200px;
         }
         .oil-chart-wrapper canvas {
-            width: 100% !important;
-            height: 100% !important;
-            max-height: none !important;
-            display: block;
+            width: 100% !important; height: 100% !important;
+            max-height: none !important; display: block;
         }
         .analytics-card .risk-item {
             display:flex; justify-content:space-between;
@@ -798,8 +708,7 @@
         .analytics-card .risk-item .risk-score.low { color:var(--dot-done); }
 
         .version {
-            text-align: center;
-            font-size: 12px;
+            text-align: center; font-size: 12px;
             color: var(--text-muted);
             padding: 16px 0 8px;
             border-top: 1px solid var(--border-color);
@@ -817,24 +726,34 @@
             .timeline-dot { width:52px; height:52px; }
             .timeline-dot .dot-pct { font-size:14px; }
             .timeline-dot .dot-label { font-size:7px; max-width:44px; }
-            .fleet-dot, .zenith-dot, .sentinel-dot { width:60px; height:60px; }
-            .fleet-dot .dot-pct, .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size: 14px; }
-            .track-row-extra { gap: 20px; }
+            .fleet-dot { width:60px; height:60px; }
+            .fleet-dot .dot-pct { font-size: 14px; }
+            .info-panel { flex-direction:column; align-items:flex-start; gap:8px; padding:12px 16px; }
+            .info-panel .info-details { flex-direction:column; gap:4px; }
+            .phase-header .phase-title { font-size:16px; }
+            .phase-header .phase-meta { font-size:12px; gap:8px; flex-wrap:wrap; }
             .phase-cards { flex-direction:column; }
             .phase-card { max-width:100%; min-width:0; }
+            .modal { padding:24px; }
             .analytics-grid { grid-template-columns:1fr; }
+            .theme-modal .theme-options { grid-template-columns:1fr 1fr; }
+            .export-bar { flex-direction:column; align-items:stretch; }
         }
         @media (max-width: 480px) {
             .header-left h1 { font-size:30px; }
+            .stat-badge { padding:4px 12px; font-size:12px; }
+            .stat-badge .num { font-size:15px; }
             .timeline-track { height:70px; padding:0 24px; }
             .timeline-line { left:24px; right:24px; }
             .timeline-dot { width:44px; height:44px; }
             .timeline-dot .dot-pct { font-size:12px; }
             .timeline-dot .dot-label { font-size:6px; max-width:36px; }
-            .fleet-dot, .zenith-dot, .sentinel-dot { width:52px; height:52px; }
-            .fleet-dot .dot-pct, .zenith-dot .dot-pct, .sentinel-dot .dot-pct { font-size: 12px; }
-            .fleet-dot .dot-label, .zenith-dot .dot-label, .sentinel-dot .dot-label { font-size: 7px; }
-            .track-row-extra { gap: 14px; }
+            .fleet-dot { width:52px; height:52px; }
+            .fleet-dot .dot-pct { font-size: 12px; }
+            .fleet-dot .dot-label { font-size: 7px; }
+            .phase-block { padding:12px 14px; }
+            .theme-modal .theme-options { grid-template-columns:1fr; }
+            .modal { padding:20px; }
         }
 
         @media print {
@@ -851,6 +770,7 @@
         <nav class="nav-links">
             <a href="index.html">Главная</a>
             <a href="arion.html" class="active">Arion</a>
+            <a href="sentinel.html">Sentinel</a>
             <a href="analysis.html">Аналитика</a>
         </nav>
         <div class="right-info">
@@ -901,10 +821,9 @@
             </div>
             <div class="extra-tracks">
                 <div class="track-row-extra fleet-track" id="fleetTrack"></div>
-                <div class="track-row-extra sentinel-track" id="sentinelTrack"></div>
             </div>
             <div class="info-panel" id="infoPanel">
-                <span class="info-placeholder">Нажмите на кружок, чтобы увидеть информацию</span>
+                <span class="info-placeholder">Нажмите на кружок этапа, чтобы увидеть информацию</span>
                 <span class="info-name" id="infoName" style="display:none;"></span>
                 <div class="info-details" id="infoDetails" style="display:none;"></div>
             </div>
@@ -912,8 +831,6 @@
 
         <div class="phases-section" id="phasesContainer"></div>
         <div class="phases-section" id="fleetContainer"></div>
-        <div class="phases-section" id="zenithContainer"></div>
-        <div class="phases-section" id="sentinelContainer"></div>
 
         <div class="analytics-section" id="analyticsSection">
             <div class="analytics-title">📊 Аналитика проекта</div>
@@ -953,12 +870,12 @@
 
         <div class="toast-container" id="toastContainer"></div>
 
-        <div class="version">v1.2.15</div>
+        <div class="version">v1.3.0</div>
     </div>
 
     <script>
         // ============================================================
-        //  VERSION: v1.2.15
+        //  VERSION: v1.3.0
         // ============================================================
 
         const phases = [
@@ -969,154 +886,270 @@
             { id: 'p5', label: 'Газовая добыча и подготовка', startDate: null, endDate: null, budget: 0 }
         ];
 
-        // Sub-phases (Arion) — сохранены из предыдущей версии (сокращено для читаемости)
         const subPhases = [
-            { id: '1.1', phaseId: 'p1', name: 'Постройка сейсморазведочного корабля', startDate: '2026-08-16', endDate: '2026-09-04', pct: 100, description: 'Строительство судна для морской сейсморазведки.', characteristics: 'Длина 90 м, 6 000 т, автономность 60 суток.', dependencies: [] },
-            { id: '1.2', phaseId: 'p1', name: 'Сейсморазведка', startDate: '2026-08-16', endDate: '2026-08-25', pct: 100, description: 'Сейсмические профили.', characteristics: '~5 000 км², до 8 км глубина.', dependencies: ['1.1'] },
-            { id: '1.3', phaseId: 'p1', name: 'Бурение разведочных скважин', startDate: '2026-08-16', endDate: '2026-08-25', pct: 100, description: 'Бурение 3 скважин.', characteristics: '3 000–4 500 м.', dependencies: ['1.2'] },
-            { id: '1.4', phaseId: 'p1', name: 'Составление карты местности', startDate: '2026-09-03', endDate: '2026-09-03', pct: 100, description: 'Геодезические работы.', characteristics: '1:5000, 200 км².', dependencies: ['1.3'] },
-            { id: '1.5', phaseId: 'p1', name: 'Выбор площадки ЦПС', startDate: '2026-09-03', endDate: '2026-09-03', pct: 100, description: 'Выбор площадки ЦПС.', characteristics: '3–5 участков.', dependencies: ['1.4'] },
-            { id: '2.1', phaseId: 'p2', name: 'Бурение эксплуатационных скважин', startDate: '2026-09-04', endDate: '2026-09-05', pct: 100, description: 'Бурение 8–12 скважин.', characteristics: '3 000–5 000 м.', dependencies: ['1.4'] },
-            { id: '2.2', phaseId: 'p2', name: 'Монтаж арматуры и фонтанной системы', startDate: '2026-09-05', endDate: '2026-09-05', pct: 100, description: 'Установка арматуры.', characteristics: 'до 70 МПа.', dependencies: ['2.1'] },
-            { id: '2.3', phaseId: 'p2', name: 'Строительство ЦПС', startDate: '2026-09-05', endDate: '2026-09-13', pct: 100, description: 'Возведение ЦПС.', characteristics: '50 000 т/сут.', dependencies: ['2.1'] },
-            { id: '2.4', phaseId: 'p2', name: 'Система ППД и водоочистка', startDate: '2026-09-09', endDate: '2026-09-13', pct: 100, description: 'ППД и водоочистка.', characteristics: '20 000 м³/сут.', dependencies: ['2.3'] },
-            { id: '2.5', phaseId: 'p2', name: 'Факельная система и газотрубы', startDate: '2026-09-06', endDate: '2026-09-09', pct: 100, description: 'Факел и газопроводы.', characteristics: '50 м факел.', dependencies: ['2.3'] },
-            { id: '2.6', phaseId: 'p2', name: 'Подъездные дороги промысла', startDate: '2026-09-04', endDate: '2026-09-06', pct: 100, description: 'Дороги промысла.', characteristics: '~30 км.', dependencies: ['1.5'] },
-            { id: '2.7', phaseId: 'p2', name: 'Вахтовый городок и бытовой комплекс', startDate: '2026-09-05', endDate: '2026-09-06', pct: 100, description: 'Вахтовый городок.', characteristics: '2 га.', dependencies: ['2.6'] },
-            { id: '3.1', phaseId: 'p3', name: 'Нефтепровод до моря', startDate: '2026-09-13', endDate: '2026-09-14', pct: 100, description: 'Магистральный трубопровод.', characteristics: '200 км, 1 000 мм.', dependencies: ['2.3'] },
-            { id: '3.2', phaseId: 'p3', name: 'Промежуточные НПС', startDate: '2026-09-14', endDate: '2026-09-21', pct: 100, description: 'НПС на трассе.', characteristics: '5 МВт каждая.', dependencies: ['3.1'] },
-            { id: '3.3', phaseId: 'p3', name: 'Головная НПС у НПЗ', startDate: '2026-09-21', endDate: '2026-10-02', pct: 100, description: 'ГНПС у НПЗ.', characteristics: '500 000 т/сут.', dependencies: ['3.1'] },
-            { id: '3.4', phaseId: 'p3', name: 'Строительство НПЗ', startDate: '2026-09-20', endDate: null, pct: 80, description: 'Строительство НПЗ.', characteristics: '10 млн т/год.', dependencies: ['3.3'] },
-            { id: '3.5', phaseId: 'p3', name: 'Резервуарный парк РВС', startDate: '2026-09-21', endDate: '2026-10-01', pct: 100, description: 'РВС для продуктов.', characteristics: '1 млн м³.', dependencies: ['3.4'] },
-            { id: '3.6', phaseId: 'p3', name: 'Обваловка и системы безопасности', startDate: '2026-09-26', endDate: '2026-10-01', pct: 100, description: 'Обваловка.', characteristics: '2 м вал.', dependencies: ['3.5'] },
-            { id: '3.7', phaseId: 'p3', name: 'Дороги и мосты вдоль трубопровода', startDate: '2026-09-21', endDate: '2026-09-26', pct: 100, description: 'Дороги и мосты.', characteristics: '210 км.', dependencies: ['3.1'] },
-            { id: '3.8', phaseId: 'p3', name: 'Инженерные сети НПЗ', startDate: '2026-09-26', endDate: '2026-10-01', pct: 100, description: 'Инженерные сети.', characteristics: '10 000 м³/сут.', dependencies: ['3.4'] },
-            { id: '3.9', phaseId: 'p3', name: 'Оптоволокно вдоль маршрута', startDate: '2026-09-15', endDate: '2026-09-21', pct: 100, description: 'Оптоволокно.', characteristics: '200 км.', dependencies: ['3.1'] },
-            { id: '3.10', phaseId: 'p3', name: 'Товарный парк ЦПС', startDate: '2026-09-27', endDate: '2026-10-19', pct: 100, description: 'Промежуточные резервуары нефти.', characteristics: '100 000 м³.', dependencies: ['2.3', '2.6'] },
-            { id: '3.11', phaseId: 'p3', name: 'СИКН — система измерений нефти', startDate: '2026-09-27', endDate: null, pct: 94, description: 'Узел учёта нефти.', characteristics: '500 000 т/сут.', dependencies: ['2.3', '3.10'] },
-            { id: '3.12', phaseId: 'p3', name: 'Расширение фонда нефтяных скважин до 20', startDate: '2026-10-04', endDate: '2026-10-08', pct: 100, description: 'Дополнительные скважины.', characteristics: '8–12 скважин.', dependencies: ['2.1', '2.3', '3.10'] },
-            { id: '3.13', phaseId: 'p3', name: 'Запуск месторождения в эксплуатацию', startDate: '2026-10-04', endDate: null, pct: 99, description: 'Пусконаладка.', characteristics: '20 скважин.', dependencies: ['2.2', '2.3', '2.4', '3.10', '3.11', '3.12'] },
-            { id: '3.14', phaseId: 'p3', name: 'Аварийные резервуары на ГНПС', startDate: '2026-10-10', endDate: '2026-10-18', pct: 100, description: 'Аварийные ёмкости.', characteristics: '3 × 50 000 м³.', dependencies: ['3.3'] },
-            { id: '4.1', phaseId: 'p4', name: 'Завод СПГ (линии сжижения)', startDate: null, endDate: null, pct: 0, description: 'Сжижение газа.', characteristics: '5 млн т/год.', dependencies: ['2.5'] },
-            { id: '4.2', phaseId: 'p4', name: 'Изотермические резервуары СПГ', startDate: null, endDate: null, pct: 0, description: 'Резервуары СПГ.', characteristics: '2 × 200 000 м³.', dependencies: ['4.1'] },
-            { id: '4.3', phaseId: 'p4', name: 'Глубоководный порт', startDate: null, endDate: null, pct: 0, description: 'Порт вокруг верфи.', characteristics: '500 м причал.', dependencies: ['3.1', '3.4', 'Ф.1'] },
-            { id: '4.4', phaseId: 'p4', name: 'Криогенный терминал и шланги', startDate: null, endDate: null, pct: 0, description: 'Криогенный терминал.', characteristics: '10 000 м³/час.', dependencies: ['4.3', '4.2'] },
-            { id: '4.5', phaseId: 'p4', name: 'Теплоцентраль (ТЭЦ)', startDate: null, endDate: null, pct: 0, description: 'Основная генерация.', characteristics: '1 000 МВт.', dependencies: ['2.5'] },
-            { id: '4.5b', phaseId: 'p4', name: 'ГТЭС — резервная генерация', startDate: null, endDate: null, pct: 0, description: 'Резервная генерация.', characteristics: '400 МВт.', dependencies: ['2.5'] },
-            { id: '4.6', phaseId: 'p4', name: 'ЛЭП и подстанции', startDate: null, endDate: null, pct: 0, description: 'ЛЭП.', characteristics: '350 км.', dependencies: ['4.5', '4.5b'] },
-            { id: '4.6b', phaseId: 'p4', name: 'Аварийные дизель-генераторы', startDate: null, endDate: null, pct: 0, description: 'Дизель-генераторы.', characteristics: '20 генераторов.', dependencies: ['4.5', '4.6'] },
-            { id: '4.8', phaseId: 'p4', name: 'Береговая оборона', startDate: null, endDate: null, pct: 0, description: 'ПВО и береговые комплексы.', characteristics: 'С-400.', dependencies: ['4.3'] },
-            { id: '4.9', phaseId: 'p4', name: 'Берегоукрепление и портовая логистика', startDate: null, endDate: null, pct: 0, description: 'Берегоукрепление.', characteristics: '600 м.', dependencies: ['4.3'] },
-            { id: '4.10', phaseId: 'p4', name: 'Административно-диспетчерский центр', startDate: null, endDate: null, pct: 0, description: 'Диспетчерский центр.', characteristics: '1 500 м².', dependencies: ['3.4', '4.3'] },
-            { id: '4.11', phaseId: 'p4', name: 'Нефтеналивной терминал', startDate: null, endDate: null, pct: 0, description: 'Наливные стендеры.', characteristics: '4 × 5 000 м³/час.', dependencies: ['4.3', '3.5'] },
-            { id: '4.12', phaseId: 'p4', name: 'VRS — улавливание паров', startDate: null, endDate: null, pct: 0, description: 'Улавливание паров.', characteristics: '1 500 м³/час.', dependencies: ['3.5', '4.11'] },
-            { id: '4.13', phaseId: 'p4', name: 'BOG-компрессоры СПГ', startDate: null, endDate: null, pct: 0, description: 'BOG-компрессоры.', characteristics: 'до 15 т/час.', dependencies: ['4.1', '4.2'] },
-            { id: '4.14', phaseId: 'p4', name: 'Азотная станция', startDate: null, endDate: null, pct: 0, description: 'Азотная станция.', characteristics: '5 000 м³/час.', dependencies: ['4.1', '4.2'] },
-            { id: '5.1', phaseId: 'p5', name: 'Поисково-разведочное бурение на газ', startDate: null, endDate: null, pct: 0, description: 'Разведка газа.', characteristics: '5 скважин.', dependencies: ['1.2', '1.3'] },
-            { id: '5.2', phaseId: 'p5', name: 'Эксплуатационные газовые скважины', startDate: null, endDate: null, pct: 0, description: 'Газовые скважины.', characteristics: '20 скважин.', dependencies: ['5.1'] },
-            { id: '5.3', phaseId: 'p5', name: 'Газосборная сеть и шлейфы', startDate: null, endDate: null, pct: 0, description: 'Газосборная сеть.', characteristics: '20 шлейфов.', dependencies: ['5.2'] },
-            { id: '5.4', phaseId: 'p5', name: 'УКПГ', startDate: null, endDate: null, pct: 0, description: 'УКПГ.', characteristics: '20 млн м³/сут.', dependencies: ['5.3'] },
-            { id: '5.5', phaseId: 'p5', name: 'СИКГ', startDate: null, endDate: null, pct: 0, description: 'Узел учёта газа.', characteristics: '20 млн м³/сут.', dependencies: ['5.4'] },
-            { id: '5.6', phaseId: 'p5', name: 'Магистральный газопровод', startDate: null, endDate: null, pct: 0, description: 'Газопровод до СПГ.', characteristics: '200 км.', dependencies: ['5.4'] },
-            { id: '5.7', phaseId: 'p5', name: 'Дожимные компрессорные станции', startDate: null, endDate: null, pct: 0, description: 'ДКС.', characteristics: '4 × 16 МВт.', dependencies: ['5.6'] },
-            { id: '5.8', phaseId: 'p5', name: 'ГПЗ', startDate: null, endDate: null, pct: 0, description: 'Газоперерабатывающий завод.', characteristics: '20 млн м³/сут.', dependencies: ['5.7'] },
-            { id: '5.9', phaseId: 'p5', name: 'Установка стабилизации ШФЛУ', startDate: null, endDate: null, pct: 0, description: 'Стабилизация конденсата.', characteristics: '3 000 т/сут.', dependencies: ['5.8'] },
-            { id: '5.10', phaseId: 'p5', name: 'ПХГ', startDate: null, endDate: null, pct: 0, description: 'Подземное хранилище.', characteristics: '2 млрд м³.', dependencies: ['5.4', '5.6'] },
-            { id: '5.11', phaseId: 'p5', name: 'Компримирование газа в ПХГ', startDate: null, endDate: null, pct: 0, description: 'Закачка в ПХГ.', characteristics: '4 × 6 МВт.', dependencies: ['5.10'] },
-            { id: '5.12', phaseId: 'p5', name: 'Установка извлечения гелия', startDate: null, endDate: null, pct: 0, description: 'Извлечение гелия.', characteristics: '500 000 м³/сут.', dependencies: ['5.8'] },
-            { id: '5.14', phaseId: 'p5', name: 'ЛЭП газового кластера', startDate: null, endDate: null, pct: 0, description: 'ЛЭП газового кластера.', characteristics: '250 км.', dependencies: ['4.6', '5.4', '5.6'] },
-            { id: '5.15', phaseId: 'p5', name: 'Аварийные дизель-генераторы газового кластера', startDate: null, endDate: null, pct: 0, description: 'Дизель-генераторы.', characteristics: '12 генераторов.', dependencies: ['5.14'] }
+            // ===== ФАЗА 1 =====
+            { id: '1.1', phaseId: 'p1', name: 'Постройка сейсморазведочного корабля', startDate: '2026-08-16', endDate: '2026-09-04', pct: 100,
+                description: 'Строительство специализированного судна для проведения морской сейсморазведки. Оснащается пневматическими источниками (пушки), буксируемой косой с гидрофонами и мобильной буровой установкой для взятия проб грунта.',
+                characteristics: 'Длина 90 м, водоизмещение 6 000 т, автономность 60 суток, оборудование для 3D-сейсмики, буровая вышка для керна до 1 000 м.',
+                dependencies: [] },
+            { id: '1.2', phaseId: 'p1', name: 'Сейсморазведка', startDate: '2026-08-16', endDate: '2026-08-25', pct: 100,
+                description: 'Проведение сейсмических профилей в перспективном районе. Корабль или грузовики создают вибрационные волны, приёмники регистрируют отражения, строятся геологические разрезы для выявления структур-ловушек.',
+                characteristics: 'Площадь съёмки ~5 000 км², глубина исследования до 8 км, точность выявления аномалий ±10 м.',
+                dependencies: ['1.1'] },
+            { id: '1.3', phaseId: 'p1', name: 'Бурение разведочных скважин', startDate: '2026-08-16', endDate: '2026-08-25', pct: 100,
+                description: 'Бурение нескольких разведочных стволов в точках, определённых сейсморазведкой. Извлекаются керны (образцы пород) для анализа наличия углеводородов.',
+                characteristics: '3 скважины глубиной 3 000–4 500 м, отбор керна через каждые 10 м, объём образцов ~100 кг на скважину.',
+                dependencies: ['1.2'] },
+            { id: '1.4', phaseId: 'p1', name: 'Составление карты местности', startDate: '2026-09-03', endDate: '2026-09-03', pct: 100,
+                description: 'Геодезические работы по составлению детальной карты рельефа, растительности, гидрографии и инфраструктуры района строительства. Данные используются для планирования трасс трубопроводов, дорог и размещения объектов.',
+                characteristics: 'Масштаб 1:5000, охват 200 км², точность высот ±0.5 м.',
+                dependencies: ['1.3'] },
+            { id: '1.5', phaseId: 'p1', name: 'Выбор площадки ЦПС', startDate: '2026-09-03', endDate: '2026-09-03', pct: 100,
+                description: 'Геодезические и инженерно-геологические изыскания на суше. Определяются оптимальные места для Центрального пункта сбора (вблизи скважин) с учётом рельефа, грунтов, логистики.',
+                characteristics: 'Изучаются 3–5 альтернативных участков, оценивается необходимость выравнивания площадок, подводящих дорог.',
+                dependencies: ['1.4'] },
+
+            // ===== ФАЗА 2 =====
+            { id: '2.1', phaseId: 'p2', name: 'Бурение эксплуатационных скважин', startDate: '2026-09-04', endDate: '2026-09-05', pct: 100,
+                description: 'Бурение основных добывающих скважин на месторождении. Используются буровые установки большего размера, чем разведочные. Стволы оборудуются обсадными трубами и цементируются.',
+                characteristics: '8–12 скважин, глубина 3 000–5 000 м, дебит планируется ~1 000–1 500 т/сут каждая.',
+                dependencies: ['1.4'] },
+            { id: '2.2', phaseId: 'p2', name: 'Монтаж арматуры и фонтанной системы', startDate: '2026-09-05', endDate: '2026-09-05', pct: 100,
+                description: 'Установка на устьях скважин фонтанной арматуры (запорная и регулирующая аппаратура), систем контроля давления, штуцеров для регулирования режима добычи.',
+                characteristics: 'Рабочее давление до 70 МПа, диаметр проходов 80–150 мм, система аварийной остановки.',
+                dependencies: ['2.1'] },
+            { id: '2.3', phaseId: 'p2', name: 'Строительство ЦПС', startDate: '2026-09-05', endDate: '2026-09-13', pct: 100,
+                description: 'Возведение центрального пункта сбора – площадки с сепараторами для разделения нефти, газа и воды, трубчатыми печами подогрева, отстойниками. Включает монтаж ёмкостей, трубной обвязки и автоматики.',
+                characteristics: 'Производительность по нефти 50 000 т/сут, объём сепараторов 200 м³ каждый (6 шт.), печи мощностью 10 МВт.',
+                dependencies: ['2.1'] },
+            { id: '2.4', phaseId: 'p2', name: 'Система ППД и водоочистка', startDate: '2026-09-09', endDate: '2026-09-13', pct: 100,
+                description: 'Строительство блока подготовки воды, отделённой от нефти, и насосной станции для закачки очищенной воды обратно в пласт для поддержания давления.',
+                characteristics: 'Производительность очистки 20 000 м³/сут, насосы с давлением 25 МПа, резервуары для буферной воды.',
+                dependencies: ['2.3'] },
+            { id: '2.5', phaseId: 'p2', name: 'Факельная система и газотрубы', startDate: '2026-09-06', endDate: '2026-09-09', pct: 100,
+                description: 'Установка факельной трубы для аварийного сжигания газа, а также прокладка газопроводов от сепараторов к потребителям.',
+                characteristics: 'Факел высотой 50 м, система автоматического поджига, газопроводы диаметром 300 мм.',
+                dependencies: ['2.3'] },
+            { id: '2.6', phaseId: 'p2', name: 'Подъездные дороги промысла', startDate: '2026-09-04', endDate: '2026-09-06', pct: 100,
+                description: 'Создание сети грунтово-щебёночных дорог, соединяющих кусты скважин между собой, с ЦПС и с внешней магистральной трассой.',
+                characteristics: 'Протяжённость ~30 км, ширина проезжей части 8 м, толщина щебёночного основания 40 см, расчётная нагрузка на ось 40 тонн.',
+                dependencies: ['1.5'] },
+            { id: '2.7', phaseId: 'p2', name: 'Вахтовый городок и бытовой комплекс', startDate: '2026-09-05', endDate: '2026-09-06', pct: 100,
+                description: 'Строительство модульного жилого городка, столовой, бани/прачечной, административного здания с узлом связи и медпункта первой помощи.',
+                characteristics: 'Площадь застройки 2 га, столовая на 100 посадочных мест, резервный дизель-генератор на 1 МВт.',
+                dependencies: ['2.6'] },
+
+            // ===== ФАЗА 3 =====
+            { id: '3.1', phaseId: 'p3', name: 'Нефтепровод до моря', startDate: '2026-09-13', endDate: '2026-09-14', pct: 100,
+                description: 'Прокладка магистрального трубопровода от ЦПС к побережью.',
+                characteristics: 'Длина 200 км, диаметр 1 000 мм, рабочее давление 6 МПа, пропускная способность до 500 000 т/сут.',
+                dependencies: ['2.3'] },
+            { id: '3.2', phaseId: 'p3', name: 'Промежуточные НПС', startDate: '2026-09-14', endDate: '2026-09-21', pct: 100,
+                description: 'Строительство вдоль трубопровода 4–5 станций с центробежными насосами.',
+                characteristics: 'Мощность насосов 5 МВт каждая, интервал между НПС 40–50 км.',
+                dependencies: ['3.1'] },
+            { id: '3.3', phaseId: 'p3', name: 'Головная НПС у НПЗ', startDate: '2026-09-21', endDate: '2026-10-02', pct: 100,
+                description: 'Станция на конечной точке трубопровода перед входом на завод.',
+                characteristics: 'Производительность 500 000 т/сут, насосы с давлением 7 МПа, резервуары-отстойники на 10 000 м³.',
+                dependencies: ['3.1'] },
+            { id: '3.4', phaseId: 'p3', name: 'Строительство НПЗ', startDate: '2026-09-20', endDate: null, pct: 80,
+                description: 'Возведение комплекса переработки – ректификационные колонны, крекинг, гидроочистка.',
+                characteristics: 'Мощность по сырью 10 млн т/год, колонны высотой 50 м.',
+                dependencies: ['3.3'] },
+            { id: '3.5', phaseId: 'p3', name: 'Резервуарный парк РВС', startDate: '2026-09-21', endDate: '2026-10-01', pct: 100,
+                description: 'Сооружение 10 стальных вертикальных цилиндрических резервуаров (РВС) для хранения готовых продуктов.',
+                characteristics: 'Объём каждого 100 000 м³, общая ёмкость 1 млн м³.',
+                dependencies: ['3.4'] },
+            { id: '3.6', phaseId: 'p3', name: 'Обваловка и системы безопасности', startDate: '2026-09-26', endDate: '2026-10-01', pct: 100,
+                description: 'Строительство земляных валов, монтаж систем пожаротушения, дренажных каналов, датчиков утечек.',
+                characteristics: 'Высота вала 2 м, ширина основания 6 м, система пенотушения.',
+                dependencies: ['3.5'] },
+            { id: '3.7', phaseId: 'p3', name: 'Дороги и мосты вдоль трубопровода', startDate: '2026-09-21', endDate: '2026-09-26', pct: 100,
+                description: 'Прокладка технической дороги-дублёра вдоль магистрального нефтепровода.',
+                characteristics: 'Протяжённость 210 км, ширина 6 м, 3 моста длиной до 80 м.',
+                dependencies: ['3.1'] },
+            { id: '3.8', phaseId: 'p3', name: 'Инженерные сети НПЗ', startDate: '2026-09-26', endDate: '2026-10-01', pct: 100,
+                description: 'Строительство внешних инженерных систем для НПЗ: водозабор, канализация, ливнёвка.',
+                characteristics: 'Производительность водозабора 10 000 м³/сут, система оборотного водоснабжения.',
+                dependencies: ['3.4'] },
+            { id: '3.9', phaseId: 'p3', name: 'Оптоволокно вдоль маршрута', startDate: '2026-09-15', endDate: '2026-09-21', pct: 100,
+                description: 'Прокладка подземного оптоволоконного кабеля в одной траншее с нефтепроводом.',
+                characteristics: 'Длина 200 км, 24-волоконный кабель, система мониторинга целостности.',
+                dependencies: ['3.1'] },
+            { id: '3.10', phaseId: 'p3', name: 'Товарный парк ЦПС (промежуточные резервуары нефти)', startDate: '2026-09-27', endDate: '2026-10-19', pct: 100,
+                description: 'Сооружение на территории ЦПС нескольких стальных вертикальных резервуаров (РВС) для накопления и буферизации подготовленной нефти перед отправкой в магистральный трубопровод.',
+                characteristics: '5 резервуаров объёмом по 20 000 м³ каждый, общая ёмкость 100 000 м³, насосная станция перекачки на магистраль — 3 насоса по 5 МВт.',
+                dependencies: ['2.3', '2.6'] },
+            { id: '3.11', phaseId: 'p3', name: 'СИКН — система измерений количества и качества нефти', startDate: '2026-09-27', endDate: null, pct: 94,
+                description: 'Коммерческий узел учёта нефти на выходе с ЦПС перед подачей в магистральный трубопровод.',
+                characteristics: 'Производительность до 500 000 т/сут, 4 измерительные линии, точность ±0.15%, АСУ ТП.',
+                dependencies: ['2.3', '3.10'] },
+            { id: '3.12', phaseId: 'p3', name: 'Расширение фонда нефтяных скважин до 20', startDate: '2026-10-04', endDate: '2026-10-08', pct: 100,
+                description: 'Бурение дополнительных эксплуатационных нефтяных скважин, чтобы выйти на проектную добычу.',
+                characteristics: 'Дополнительно 8–12 скважин, глубина 3 000–5 000 м.',
+                dependencies: ['2.1', '2.3', '3.10'] },
+            { id: '3.13', phaseId: 'p3', name: 'Запуск месторождения в эксплуатацию', startDate: '2026-10-04', endDate: null, pct: 99,
+                description: 'Пусконаладка месторождения: запуск каждой скважины по очереди, вывод на режим, проверка давления, настройка штуцеров.',
+                characteristics: 'Последовательный ввод 20 скважин, вывод на проектную мощность.',
+                dependencies: ['2.2', '2.3', '2.4', '3.10', '3.11', '3.12'] },
+            { id: '3.14', phaseId: 'p3', name: 'Аварийные резервуары на ГНПС', startDate: '2026-10-10', endDate: '2026-10-18', pct: 100,
+                description: 'Дополнительные ёмкости рядом с Головной насосной станцией у НПЗ.',
+                characteristics: '3 резервуара по 50 000 м³, с обваловкой, системой перекачки обратно в трубу.',
+                dependencies: ['3.3'] },
+
+            // ===== ФАЗА 4 =====
+            { id: '4.1', phaseId: 'p4', name: 'Завод СПГ (линии сжижения)', startDate: null, endDate: null, pct: 0,
+                description: 'Строительство комплекса по сжижению природного газа до температуры -162°C.',
+                characteristics: 'Производительность 5 млн т СПГ в год, энергопотребление 500 МВт.',
+                dependencies: ['2.5'] },
+            { id: '4.2', phaseId: 'p4', name: 'Изотермические резервуары СПГ', startDate: null, endDate: null, pct: 0,
+                description: 'Строительство специальных двухстенных резервуаров для хранения сжиженного газа при сверхнизкой температуре.',
+                characteristics: 'Объём каждого 200 000 м³, количество 2 шт.',
+                dependencies: ['4.1'] },
+            { id: '4.3', phaseId: 'p4', name: 'Глубоководный порт', startDate: null, endDate: null, pct: 0,
+                description: 'Строительство портовой инфраструктуры на берегу моря: глубоководные причалы, волнолом, береговые коллекторы. Порт проектируется вокруг уже строящейся верфи (Ф.1).',
+                characteristics: 'Длина причальной стенки 500 м, глубина у причала 25 м, волнолом длиной 1,5 км.',
+                dependencies: ['3.1', '3.4', 'Ф.1'] },
+            { id: '4.4', phaseId: 'p4', name: 'Криогенный терминал и шланги', startDate: null, endDate: null, pct: 0,
+                description: 'Оснащение причала специальными вакуумными шлангами для перегрузки сжиженного газа на газовозы.',
+                characteristics: 'Производительность загрузки 10 000 м³/час, шланги длиной 30 м.',
+                dependencies: ['4.3', '4.2'] },
+            { id: '4.5', phaseId: 'p4', name: 'Теплоцентраль (ТЭЦ) — основная генерация', startDate: null, endDate: null, pct: 0,
+                description: 'Возведение основной теплоэлектроцентрали, обеспечивающей электричеством и паром все объекты Arion.',
+                characteristics: 'Установленная электрическая мощность 1 000 МВт, тепловая 800 Гкал/ч.',
+                dependencies: ['2.5'] },
+            { id: '4.5b', phaseId: 'p4', name: 'Газотурбинная электростанция (ГТЭС) — резервная генерация', startDate: null, endDate: null, pct: 0,
+                description: 'Резервная газотурбинная электростанция, включается при остановке ТЭЦ.',
+                characteristics: 'Установленная мощность 400 МВт, время запуска 10 минут.',
+                dependencies: ['2.5'] },
+            { id: '4.6', phaseId: 'p4', name: 'Линии электропередачи (ЛЭП) и трансформаторные подстанции', startDate: null, endDate: null, pct: 0,
+                description: 'Прокладка высоковольтных линий электропередачи от ТЭЦ и ГТЭС ко всем объектам Arion.',
+                characteristics: 'Общая протяжённость 350 км, магистральные линии 220 кВ.',
+                dependencies: ['4.5', '4.5b'] },
+            { id: '4.6b', phaseId: 'p4', name: 'Аварийные дизель-генераторы', startDate: null, endDate: null, pct: 0,
+                description: 'Установка аварийных дизель-генераторов на всех критических объектах.',
+                characteristics: '20 генераторов мощностью от 500 кВт до 5 МВт.',
+                dependencies: ['4.5', '4.6'] },
+            { id: '4.8', phaseId: 'p4', name: 'Береговая оборона', startDate: null, endDate: null, pct: 0,
+                description: 'Развёртывание средств ПВО, радиолокационных станций, береговых ракетных комплексов.',
+                characteristics: 'ЗРК С-400 (2 дивизиона), береговые комплексы.',
+                dependencies: ['4.3'] },
+            { id: '4.9', phaseId: 'p4', name: 'Берегоукрепление и портовая логистика', startDate: null, endDate: null, pct: 0,
+                description: 'Строительство подпорных стенок, бетонирование прилегающей территории порта.',
+                characteristics: 'Берегоукрепление на 600 м, складская площадь 5 000 м².',
+                dependencies: ['4.3'] },
+            { id: '4.10', phaseId: 'p4', name: 'Административно-диспетчерский центр и КПП', startDate: null, endDate: null, pct: 0,
+                description: 'Возведение капитального здания для управления всеми объектами Arion.',
+                characteristics: '3-этажное здание площадью 1 500 м², 5 КПП.',
+                dependencies: ['3.4', '4.3'] },
+            { id: '4.11', phaseId: 'p4', name: 'Нефтеналивной терминал и наливные стендеры', startDate: null, endDate: null, pct: 0,
+                description: 'Специальное оборудование на глубоководном причале для заливки нефти в танкеры.',
+                characteristics: '4 наливных стендера по 5 000 м³/час каждый.',
+                dependencies: ['4.3', '3.5'] },
+            { id: '4.12', phaseId: 'p4', name: 'Система улавливания паров (VRS) на терминале и РВС', startDate: null, endDate: null, pct: 0,
+                description: 'Система улавливания паров лёгких фракций на терминале и резервуарах.',
+                characteristics: 'Производительность 1 500 м³/час, рекуперация 99%.',
+                dependencies: ['3.5', '4.11'] },
+            { id: '4.13', phaseId: 'p4', name: 'BOG-компрессоры и система улавливания паров СПГ', startDate: null, endDate: null, pct: 0,
+                description: 'Криогенные компрессоры возвращают испарившийся газ обратно в цикл сжижения.',
+                characteristics: 'Производительность до 15 т/час.',
+                dependencies: ['4.1', '4.2'] },
+            { id: '4.14', phaseId: 'p4', name: 'Азотная станция для продувки и инертизации', startDate: null, endDate: null, pct: 0,
+                description: 'Производство азота для продувки трубопроводов и инертизации резервуаров СПГ.',
+                characteristics: '5 000 м³/час азота, чистота 99.9%.',
+                dependencies: ['4.1', '4.2'] },
+
+            // ===== ФАЗА 5 =====
+            { id: '5.1', phaseId: 'p5', name: 'Поисково-разведочное бурение на газ', startDate: null, endDate: null, pct: 0,
+                description: 'Бурение разведочных скважин на газовых структурах.',
+                characteristics: '5 разведочных скважин глубиной 2 500–4 000 м.',
+                dependencies: ['1.2', '1.3'] },
+            { id: '5.2', phaseId: 'p5', name: 'Эксплуатационные газовые скважины', startDate: null, endDate: null, pct: 0,
+                description: 'Бурение основной сетки добывающих газовых скважин.',
+                characteristics: '20 скважин, дебит 1 000 000 м³/сут каждая.',
+                dependencies: ['5.1'] },
+            { id: '5.3', phaseId: 'p5', name: 'Газосборная сеть и шлейфы', startDate: null, endDate: null, pct: 0,
+                description: 'Система трубопроводов, соединяющая каждую газовую скважину с УКПГ.',
+                characteristics: '20 шлейфов по 0.5–2 км, диаметр 150 мм.',
+                dependencies: ['5.2'] },
+            { id: '5.4', phaseId: 'p5', name: 'Установка комплексной подготовки газа (УКПГ)', startDate: null, endDate: null, pct: 0,
+                description: 'Промысловая установка первичной подготовки газа.',
+                characteristics: '20 млн м³/сут, гликолевая осушка до -20°C.',
+                dependencies: ['5.3'] },
+            { id: '5.5', phaseId: 'p5', name: 'СИКГ — система измерений количества и качества газа', startDate: null, endDate: null, pct: 0,
+                description: 'Коммерческий узел учёта газа на выходе с УКПГ.',
+                characteristics: '20 млн м³/сут, точность ±0.5%, хроматограф.',
+                dependencies: ['5.4'] },
+            { id: '5.6', phaseId: 'p5', name: 'Магистральный газопровод УКПГ → ГПЗ → СПГ', startDate: null, endDate: null, pct: 0,
+                description: 'Прокладка газопровода высокого давления от УКПГ до завода СПГ.',
+                characteristics: 'Длина 200 км, диаметр 700 мм, давление 10 МПа.',
+                dependencies: ['5.4'] },
+            { id: '5.7', phaseId: 'p5', name: 'Дожимные компрессорные станции (ДКС)', startDate: null, endDate: null, pct: 0,
+                description: 'Строительство вдоль газопровода станций с газоперекачивающими агрегатами.',
+                characteristics: '4 станции, мощность каждого ГПА 16 МВт.',
+                dependencies: ['5.6'] },
+            { id: '5.8', phaseId: 'p5', name: 'Газоперерабатывающий завод (ГПЗ)', startDate: null, endDate: null, pct: 0,
+                description: 'Завод очищает, осушает и разделяет газ на метан и ШФЛУ.',
+                characteristics: '20 млн м³/сут по сырому газу.',
+                dependencies: ['5.7'] },
+            { id: '5.9', phaseId: 'p5', name: 'Установка стабилизации газового конденсата (ШФЛУ)', startDate: null, endDate: null, pct: 0,
+                description: 'Разделение ШФЛУ на товарные продукты: пропан, бутан, стабильный конденсат.',
+                characteristics: '3 000 т/сут ШФЛУ.',
+                dependencies: ['5.8'] },
+            { id: '5.10', phaseId: 'p5', name: 'Подземное хранилище газа (ПХГ)', startDate: null, endDate: null, pct: 0,
+                description: 'Резервуар для сезонного хранения газа в выработанном пласте.',
+                characteristics: 'Активный объём 2 млрд м³.',
+                dependencies: ['5.4', '5.6'] },
+            { id: '5.11', phaseId: 'p5', name: 'Система компримирования и закачки газа в ПХГ', startDate: null, endDate: null, pct: 0,
+                description: 'Комплекс оборудования для закачки газа в ПХГ и его отбора.',
+                characteristics: '4 компрессора по 6 МВт, давление закачки 20 МПа.',
+                dependencies: ['5.10'] },
+            { id: '5.12', phaseId: 'p5', name: 'Установка извлечения гелия', startDate: null, endDate: null, pct: 0,
+                description: 'Извлечение гелия из природного газа (при содержании выше 0.05%).',
+                characteristics: '500 000 м³/сут по сырому газу.',
+                dependencies: ['5.8'] },
+            { id: '5.14', phaseId: 'p5', name: 'Линии электропередачи (ЛЭП) газового кластера', startDate: null, endDate: null, pct: 0,
+                description: 'Расширение магистральной сети ЛЭП для питания объектов газового дивизиона.',
+                characteristics: 'Протяжённость 250 км, напряжение 110 кВ.',
+                dependencies: ['4.6', '5.4', '5.6'] },
+            { id: '5.15', phaseId: 'p5', name: 'Аварийные дизель-генераторы газового кластера', startDate: null, endDate: null, pct: 0,
+                description: 'Резервное питание для всех объектов Фазы 5.',
+                characteristics: '12 генераторов мощностью 1–5 МВт каждый.',
+                dependencies: ['5.14'] }
         ];
 
         // ===== ФЛОТ =====
         const fleetPhases = [
-            { id: 'Ф.1', phaseId: 'fleet', name: 'Постройка судостроительной верфи', startDate: '2026-10-14', endDate: '2026-10-30', pct: 100, description: 'Строительство собственной верфи.', characteristics: '40 га, 2 сухих дока.', dependencies: ['1.5'] },
-            { id: 'Ф.2', phaseId: 'fleet', name: 'Нефтяной танкер №1 (Aframax)', startDate: '2026-10-14', endDate: null, pct: 28, description: 'Первый танкер Aframax.', characteristics: '100 000 т дедвейт.', dependencies: ['Ф.1'] },
-            { id: 'Ф.3', phaseId: 'fleet', name: 'Нефтяной танкер №2 (Aframax)', startDate: null, endDate: null, pct: 0, description: 'Второй танкер Aframax.', characteristics: 'Идентичен Ф.2.', dependencies: ['Ф.1', 'Ф.2'] },
-            { id: 'Ф.4', phaseId: 'fleet', name: 'Газовоз СПГ №1 (мембранный)', startDate: '2026-10-14', endDate: null, pct: 14, description: 'Первый газовоз СПГ.', characteristics: '170 000 м³.', dependencies: ['Ф.1'] },
-            { id: 'Ф.5', phaseId: 'fleet', name: 'Газовоз СПГ №2 (мембранный)', startDate: null, endDate: null, pct: 0, description: 'Второй газовоз СПГ.', characteristics: '170 000 м³.', dependencies: ['Ф.1', 'Ф.4'] }
+            { id: 'Ф.1', phaseId: 'fleet', name: 'Постройка судостроительной верфи', startDate: '2026-10-14', endDate: '2026-10-30', pct: 100,
+                description: 'Строительство собственной верфи на побережье рядом с будущим портом Arion. Включает сухие доки, стапели, крановое хозяйство, цеха сборки корпусов, трубогибочные и сварочные участки, склады металла, административно-бытовой корпус и причальную стенку для достройки судов на плаву. Верфь строится первой — без неё танкеры и газовозы придётся заказывать на чужих заводах с очередью 24–30 месяцев и полной предоплатой. Своя верфь даёт ускорение в 2–3 раза и позволяет в будущем строить новые суда без внешних подрядчиков.',
+                characteristics: 'Площадь 40 га. Два сухих дока (300 × 60 м и 250 × 50 м). Стапели до 4 корпусов одновременно. Краны 2 × 600 т, 4 × 150 т. Цеха: корпусосборочный, трубомонтажный, окрасочный, электромонтажный, криогенный. Причальная стенка 400 м. Пропускная способность: 2 корабля одновременно.',
+                dependencies: ['1.5'] },
+            { id: 'Ф.2', phaseId: 'fleet', name: 'Нефтяной танкер №1 (Aframax)', startDate: '2026-10-14', endDate: null, pct: 28,
+                description: 'Постройка первого нефтяного танкера класса Aframax на собственной верфи (Ф.1). Предназначен для вывоза сырой нефти и нефтепродуктов с НПЗ Arion. Корпус двойной, с двойным дном и двойными бортами (по требованиям MARPOL). Оборудован системами инертных газов, подогрева груза, мойки танков, насосными отделениями, системой аварийной остановки грузовых операций.',
+                characteristics: 'Дедвейт 100 000 т. Длина 250 м, ширина 44 м, осадка 15 м. 12 грузовых танков, суммарный объём 115 000 м³. Скорость 14 узлов, дальность 12 000 миль. Экипаж 25 человек. Грузовые насосы 4 × 5 000 м³/час.',
+                dependencies: ['Ф.1'] },
+            { id: 'Ф.3', phaseId: 'fleet', name: 'Нефтяной танкер №2 (Aframax)', startDate: null, endDate: null, pct: 0,
+                description: 'Постройка второго нефтяного танкера того же класса, что и Ф.2. Строится сразу после первого на той же верфи, с использованием уже отлаженной технологии, обученной команды и готовой оснастки. Это даёт ускорение. Нужен для ритмичной отгрузки: пока один танкер в рейсе, второй стоит под загрузкой у терминала.',
+                characteristics: 'Идентичны Ф.2: дедвейт 100 000 т, длина 250 м, 12 танков, 115 000 м³.',
+                dependencies: ['Ф.1', 'Ф.2'] },
+            { id: 'Ф.4', phaseId: 'fleet', name: 'Газовоз СПГ №1 (мембранный)', startDate: '2026-10-14', endDate: null, pct: 14,
+                description: 'Постройка первого газовоза для перевозки сжиженного природного газа с завода СПГ Arion. Мембранный тип (GTT Mark III) — грузовые танки встроены в корпус и облицованы криогенной мембраной из нержавеющей стали и теплоизоляцией. Оборудован системой удержания BOG, двумя винтами, системой динамического позиционирования для швартовки к криогенному терминалу.',
+                characteristics: 'Вместимость 170 000 м³ СПГ. Длина 290 м, ширина 46 м, осадка 12 м. 4 мембранных танка, температура груза -162°C. Скорость 19 узлов, дальность 15 000 миль. Экипаж 35 человек.',
+                dependencies: ['Ф.1'] },
+            { id: 'Ф.5', phaseId: 'fleet', name: 'Газовоз СПГ №2 (мембранный)', startDate: null, endDate: null, pct: 0,
+                description: 'Постройка второго газовоза СПГ того же класса. Аналогично Ф.3 — использует отлаженную технологию и команду после первого газовоза, что ускоряет стройку на 30–40%. Нужен для регулярных рейсов и закрытия всей логистики завода с запасом на ремонт и непогоду.',
+                characteristics: 'Идентичны Ф.4: 170 000 м³, длина 290 м, 4 мембранных танка, -162°C.',
+                dependencies: ['Ф.1', 'Ф.4'] }
         ];
-
-        // ===== ГОРНЫЕ АНГАРЫ ZENITH (C) =====
-        const zenithPhases = [
-            { id: 'C.0', phaseId: 'zenith', name: 'Геологическое обследование горы', startDate: '2026-11-14', endDate: null, pct: 0,
-                description: 'Инженерные изыскания в массиве между НПЗ и внешним склоном. Определение прочности породы, трещиноватости, водоносных горизонтов, зон тектонических нарушений. Без этого нельзя резать пещеры — можно получить обвал или затопление.',
-                characteristics: 'Бурение 20–30 скважин глубиной до 200 м, сейсмика массива, гидрогеология. 2 месяца.',
-                dependencies: [] },
-            { id: 'C.1', phaseId: 'zenith', name: 'Проходка пещер и заезд техники', startDate: null, endDate: null, pct: 0,
-                description: 'Главный и самый быстрый подпункт. Проходка многоуровневых каверн в горе, пробивка въездных тоннелей для техники, черновой пол, дренаж, временная вентиляция и свет. После завершения техника заезжает своим ходом — танки, БТР, грузовики, истребители.',
-                characteristics: '5 уровней, каждый 300 × 100 × 30 м. Общий объём 4,5 млн м³. Въездные тоннели: 2 шт., 30 м ширина × 12 м высота. Ёмкость: 40 истребителей, 150 танков, 200 БТР/БМП, 30 ракетных комплексов, 300 грузовиков.',
-                dependencies: ['C.0'] },
-            { id: 'C.2', phaseId: 'zenith', name: 'Укрепление стен, колонн и кровли', startDate: null, endDate: null, pct: 0,
-                description: 'После заезда техники — капитальное укрепление. Торкретирование стен, установка несущих колонн, анкеровка кровли, гидроизоляция. Защита от обвала и протечек.',
-                characteristics: 'Торкрет 20 см, 200+ анкеров глубиной 10 м, стальные арки в тоннелях.',
-                dependencies: ['C.1'] },
-            { id: 'C.3', phaseId: 'zenith', name: 'Гермодвери и защитные затворы', startDate: null, endDate: null, pct: 0,
-                description: 'Установка массивных blast-дверей на въездах и между уровнями. Защита от ударной волны, проникновения, радиации (на случай ядерного удара по НПЗ).',
-                characteristics: '4 двери по 30 × 12 м, вес 200 т каждая, гидравлический привод, открытие за 60 с.',
-                dependencies: ['C.2'] },
-            { id: 'C.4', phaseId: 'zenith', name: 'Лифты и вертикальный транспорт', startDate: null, endDate: null, pct: 0,
-                description: 'Тяжёлые грузовые лифты между уровнями для техники и персонала. Позволяют перемещать танки и самолёты между этажами без выезда наружу.',
-                characteristics: '4 лифта грузоподъёмностью 60 т, платформа 20 × 6 м. 2 пассажирских лифта.',
-                dependencies: ['C.2'] },
-            { id: 'C.5', phaseId: 'zenith', name: 'Вентиляция, климат, пожаротушение', startDate: null, endDate: null, pct: 0,
-                description: 'Постоянная система жизнеобеспечения. Приточная и вытяжная вентиляция, фильтрация воздуха, поддержание температуры и влажности, автоматическое пожаротушение (пенное и газовое).',
-                characteristics: '10 воздухообменов/час, HEPA-фильтры, 200 огнетушителей, 5 насосных станций.',
-                dependencies: ['C.2', 'C.4'] },
-            { id: 'C.6', phaseId: 'zenith', name: 'Энергоснабжение и освещение', startDate: null, endDate: null, pct: 0,
-                description: 'Собственная подстанция, кабельные линии от основной сети Arion, дизель-генераторы для автономии на 30 суток. Освещение всех уровней, аварийное освещение.',
-                characteristics: '15 МВт, 4 генератора по 3 МВт, кабели 10 кВ, 5 000 светильников.',
-                dependencies: ['C.2'] },
-            { id: 'C.7', phaseId: 'zenith', name: 'Внутренняя безопасность', startDate: null, endDate: null, pct: 0,
-                description: 'Камеры, датчики движения, контроль доступа, биометрия на входах. Система оповещения. Связь с Sentinel.',
-                characteristics: '300 камер, 50 биометрических турникетов, оптоволокно до ЦКП Sentinel.',
-                dependencies: ['C.6'] }
-        ];
-
-        // ===== ВНЕШНЯЯ БАЗА SENTINEL (M) =====
-        const sentinelPhases = [
-            { id: 'M.1', phaseId: 'sentinel', name: 'Разравнивание территории и грунтовая ВПП', startDate: '2026-11-14', endDate: null, pct: 0,
-                description: 'Быстрое разравнивание площадки у подножия горы. Грунтовая полоса, чтобы самолёты могли садиться и взлетать «по земле». Больше ничего не нужно — после этого база может месяцами ждать.',
-                characteristics: 'Полоса 2 000 × 60 м, грунт укатан, освещение нет, диспетчерской нет.',
-                dependencies: [] },
-            { id: 'M.2', phaseId: 'sentinel', name: 'Периметр, ограждение, КПП', startDate: null, endDate: null, pct: 0,
-                description: 'Забор по периметру базы, колючая проволока, КПП с шлагбаумами, вышки охраны.',
-                characteristics: '8 км забора, 6 вышек, 2 КПП.',
-                dependencies: ['M.1'] },
-            { id: 'M.3', phaseId: 'sentinel', name: 'Капитальная ВПП', startDate: null, endDate: null, pct: 0,
-                description: 'Бетонная или асфальтовая взлётно-посадочная полоса, рулёжные дорожки, перрон.',
-                characteristics: '2 500 × 60 м, бетон 40 см, освещение, рулёжки.',
-                dependencies: ['M.1', 'M.2'] },
-            { id: 'M.4', phaseId: 'sentinel', name: 'Командно-диспетчерский пункт и радар', startDate: null, endDate: null, pct: 0,
-                description: 'Вышка управления полётами, радиолокационные станции, связь.',
-                characteristics: 'Вышка 30 м, 2 радара (обзор и посадка), 5 радиостанций.',
-                dependencies: ['M.3'] },
-            { id: 'M.5', phaseId: 'sentinel', name: 'Казармы и бытовые здания', startDate: null, endDate: null, pct: 0,
-                description: 'Жилые модули для гарнизона, столовая, медпункт, спортзал, административный корпус.',
-                characteristics: '500 мест, столовая на 200, госпиталь на 20 коек.',
-                dependencies: ['M.2'] },
-            { id: 'M.6', phaseId: 'sentinel', name: 'Позиции ПВО', startDate: null, endDate: null, pct: 0,
-                description: 'Стационарные позиции для ЗРК, радары, укрытия для расчётов.',
-                characteristics: '4 позиции ЗРК малой/средней дальности, 2 радиолокатора.',
-                dependencies: ['M.2'] },
-            { id: 'M.7', phaseId: 'sentinel', name: 'Внешние склады боеприпасов', startDate: null, endDate: null, pct: 0,
-                description: 'Защищённые хранилища с обваловкой для боеприпасов, ракет, топлива. Отдельно от горных ангаров — чтобы при детонации не повредить пещеры.',
-                characteristics: '10 хранилищ по 500 м², обваловка 2 м, молниезащита.',
-                dependencies: ['M.2'] },
-            { id: 'M.8', phaseId: 'sentinel', name: 'Парки техники и ремонтные боксы', startDate: null, endDate: null, pct: 0,
-                description: 'Открытые парковки и крытые боксы для техники, не поместившейся в горах, ремонтные мастерские.',
-                characteristics: '20 000 м² парковок, 8 боксов по 1 000 м².',
-                dependencies: ['M.3', 'M.5'] }
-        ];
-
-        // ===== БЮДЖЕТ =====
-        const budgetByPhase = { p1: 500, p2: 294, p3: 456, p4: 0, p5: 0, fleet: 0, zenith: 0, sentinel: 0 };
-        const spentByPhase = { p1: 500, p2: 294, p3: 0, p4: 0, p5: 0, fleet: 0, zenith: 0, sentinel: 0 };
 
         // ===== ДАТА РАСЧЁТА =====
         const CURRENT_DATE = new Date('2026-11-14');
 
-        // ===== РИСКИ / НЕФТЬ =====
+        // ===== БЮДЖЕТ =====
+        const budgetByPhase = { p1: 500, p2: 294, p3: 456, p4: 0, p5: 0, fleet: 0 };
+        const spentByPhase = { p1: 500, p2: 294, p3: 0, p4: 0, p5: 0, fleet: 0 };
+
+        // ===== РИСКИ И НЕФТЬ =====
         const extraData = {
             risks: [
                 { name: 'Задержка поставок', probability: 0.40, impact: 0.55 },
@@ -1163,7 +1196,7 @@
         function getSubsByPhase(phaseId) { return subPhases.filter(s => s.phaseId === phaseId); }
 
         function getAllSubs() {
-            return subPhases.concat(fleetPhases, zenithPhases, sentinelPhases);
+            return subPhases.concat(fleetPhases);
         }
 
         function getPhaseProgress(phaseId) {
@@ -1177,18 +1210,6 @@
             if (!fleetPhases.length) return 0;
             const sum = fleetPhases.reduce((acc, s) => acc + s.pct, 0);
             return Math.round(sum / fleetPhases.length);
-        }
-
-        function getZenithProgress() {
-            if (!zenithPhases.length) return 0;
-            const sum = zenithPhases.reduce((acc, s) => acc + s.pct, 0);
-            return Math.round(sum / zenithPhases.length);
-        }
-
-        function getSentinelProgress() {
-            if (!sentinelPhases.length) return 0;
-            const sum = sentinelPhases.reduce((acc, s) => acc + s.pct, 0);
-            return Math.round(sum / sentinelPhases.length);
         }
 
         function getOverallProgress() {
@@ -1223,8 +1244,6 @@
             const phase = getPhaseById(phaseId);
             if (phase) return phase.label;
             if (phaseId === 'fleet') return 'Флот и судостроение';
-            if (phaseId === 'zenith') return 'Горные ангары Zenith';
-            if (phaseId === 'sentinel') return 'Военная база Sentinel';
             return '—';
         }
 
@@ -1319,16 +1338,19 @@
         }
 
         // ============================================================
-        //  RENDER EXTRA TRACKS (Fleet / Zenith / Sentinel)
+        //  RENDER FLEET TRACK
         // ============================================================
 
-        function createExtraDot(type, label, progress, onClick) {
-            const dot = document.createElement('div');
-            dot.className = type + '-dot';
+        function renderFleetTrack() {
+            const container = document.getElementById('fleetTrack');
+            if (!container) return;
+            container.innerHTML = '';
+
+            const progress = getFleetProgress();
             const status = getStatusInfo(progress);
-            if (status.status === 'active') dot.classList.add('active');
-            if (status.status === 'done') dot.classList.add('done');
-            if (status.status === 'pending') dot.classList.add('pending');
+
+            const dot = document.createElement('div');
+            dot.className = `fleet-dot ${status.status}`;
             dot.setAttribute('tabindex', '0');
             dot.setAttribute('role', 'button');
 
@@ -1339,33 +1361,15 @@
 
             const labelSpan = document.createElement('span');
             labelSpan.className = 'dot-label';
-            labelSpan.textContent = label;
+            labelSpan.textContent = 'Флот';
             dot.appendChild(labelSpan);
 
             dot.addEventListener('click', function(e) {
                 e.stopPropagation();
-                onClick();
+                showFleetInfo();
             });
 
-            return dot;
-        }
-
-        function renderFleetTrack() {
-            const container = document.getElementById('fleetTrack');
-            if (!container) return;
-            container.innerHTML = '';
-            const progress = getFleetProgress();
-            container.appendChild(createExtraDot('fleet', 'Флот', progress, showFleetInfo));
-        }
-
-        function renderSentinelTrack() {
-            const container = document.getElementById('sentinelTrack');
-            if (!container) return;
-            container.innerHTML = '';
-            const zenProgress = getZenithProgress();
-            const senProgress = getSentinelProgress();
-            container.appendChild(createExtraDot('zenith', 'Zenith C', zenProgress, showZenithInfo));
-            container.appendChild(createExtraDot('sentinel', 'Sentinel M', senProgress, showSentinelInfo));
+            container.appendChild(dot);
         }
 
         function showFleetInfo() {
@@ -1376,66 +1380,25 @@
             placeholder.style.display = 'none';
             nameEl.style.display = 'block';
             detailsEl.style.display = 'flex';
+
             const progress = getFleetProgress();
             const status = getStatusInfo(progress);
             nameEl.textContent = 'Флот и судостроение';
             nameEl.className = 'info-name fleet-' + status.status;
+
             const total = fleetPhases.length;
             const completed = fleetPhases.filter(s => s.pct >= 100).length;
             const start = formatDate(fleetPhases[0].startDate);
             const end = formatDate(fleetPhases[0].endDate);
+            const budget = budgetByPhase.fleet ? '$' + budgetByPhase.fleet + ' млн' : '—';
+
             detailsEl.innerHTML = `
                 <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
                 <div class="detail-item"><span class="label">Подэтапов:</span> ${total}</div>
                 <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
                 <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
                 <div class="detail-item"><span class="label">Окончание:</span> ${end}</div>
-            `;
-        }
-
-        function showZenithInfo() {
-            const panel = document.getElementById('infoPanel');
-            const placeholder = panel.querySelector('.info-placeholder');
-            const nameEl = document.getElementById('infoName');
-            const detailsEl = document.getElementById('infoDetails');
-            placeholder.style.display = 'none';
-            nameEl.style.display = 'block';
-            detailsEl.style.display = 'flex';
-            const progress = getZenithProgress();
-            const status = getStatusInfo(progress);
-            nameEl.textContent = 'Горные ангары Zenith (C)';
-            nameEl.className = 'info-name zenith-' + status.status;
-            const total = zenithPhases.length;
-            const completed = zenithPhases.filter(s => s.pct >= 100).length;
-            const start = formatDate(zenithPhases[0].startDate);
-            detailsEl.innerHTML = `
-                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
-                <div class="detail-item"><span class="label">Подэтапов:</span> ${total}</div>
-                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
-            `;
-        }
-
-        function showSentinelInfo() {
-            const panel = document.getElementById('infoPanel');
-            const placeholder = panel.querySelector('.info-placeholder');
-            const nameEl = document.getElementById('infoName');
-            const detailsEl = document.getElementById('infoDetails');
-            placeholder.style.display = 'none';
-            nameEl.style.display = 'block';
-            detailsEl.style.display = 'flex';
-            const progress = getSentinelProgress();
-            const status = getStatusInfo(progress);
-            nameEl.textContent = 'Военная база Sentinel (M)';
-            nameEl.className = 'info-name sentinel-' + status.status;
-            const total = sentinelPhases.length;
-            const completed = sentinelPhases.filter(s => s.pct >= 100).length;
-            const start = formatDate(sentinelPhases[0].startDate);
-            detailsEl.innerHTML = `
-                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
-                <div class="detail-item"><span class="label">Подэтапов:</span> ${total}</div>
-                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
-                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
+                <div class="detail-item"><span class="label">Бюджет:</span> ${budget}</div>
             `;
         }
 
@@ -1506,47 +1469,39 @@
             });
         }
 
-        function renderExtraPhases(containerId, phasesList, blockClass, cardClass, title, startDate) {
-            const container = document.getElementById(containerId);
+        function renderFleetPhases() {
+            const container = document.getElementById('fleetContainer');
             container.innerHTML = '';
-            const progress = phasesList.length ? Math.round(phasesList.reduce((a, s) => a + s.pct, 0) / phasesList.length) : 0;
+            const progress = getFleetProgress();
+            const start = formatDate(fleetPhases[0].startDate);
+            const end = formatDate(fleetPhases[0].endDate);
+            const budget = budgetByPhase.fleet ? '$' + budgetByPhase.fleet + ' млн' : '—';
+
             const block = document.createElement('div');
-            block.className = 'phase-block ' + blockClass;
+            block.className = 'phase-block fleet-block';
             block.innerHTML = `
                 <div class="phase-header">
-                    <span class="phase-title">${title}</span>
+                    <span class="phase-title">🚢 Флот и судостроение (вне фаз)</span>
                     <div class="phase-meta">
-                        <span>Начало: ${formatDate(startDate)}</span>
+                        <span>Начало: ${start}</span>
+                        <span>Окончание: ${end}</span>
+                        <span>Бюджет: ${budget}</span>
                     </div>
                     <span class="phase-progress">${progress}%</span>
                 </div>
             `;
             const cardsWrap = document.createElement('div');
             cardsWrap.className = 'phase-cards';
-            phasesList.forEach((sub, idx) => {
-                cardsWrap.appendChild(createPhaseCard(sub, idx, cardClass));
+            fleetPhases.forEach((sub, idx) => {
+                cardsWrap.appendChild(createPhaseCard(sub, idx, 'fleet-card'));
             });
             block.appendChild(cardsWrap);
             container.appendChild(block);
         }
 
-        function renderFleetPhases() {
-            renderExtraPhases('fleetContainer', fleetPhases, 'fleet-block', 'fleet-card', '🚢 Флот и судостроение (вне фаз)', fleetPhases[0].startDate);
-        }
-
-        function renderZenithPhases() {
-            renderExtraPhases('zenithContainer', zenithPhases, 'zenith-block', 'zenith-card', '🏔️ Горные ангары Zenith (C) — секретная инфраструктура', zenithPhases[0].startDate);
-        }
-
-        function renderSentinelPhases() {
-            renderExtraPhases('sentinelContainer', sentinelPhases, 'sentinel-block', 'sentinel-card', '🛡️ Военная база Sentinel (M) — внешний периметр', sentinelPhases[0].startDate);
-        }
-
         function createPhaseCard(sub, index, extraClass) {
             const status = getStatusInfo(sub.pct);
             const isFleet = sub.phaseId === 'fleet';
-            const isZenith = sub.phaseId === 'zenith';
-            const isSentinel = sub.phaseId === 'sentinel';
             const card = document.createElement('div');
             card.className = 'phase-card' + (extraClass ? ' ' + extraClass : '');
             card.dataset.id = sub.id;
@@ -1561,7 +1516,7 @@
             top.className = 'card-top';
 
             const nameSpan = document.createElement('span');
-            nameSpan.className = 'card-name' + ((isFleet || isZenith || isSentinel) && status.status === 'active' ? ' active' : '');
+            nameSpan.className = 'card-name' + (isFleet && status.status === 'active' ? ' active' : '');
             nameSpan.textContent = sub.name;
             top.appendChild(nameSpan);
 
@@ -1587,7 +1542,6 @@
             card.appendChild(meta);
 
             card.addEventListener('click', function() { openModal(sub); });
-
             return card;
         }
 
@@ -1600,13 +1554,9 @@
             const title = document.getElementById('modalTitle');
             const status = getStatusInfo(sub.pct);
             const isFleet = sub.phaseId === 'fleet';
-            const isZenith = sub.phaseId === 'zenith';
-            const isSentinel = sub.phaseId === 'sentinel';
             title.textContent = sub.name;
             title.className = 'modal-title status-' + status.status;
             if (isFleet && status.status === 'active') title.classList.add('fleet-active');
-            if (isZenith && status.status === 'active') title.classList.add('zenith-active');
-            if (isSentinel && status.status === 'active') title.classList.add('sentinel-active');
 
             const body = document.getElementById('modalBody');
             body.innerHTML = '';
@@ -1629,8 +1579,8 @@
             fields.forEach(f => {
                 const row = document.createElement('div');
                 row.className = 'row';
-                const valueClass = f.extraClass ? `value ${f.extraClass}` : 'value';
-                row.innerHTML = `<span class="key">${f.key}</span><span class="${valueClass}">${f.value}</span>`;
+                const vc = f.extraClass ? `value ${f.extraClass}` : 'value';
+                row.innerHTML = `<span class="key">${f.key}</span><span class="${vc}">${f.value}</span>`;
                 body.appendChild(row);
             });
 
@@ -1653,7 +1603,6 @@
         // ============================================================
 
         function renderAnalytics() {
-            // Бюджет
             const ctxBudget = document.getElementById('budgetChart').getContext('2d');
             const spent1 = spentByPhase.p1 || 0;
             const spent2 = spentByPhase.p2 || 0;
@@ -1710,7 +1659,6 @@
                 }
             });
 
-            // Риски
             const riskList = document.getElementById('riskList');
             riskList.innerHTML = extraData.risks.map(r => {
                 const score = (r.probability * r.impact * 100).toFixed(0);
@@ -1874,11 +1822,8 @@
             applyTheme(currentTheme);
             renderTimeline();
             renderFleetTrack();
-            renderSentinelTrack();
             renderPhases();
             renderFleetPhases();
-            renderZenithPhases();
-            renderSentinelPhases();
             updateStats();
 
             document.getElementById('modalClose').addEventListener('click', function() {
