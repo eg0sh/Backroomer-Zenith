@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sentinel A · Дашборд</title>
+    <title>Sentinel · Дашборд</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -297,17 +297,22 @@
             box-shadow: 0 4px 30px rgba(0,0,0,0.4);
         }
         .top-menu .logo {
-            font-size: 24px; font-weight: 700;
+            font-size: 24px;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: -0.5px;
         }
         .top-menu .nav-links { display: flex; gap: 24px; flex-wrap: wrap; }
         .top-menu .nav-links a {
-            color: var(--text-secondary); text-decoration: none;
-            font-size: 15px; font-weight: 500;
-            padding: 6px 2px; border-bottom: 2px solid transparent;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 6px 2px;
+            border-bottom: 2px solid transparent;
             transition: all 0.2s;
         }
         .top-menu .nav-links a:hover,
@@ -316,29 +321,47 @@
             border-bottom-color: var(--accent-gold);
         }
         .top-menu .right-info {
-            font-size: 13px; color: var(--text-muted);
-            display: flex; align-items: center; gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
         .top-menu .right-info .dot {
-            display: inline-block; width: 8px; height: 8px;
-            border-radius: 50%; background: var(--dot-done);
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--dot-done);
             animation: pulse-dot 2s ease-in-out infinite;
         }
         @keyframes pulse-dot {
             0%,100% { opacity:1; transform:scale(1); }
             50% { opacity:0.3; transform:scale(0.7); }
         }
-        .header-controls { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .header-controls { display:flex; align-items:center; gap:12px; }
         .theme-btn {
-            background: var(--bg-card); border: 1px solid var(--border-color);
-            color: var(--text-secondary); padding: 6px 14px;
-            border-radius: 40px; font-size: 13px; cursor: pointer;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            cursor: pointer;
             transition: all 0.2s;
         }
         .theme-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
         .dashboard { max-width: 1400px; width: 100%; padding: 20px 24px 40px; }
 
+        @keyframes pulse-red {
+            0%,100% { box-shadow:0 0 30px rgba(231,76,60,0.4), 0 0 60px rgba(231,76,60,0.2); }
+            50% { box-shadow:0 0 80px rgba(231,76,60,0.8), 0 0 150px rgba(231,76,60,0.3); }
+        }
+        @keyframes ring-pulse {
+            0%,100% { transform:scale(1); opacity:0.6; }
+            50% { transform:scale(1.6); opacity:0; }
+        }
         @keyframes modal-in {
             from { opacity:0; transform:scale(0.95) translateY(20px); }
             to { opacity:1; transform:scale(1) translateY(0); }
@@ -347,26 +370,20 @@
             from { opacity:0; transform:translateY(15px) scale(0.97); }
             to { opacity:1; transform:translateY(0) scale(1); }
         }
-        @keyframes pulse-gold {
-            0%,100% { box-shadow: 0 0 30px rgba(245,176,65,0.4); }
-            50% { box-shadow: 0 0 80px rgba(245,176,65,0.8); }
-        }
-        @keyframes pulse-red-glow {
-            0%,100% { box-shadow: 0 0 30px rgba(231,76,60,0.4); }
-            50% { box-shadow: 0 0 80px rgba(231,76,60,0.8); }
-        }
 
         .header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:32px; gap:16px; }
         .header-left h1 {
             font-size:52px; font-weight:800; letter-spacing:-1px;
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin:0;
         }
         .header-right { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
         .stat-badge {
             display:flex; align-items:center; gap:8px;
-            background:var(--bg-card); backdrop-filter:blur(8px);
+            background:var(--bg-card);
             padding:6px 14px; border-radius:40px; border:1px solid var(--border-color);
             font-size:14px; box-shadow:var(--shadow);
         }
@@ -375,7 +392,7 @@
         .stat-badge .label { color:var(--text-muted); font-weight:400; }
         .update-time {
             font-size:13px; color:var(--text-muted);
-            background:var(--bg-card); backdrop-filter:blur(4px);
+            background:var(--bg-card);
             padding:4px 14px; border-radius:40px; border:1px solid var(--border-color);
             display:flex; align-items:center; gap:6px;
         }
@@ -392,132 +409,166 @@
         }
         .export-btn:hover { border-color:var(--accent-gold); color:var(--accent-gold); }
 
-        /* ===== ЕДИНАЯ ЛИНИЯ С ДВУМЯ КРУГАМИ ===== */
+        /* ===== Timeline (как в Arion) ===== */
         .timeline-wrapper {
-            background:var(--bg-panel); backdrop-filter:blur(10px);
-            border-radius:24px; padding:30px 20px 20px;
+            background:var(--bg-panel);
+            border-radius:24px; padding:30px 20px 24px;
             border:1px solid var(--border-color); margin-bottom:28px;
             box-shadow:var(--shadow);
         }
-        .sentinel-track {
+        .timeline-track {
             position: relative;
-            height: 120px;
+            height: 130px;
             width: 100%;
+            padding: 0 40px;
         }
-        .sentinel-line {
+        .timeline-line {
             position: absolute;
             top: 50%;
-            left: 25%;
-            right: 25%;
+            left: 40px;
+            right: 40px;
             height: 5px;
             background: var(--line-bg);
             border-radius: 4px;
             transform: translateY(-50%);
             z-index: 1;
-            overflow: hidden;
-            box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+            box-shadow: 0 0 20px rgba(255,255,255,0.05), inset 0 0 8px rgba(0,0,0,0.5);
+            overflow: visible;
         }
-        .sentinel-fill {
+        .seg-fill {
+            position: absolute;
+            top: 0;
             height: 100%;
             border-radius: 4px;
-            background: linear-gradient(90deg, #f5b041, #e67e22);
-            box-shadow: 0 0 20px rgba(245,176,65,0.5);
-            transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+            background: linear-gradient(90deg, var(--accent-gold), var(--gradient-end));
+            box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(245,176,65,0.15);
+            transition: width 0.8s cubic-bezier(0.4,0,0.2,1), left 0.8s cubic-bezier(0.4,0,0.2,1);
             width: 0%;
-            position: absolute;
-            left: 0;
-            top: 0;
+            left: 0%;
         }
-        .sentinel-dot {
+
+        /* Кружки на линии */
+        .timeline-dot {
             position: absolute;
             top: 50%;
             transform: translate(-50%, -50%);
-            width: 88px;
-            height: 88px;
+            width: 84px;
+            height: 84px;
             border-radius: 50%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            z-index: 2;
-            border: 2px solid;
             font-weight: 700;
             color: #fff;
-            text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+            cursor: pointer;
+            z-index: 2;
             transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+            user-select: none;
+            border: 2px solid rgba(255,255,255,0.15);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.6);
+            background: #1a2332;
+            text-shadow: 0 1px 6px rgba(0,0,0,0.6);
         }
-        .sentinel-dot.underground {
-            left: 25%;
-            background: linear-gradient(135deg, #f5b041, #d48c2c);
-            border-color: #f5b041;
-            box-shadow: 0 4px 24px rgba(245,176,65,0.4);
-        }
-        .sentinel-dot.surface {
-            left: 75%;
-            background: linear-gradient(135deg, #e74c3c, #c0392b);
-            border-color: #e74c3c;
-            box-shadow: 0 4px 24px rgba(231,76,60,0.4);
-        }
-        .sentinel-dot:hover {
-            transform: translate(-50%, -50%) scale(1.1);
-            z-index: 5;
-        }
-        .sentinel-dot.active.underground {
-            animation: pulse-gold 1.8s ease-in-out infinite;
-        }
-        .sentinel-dot.active.surface {
-            animation: pulse-red-glow 1.8s ease-in-out infinite;
-        }
-        .sentinel-dot .dot-pct {
-            font-size: 18px;
+        .timeline-dot .dot-pct {
+            font-size: 19px;
             line-height: 1.1;
         }
-        .sentinel-dot .dot-label {
-            font-size: 10px;
+        .timeline-dot .dot-label {
+            font-size: 9px;
             font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            opacity: 0.9;
+            letter-spacing: 0.3px;
+            opacity: 0.85;
             margin-top: 2px;
+            text-align: center;
+            max-width: 72px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .timeline-dot .dot-sub {
+            font-size: 8px;
+            font-weight: 400;
+            opacity: 0.6;
+            margin-top: 1px;
             text-align: center;
             max-width: 76px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
-        /* ===== ИНФО-ПАНЕЛЬ ===== */
-        .info-panel {
-            margin-top: 18px;
-            background: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid var(--border-color);
-            padding: 14px 22px;
-            min-height: 56px;
-            display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-            box-shadow: var(--shadow);
+        .timeline-dot::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            pointer-events: none;
+            transition: all 0.4s ease;
         }
-        .info-panel .info-placeholder { color: var(--text-muted); font-size: 14px; }
-        .info-panel .info-name { font-size: 20px; font-weight: 600; }
-        .info-panel .info-name.status-done { color: var(--dot-done); }
-        .info-panel .info-name.status-active { color: var(--accent-gold); }
-        .info-panel .info-name.status-pending { color: var(--text-muted); }
-        .info-panel .info-name.underground-active { color: #f5b041; }
-        .info-panel .info-name.surface-active { color: #e74c3c; }
-        .info-panel .info-details { display: flex; gap: 20px; flex-wrap: wrap; font-size: 13px; color: var(--text-secondary); }
-        .info-panel .info-details .detail-item { display: flex; align-items: baseline; gap: 6px; }
-        .info-panel .info-details .detail-item .label { color: var(--text-muted); }
 
-        /* ===== БЛОКИ ФАЗ ===== */
+        /* Цвета статусов */
+        .timeline-dot.done {
+            background: linear-gradient(135deg, #2b6a9e, #1d4a7a);
+            border-color: #4a8ec4;
+            box-shadow: 0 0 30px rgba(42,106,158,0.5), inset 0 0 20px rgba(74,142,196,0.2);
+        }
+        .timeline-dot.active {
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            border-color: #e74c3c;
+            box-shadow: 0 0 50px rgba(231,76,60,0.6), inset 0 0 30px rgba(231,76,60,0.3);
+            animation: pulse-red 1.8s ease-in-out infinite;
+        }
+        .timeline-dot.active::after {
+            border-color: rgba(231,76,60,0.3);
+            animation: ring-pulse 1.8s ease-in-out infinite;
+        }
+        .timeline-dot.pending {
+            background: rgba(42, 58, 78, 0.35);
+            border: 2px dashed rgba(90, 106, 126, 0.6);
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            color: rgba(176, 196, 222, 0.6);
+        }
+        .timeline-dot.pending .dot-pct,
+        .timeline-dot.pending .dot-label,
+        .timeline-dot.pending .dot-sub {
+            opacity: 0.55;
+        }
+
+        .timeline-dot:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            z-index: 5;
+        }
+        .timeline-dot:focus-visible {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 4px;
+        }
+
+        /* ===== Info panel ===== */
+        .info-panel {
+            margin-top:18px; background:var(--bg-card);
+            border-radius:16px; border:1px solid var(--border-color);
+            padding:14px 22px; min-height:56px;
+            display:flex; align-items:center; gap:20px; flex-wrap:wrap;
+            box-shadow:var(--shadow);
+        }
+        .info-panel .info-placeholder { color:var(--text-muted); font-size:14px; }
+        .info-panel .info-name { font-size:20px; font-weight:600; }
+        .info-panel .info-name.status-done { color:var(--dot-done); }
+        .info-panel .info-name.status-active { color:var(--accent-gold); }
+        .info-panel .info-name.status-pending { color:var(--text-muted); }
+        .info-panel .info-details { display:flex; gap:20px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); }
+        .info-panel .info-details .detail-item { display:flex; align-items:baseline; gap:6px; }
+        .info-panel .info-details .detail-item .label { color:var(--text-muted); }
+
+        /* ===== Phase blocks ===== */
         .phases-section { margin-top:28px; display:flex; flex-direction:column; gap:24px; }
         .phase-block {
-            background:var(--bg-panel); backdrop-filter:blur(6px);
+            background:var(--bg-panel);
             border-radius:20px; border:1px solid var(--border-color);
             padding:18px 22px 20px; box-shadow:var(--shadow);
         }
-        .phase-block.underground-block { border-left: 4px solid #f5b041; }
-        .phase-block.surface-block { border-left: 4px solid #e74c3c; }
         .phase-header {
             display:flex; align-items:center; justify-content:space-between;
             margin-bottom:14px; flex-wrap:wrap; gap:8px;
@@ -525,9 +576,7 @@
         .phase-header .phase-title { font-size:18px; font-weight:600; color:var(--text-primary); }
         .phase-header .phase-meta { display:flex; align-items:center; gap:16px; font-size:13px; color:var(--text-muted); }
         .phase-header .phase-meta span { background:var(--bg-card); padding:2px 12px; border-radius:40px; border:1px solid var(--border-color); }
-        .phase-header .phase-progress { font-size:14px; font-weight:500; background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
-        .underground-block .phase-progress { color: #f5b041; }
-        .surface-block .phase-progress { color: #e74c3c; }
+        .phase-header .phase-progress { font-size:14px; font-weight:500; color:var(--accent-gold); background:var(--bg-card); padding:4px 16px; border-radius:40px; border:1px solid var(--border-color); }
         .phase-cards { display:flex; flex-wrap:wrap; gap:12px; }
         .phase-card {
             background:var(--bg-card);
@@ -535,35 +584,26 @@
             border:1px solid var(--border-color);
             flex:0 1 auto; min-width:180px; max-width:320px;
             display:flex; flex-direction:column; gap:4px;
-            cursor:pointer; transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+            cursor:pointer; transition:all 0.3s;
             box-shadow:var(--shadow);
             opacity:0; animation:fadeInUp 0.5s ease forwards;
         }
         .phase-card:hover { border-color:var(--accent-gold); transform:translateY(-3px) scale(1.02); }
-        .underground-card:hover { border-color: #f5b041; }
-        .surface-card:hover { border-color: #e74c3c; }
         .phase-card.overdue { border-color:var(--dot-active); }
         .phase-card .card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
         .phase-card .card-name { font-size:14px; font-weight:500; color:var(--text-primary); flex:1; min-width:0; }
         .phase-card .card-pct { font-size:16px; font-weight:700; color:var(--accent-gold); min-width:48px; text-align:right; flex-shrink:0; }
         .phase-card .card-pct.done { color:var(--dot-done); }
         .phase-card .card-pct.pending { color:var(--text-muted); }
-        .underground-card .card-name.active { color: #f5b041; }
-        .surface-card .card-name.active { color: #e74c3c; }
-        .underground-card .card-pct.active { color: #f5b041; }
-        .surface-card .card-pct.active { color: #e74c3c; }
         .phase-card .card-status-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
         .phase-card .card-status-dot.done { background:var(--dot-done); }
         .phase-card .card-status-dot.active { background:var(--dot-active); }
         .phase-card .card-status-dot.pending { background:var(--dot-pending); }
-        .underground-card .card-status-dot.active { background: #f5b041; }
-        .surface-card .card-status-dot.active { background: #e74c3c; }
         .phase-card .card-meta { font-size:11px; color:var(--text-muted); display:flex; gap:12px; flex-wrap:wrap; margin-top:2px; }
+        .phase-card .card-meta span { display:flex; align-items:center; gap:4px; }
         .phase-card .card-meta .eta { color:var(--accent-gold); }
-        .underground-card .card-meta .eta { color: #f5b041; }
-        .surface-card .card-meta .eta { color: #e74c3c; }
 
-        /* ===== МОДАЛКА ===== */
+        /* ===== Modal ===== */
         .modal-overlay {
             display:none; position:fixed; inset:0;
             background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
@@ -571,20 +611,18 @@
         }
         .modal-overlay.active { display:flex; }
         .modal {
-            background:var(--bg-panel); backdrop-filter:blur(12px);
+            background:var(--bg-panel);
             border-radius:24px; padding:32px 36px;
             max-width:560px; width:100%;
             border:1px solid var(--border-color);
             box-shadow:0 24px 80px rgba(0,0,0,0.8);
-            animation:modal-in 0.4s cubic-bezier(0.4,0,0.2,1);
+            animation:modal-in 0.4s;
             max-height:80vh; overflow-y:auto;
         }
         .modal .modal-title { font-size:20px; font-weight:600; margin-bottom:8px; }
         .modal .modal-title.status-done { color: var(--dot-done) !important; }
         .modal .modal-title.status-active { color: var(--accent-gold) !important; }
         .modal .modal-title.status-pending { color: var(--text-muted) !important; }
-        .modal .modal-title.underground-active { color: #f5b041 !important; }
-        .modal .modal-title.surface-active { color: #e74c3c !important; }
         .modal .modal-close {
             margin-top:20px; background:var(--bg-card); border:1px solid var(--border-color);
             color:var(--text-secondary); padding:10px 24px; border-radius:40px;
@@ -615,10 +653,9 @@
             margin:0 auto 6px; border:1px solid rgba(255,255,255,0.1);
         }
 
-        /* ===== АНАЛИТИКА ===== */
         .analytics-section {
             margin-top:32px;
-            background:var(--bg-panel); backdrop-filter:blur(6px);
+            background:var(--bg-panel);
             border-radius:24px; border:1px solid var(--border-color);
             padding:24px; box-shadow:var(--shadow);
         }
@@ -627,7 +664,8 @@
             margin-bottom:20px;
         }
         .analytics-grid {
-            display:grid; grid-template-columns: 1fr 1fr; gap:20px;
+            display:grid; grid-template-columns: 1fr 1fr;
+            gap:20px;
         }
         .analytics-card {
             background:var(--bg-card); border-radius:16px;
@@ -666,26 +704,22 @@
             .top-menu .nav-links { justify-content: center; }
             .dashboard { padding: 16px 12px; }
             .header-left h1 { font-size:38px; }
-            .sentinel-track { height: 100px; }
-            .sentinel-dot { width: 72px; height: 72px; }
-            .sentinel-dot .dot-pct { font-size: 15px; }
-            .sentinel-dot .dot-label { font-size: 9px; max-width: 60px; }
-            .sentinel-line { left: 22%; right: 22%; }
-            .sentinel-dot.underground { left: 22%; }
-            .sentinel-dot.surface { left: 78%; }
+            .timeline-track { height: 110px; padding: 0 30px; }
+            .timeline-line { left: 30px; right: 30px; }
+            .timeline-dot { width: 70px; height: 70px; }
+            .timeline-dot .dot-pct { font-size: 16px; }
             .phase-cards { flex-direction:column; }
             .phase-card { max-width:100%; min-width:0; }
             .analytics-grid { grid-template-columns:1fr; }
         }
         @media (max-width: 480px) {
             .header-left h1 { font-size:30px; }
-            .sentinel-track { height: 90px; }
-            .sentinel-dot { width: 64px; height: 64px; }
-            .sentinel-dot .dot-pct { font-size: 13px; }
-            .sentinel-dot .dot-label { font-size: 8px; max-width: 54px; }
-            .sentinel-line { left: 20%; right: 20%; }
-            .sentinel-dot.underground { left: 20%; }
-            .sentinel-dot.surface { left: 80%; }
+            .timeline-track { height: 100px; padding: 0 24px; }
+            .timeline-line { left: 24px; right: 24px; }
+            .timeline-dot { width: 60px; height: 60px; }
+            .timeline-dot .dot-pct { font-size: 14px; }
+            .timeline-dot .dot-label { font-size: 8px; max-width: 52px; }
+            .timeline-dot .dot-sub { font-size: 7px; max-width: 56px; }
         }
 
         @media print {
@@ -716,7 +750,7 @@
     <div class="dashboard" id="dashboard">
 
         <header class="header">
-            <div class="header-left"><h1>Sentinel A</h1></div>
+            <div class="header-left"><h1>Sentinel</h1></div>
             <div class="header-right">
                 <div class="stat-badge">
                     <span class="label">Общий прогресс</span>
@@ -742,20 +776,13 @@
             <button class="export-btn" id="exportCSV">📊 CSV</button>
         </div>
 
-        <!-- ЕДИНАЯ ЛИНИЯ С ДВУМЯ КРУГАМИ -->
+        <!-- ===== TIMELINE ===== -->
         <div class="timeline-wrapper">
-            <div class="sentinel-track" id="sentinelTrack">
-                <div class="sentinel-line" id="sentinelLine">
-                    <div class="sentinel-fill" id="sentinelFill"></div>
+            <div class="timeline-track" id="timelineTrack">
+                <div class="timeline-line">
+                    <div class="seg-fill" id="segFill"></div>
                 </div>
-                <div class="sentinel-dot underground pending" id="dotUnderground" style="left: 25%" tabindex="0" role="button">
-                    <span class="dot-pct">0%</span>
-                    <span class="dot-label">Подземная</span>
-                </div>
-                <div class="sentinel-dot surface pending" id="dotSurface" style="left: 75%" tabindex="0" role="button">
-                    <span class="dot-pct">0%</span>
-                    <span class="dot-label">Наземная</span>
-                </div>
+                <!-- dots будут вставлены JS -->
             </div>
             <div class="info-panel" id="infoPanel">
                 <span class="info-placeholder">Нажмите на кружок, чтобы увидеть информацию</span>
@@ -764,13 +791,12 @@
             </div>
         </div>
 
-        <!-- БЛОКИ ФАЗ -->
-        <div class="phases-section" id="undergroundContainer"></div>
-        <div class="phases-section" id="surfaceContainer"></div>
+        <!-- ===== BLOCKS ===== -->
+        <div class="phases-section" id="blocksContainer"></div>
 
-        <!-- АНАЛИТИКА -->
+        <!-- ===== ANALYTICS ===== -->
         <div class="analytics-section">
-            <div class="analytics-title">📊 Аналитика Sentinel A</div>
+            <div class="analytics-title">📊 Аналитика Sentinel</div>
             <div class="analytics-grid">
                 <div class="analytics-card">
                     <h3>Прогресс по частям</h3>
@@ -783,7 +809,6 @@
             </div>
         </div>
 
-        <!-- МОДАЛКИ -->
         <div class="modal-overlay" id="modalOverlay">
             <div class="modal">
                 <div class="modal-title" id="modalTitle">Название</div>
@@ -808,7 +833,7 @@
 
         const CURRENT_DATE = new Date('2026-11-15');
 
-        // ===== ПОДЗЕМНАЯ ЧАСТЬ (бывшая C) =====
+        // ===== Sentinel A — Подземная часть (C) =====
         const undergroundPhases = [
             { id: 'C.0', name: 'Геологическое обследование горы', startDate: '2026-11-15', endDate: null, pct: 0,
                 description: 'Инженерные изыскания в массиве между НПЗ и внешним склоном. Определение прочности породы, трещиноватости, водоносных горизонтов, зон тектонических нарушений. Без этого нельзя резать пещеры — можно получить обвал или затопление.',
@@ -826,4 +851,534 @@
                 description: 'Установка массивных blast-дверей на въездах и между уровнями. Защита от ударной волны, проникновения, радиации.',
                 characteristics: '4 двери по 30 × 12 м, вес 200 т каждая, гидравлический привод, открытие за 60 с.',
                 dependencies: ['C.2'] },
-            { id: 'C.4', name: 'Лифты и вертикальный транспорт', startDate: null
+            { id: 'C.4', name: 'Лифты и вертикальный транспорт', startDate: null, endDate: null, pct: 0,
+                description: 'Тяжёлые грузовые лифты между уровнями для техники и персонала.',
+                characteristics: '4 лифта грузоподъёмностью 60 т, платформа 20 × 6 м. 2 пассажирских лифта.',
+                dependencies: ['C.2'] },
+            { id: 'C.5', name: 'Вентиляция, климат, пожаротушение', startDate: null, endDate: null, pct: 0,
+                description: 'Постоянная система жизнеобеспечения. Приточная и вытяжная вентиляция, фильтрация воздуха, поддержание температуры и влажности, автоматическое пожаротушение.',
+                characteristics: '10 воздухообменов/час, HEPA-фильтры, 200 огнетушителей, 5 насосных станций.',
+                dependencies: ['C.2', 'C.4'] },
+            { id: 'C.6', name: 'Энергоснабжение и освещение', startDate: null, endDate: null, pct: 0,
+                description: 'Собственная подстанция, кабельные линии от основной сети Arion, дизель-генераторы для автономии на 30 суток.',
+                characteristics: '15 МВт, 4 генератора по 3 МВт, кабели 10 кВ, 5 000 светильников.',
+                dependencies: ['C.2'] },
+            { id: 'C.7', name: 'Внутренняя безопасность', startDate: null, endDate: null, pct: 0,
+                description: 'Камеры, датчики движения, контроль доступа, биометрия на входах. Система оповещения. Связь с Sentinel.',
+                characteristics: '300 камер, 50 биометрических турникетов, оптоволокно до ЦКП Sentinel.',
+                dependencies: ['C.6'] },
+            { id: 'C.8', name: 'Шахтные люки на вершине горы (под баллистические ракеты)', startDate: null, endDate: null, pct: 0,
+                description: 'Проходка вертикальных шахт от верхнего уровня пещер до поверхности горы, вывод люков наружу. Сейчас ракет нет — шахты стоят пустые, закрыты маскировочными крышками. Снаружи люки неотличимы от скальных выступов.',
+                characteristics: '6 шахт диаметром 10 м, глубина 120–150 м. Верхний люк: 2 створки по 12 т, гидравлический привод, открытие за 30 с. Маскировочные крышки с фальшскалой.',
+                dependencies: ['C.1', 'C.2'] },
+            { id: 'C.9', name: 'Хранилища для баллистических ракет', startDate: null, endDate: null, pct: 0,
+                description: 'Отдельные герметичные камеры под ракеты — с климат-контролем, виброизоляцией, рельсовой системой перемещения к шахтам. Ракет пока нет — хранилища пустые, готовы к приёму.',
+                characteristics: '2 камеры по 100 × 50 × 20 м. Климат 18–22°C, влажность 40%. Рельсовый путь до каждой из 6 шахт. Противоударная защита.',
+                dependencies: ['C.1', 'C.2', 'C.8'] },
+            { id: 'C.10', name: 'Научно-конструкторское бюро (R&D Center)', startDate: null, endDate: null, pct: 0,
+                description: 'Центр разработки новой военной техники: новые башни для танков, модернизация БТР, системы наведения, броня, двигатели. Офисы конструкторов, лаборатории, вычислительный кластер.',
+                characteristics: '3 этажа, 5 000 м². 200 инженеров. Суперкомпьютер для расчётов брони и аэродинамики.',
+                dependencies: ['C.2', 'C.6'] },
+            { id: 'C.11', name: 'Опытное производство и прототипирование', startDate: null, endDate: null, pct: 0,
+                description: 'Цех для изготовления прототипов: новая башня танка, усиленная броня, опытные образцы вооружения. CNC-станки, сварка, сборка, покраска.',
+                characteristics: '2 000 м². 5-осевые CNC-станки, лазерная резка, сварочные посты, 3D-принтер по металлу, покрасочная камера. Кран 20 т.',
+                dependencies: ['C.10'] },
+            { id: 'C.12', name: 'Подземный испытательный полигон', startDate: null, endDate: null, pct: 0,
+                description: 'Тоннель-тир для испытаний вооружения, брони, новых башен без выхода наружу. Мишени, бронеплиты, измерительная аппаратура, звукоизоляция.',
+                characteristics: '500 м длина, 15 м ширина, 8 м высота. Мишенная зона 50 м. Звукоизоляция 60 дБ. Вентиляция 100 000 м³/час.',
+                dependencies: ['C.11'] },
+            { id: 'C.13', name: 'Подземный командный пункт Sentinel (резервный)', startDate: null, endDate: null, pct: 0,
+                description: 'Защищённый узел связи и управления внутри горы — резервный ЦКП на случай уничтожения основного. Связь со всеми объектами через оптоволокно и спутник.',
+                characteristics: '1 000 м². Автономность 30 суток. Оптоволокно до «Цитадели» и до ЦКП Arion. 20 рабочих мест.',
+                dependencies: ['C.2', 'C.6', 'C.7'] },
+            { id: 'C.14', name: 'Склад ГСМ и топлива для бронетехники', startDate: null, endDate: null, pct: 0,
+                description: 'Подземные резервуары для дизельного топлива, бензина, масла — для заправки танков, БТР, грузовиков без выезда на поверхность.',
+                characteristics: '10 резервуаров по 500 м³ (5 000 м³ суммарно). Насосы 200 л/мин. Пенная система пожаротушения. Обваловка и датчики утечек.',
+                dependencies: ['C.1', 'C.2'] }
+        ];
+
+        // ===== Sentinel A — Наземная часть (M) =====
+        const surfacePhases = [
+            { id: 'M.1', name: 'Разравнивание территории и грунтовая ВПП', startDate: null, endDate: null, pct: 0,
+                description: 'Быстрое разравнивание площадки у подножия горы. Грунтовая полоса, чтобы самолёты могли садиться и взлетать «по земле». Больше ничего не нужно — после этого база может месяцами ждать.',
+                characteristics: 'Полоса 2 000 × 60 м, грунт укатан, освещение нет, диспетчерской нет.',
+                dependencies: [] },
+            { id: 'M.2', name: 'Периметр, ограждение, КПП', startDate: null, endDate: null, pct: 0,
+                description: 'Забор по периметру базы, колючая проволока, КПП с шлагбаумами, вышки охраны.',
+                characteristics: '8 км забора, 6 вышек, 2 КПП.',
+                dependencies: ['M.1'] },
+            { id: 'M.3', name: 'Капитальная ВПП', startDate: null, endDate: null, pct: 0,
+                description: 'Бетонная или асфальтовая взлётно-посадочная полоса, рулёжные дорожки, перрон.',
+                characteristics: '2 500 × 60 м, бетон 40 см, освещение, рулёжки.',
+                dependencies: ['M.1', 'M.2'] },
+            { id: 'M.4', name: 'Командно-диспетчерский пункт и радар', startDate: null, endDate: null, pct: 0,
+                description: 'Вышка управления полётами, радиолокационные станции, связь.',
+                characteristics: 'Вышка 30 м, 2 радара (обзор и посадка), 5 радиостанций.',
+                dependencies: ['M.3'] },
+            { id: 'M.5', name: 'Казармы и бытовые здания', startDate: null, endDate: null, pct: 0,
+                description: 'Жилые модули для гарнизона, столовая, медпункт, спортзал, административный корпус.',
+                characteristics: '500 мест, столовая на 200, госпиталь на 20 коек.',
+                dependencies: ['M.2'] },
+            { id: 'M.6', name: 'Позиции ПВО', startDate: null, endDate: null, pct: 0,
+                description: 'Стационарные позиции для ЗРК, радары, укрытия для расчётов.',
+                characteristics: '4 позиции ЗРК малой/средней дальности, 2 радиолокатора.',
+                dependencies: ['M.2'] },
+            { id: 'M.7', name: 'Внешние склады боеприпасов', startDate: null, endDate: null, pct: 0,
+                description: 'Защищённые хранилища с обваловкой для боеприпасов, ракет, топлива. Отдельно от горных ангаров.',
+                characteristics: '10 хранилищ по 500 м², обваловка 2 м, молниезащита.',
+                dependencies: ['M.2'] },
+            { id: 'M.8', name: 'Парки техники и ремонтные боксы', startDate: null, endDate: null, pct: 0,
+                description: 'Открытые парковки и крытые боксы для техники, не поместившейся в горах, ремонтные мастерские.',
+                characteristics: '20 000 м² парковок, 8 боксов по 1 000 м².',
+                dependencies: ['M.3', 'M.5'] },
+            { id: 'M.9', name: 'Ангары для техники на поверхности', startDate: null, endDate: null, pct: 0,
+                description: 'Наземные ангары для техники, которую не нужно прятать в горе — текущее дежурство, быстрый выезд. Отдельно от горных пещер, ближе к ВПП и КПП.',
+                characteristics: '4 ангара по 2 000 м². Ворота 20 м. Отопление, освещение, мастерские.',
+                dependencies: ['M.2', 'M.3'] },
+            { id: 'M.10', name: 'Топливозаправочный пункт для авиации', startDate: null, endDate: null, pct: 0,
+                description: 'Склад авиационного топлива, заправщики, системы подачи к ВПП и перрону.',
+                characteristics: '3 резервуара по 1 000 м³, 4 топливозаправщика, подземные линии к перрону.',
+                dependencies: ['M.3'] }
+        ];
+
+        const parts = [
+            { id: 'underground', label: 'Подземная часть', short: 'Подземная', phases: undergroundPhases, startDate: '2026-11-15' },
+            { id: 'surface', label: 'Наземная часть', short: 'Наземная', phases: surfacePhases, startDate: null }
+        ];
+
+        const extraData = {
+            risks: [
+                { name: 'Геология (обвал/затопление)', probability: 0.30, impact: 0.70 },
+                { name: 'Задержка поставок', probability: 0.40, impact: 0.55 },
+                { name: 'Финансирование', probability: 0.05, impact: 0.50 },
+                { name: 'Кадровый дефицит', probability: 0.20, impact: 0.45 },
+                { name: 'Технические сбои', probability: 0.20, impact: 0.40 }
+            ]
+        };
+
+        const themes = [
+            { id: 'dark', label: 'Тёмная', color: '#141c28' },
+            { id: 'light', label: 'Светлая', color: '#f0f4f8' },
+            { id: 'gold', label: 'Золотая', color: '#2a1f0e' },
+            { id: 'blue', label: 'Синяя', color: '#0a1628' },
+            { id: 'green', label: 'Зелёная', color: '#0a1a12' },
+            { id: 'purple', label: 'Фиолетовая', color: '#1a0a2a' },
+            { id: 'red', label: 'Красная', color: '#2a0a0a' },
+            { id: 'eyecare', label: 'Защита глаз', color: '#d9d9d9' },
+            { id: 'cyberpunk', label: 'Киберпанк', color: '#0a0010' },
+            { id: 'graphic', label: 'Графическая', color: '#f5f5f5' },
+            { id: 'matrix', label: 'Матрица', color: '#001000' },
+            { id: 'space', label: 'Космос', color: '#0a0a2a' },
+            { id: 'retro', label: 'Ретро', color: '#f0e8d0' }
+        ];
+
+        let currentTheme = localStorage.getItem('arion-theme') || 'dark';
+        let progressChartInstance = null;
+
+        // ===== HELPERS =====
+        function getStatusInfo(pct) {
+            if (pct >= 100) return { status: 'done', label: 'Завершён' };
+            if (pct > 0) return { status: 'active', label: 'В процессе' };
+            return { status: 'pending', label: 'Не начат' };
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '—';
+            const d = new Date(dateStr);
+            if (isNaN(d.getTime())) return dateStr;
+            return d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function calcForecast(sub) {
+            if (!sub.startDate || sub.pct <= 0 || sub.pct >= 100) return null;
+            const start = new Date(sub.startDate);
+            const elapsed = (CURRENT_DATE - start) / 86400000;
+            if (elapsed <= 0) return null;
+            const rate = sub.pct / elapsed;
+            if (rate <= 0) return null;
+            return new Date(CURRENT_DATE.getTime() + ((100 - sub.pct) / rate) * 86400000);
+        }
+
+        function formatForecast(sub) {
+            const fc = calcForecast(sub);
+            if (!fc) return '—';
+            return fc.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        function getProgress(arr) {
+            if (!arr.length) return 0;
+            return Math.round(arr.reduce((a, s) => a + s.pct, 0) / arr.length);
+        }
+
+        // ===== TIMELINE =====
+        function renderTimeline() {
+            const track = document.getElementById('timelineTrack');
+            // Очищаем старые кружки, но оставляем линию
+            track.querySelectorAll('.timeline-dot').forEach(el => el.remove());
+
+            const n = parts.length;
+            const leftMargin = 6, rightMargin = 6;
+            const range = 100 - leftMargin - rightMargin;
+            const dotPositions = parts.map((_, i) => leftMargin + (i / (n - 1)) * range);
+
+            // Позиции 6% и 94% (для 2 кружков)
+            // Линия между ними = сегмент от 6% до 94%
+            // Сегмент заливки = прогресс первой части * (94-6)% от ширины
+
+            parts.forEach((part, index) => {
+                const progress = getProgress(part.phases);
+                const status = getStatusInfo(progress);
+                const x = dotPositions[index];
+
+                const dot = document.createElement('div');
+                dot.className = `timeline-dot ${status.status}`;
+                dot.style.left = x + '%';
+                dot.dataset.partId = part.id;
+                dot.setAttribute('tabindex', '0');
+                dot.setAttribute('role', 'button');
+                dot.setAttribute('aria-label', `${part.label}, прогресс ${progress}%`);
+
+                const pctSpan = document.createElement('span');
+                pctSpan.className = 'dot-pct';
+                pctSpan.textContent = progress + '%';
+                dot.appendChild(pctSpan);
+
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'dot-label';
+                labelSpan.textContent = 'Sentinel A';
+                dot.appendChild(labelSpan);
+
+                const subSpan = document.createElement('span');
+                subSpan.className = 'dot-sub';
+                subSpan.textContent = part.short;
+                dot.appendChild(subSpan);
+
+                dot.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showPartInfo(part.id);
+                });
+                dot.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        showPartInfo(part.id);
+                    }
+                });
+
+                track.appendChild(dot);
+            });
+
+            // Заливка сегмента между кружками = прогресс первой части
+            const fill = document.getElementById('segFill');
+            const leftPos = dotPositions[0];
+            const rightPos = dotPositions[1];
+            const segmentWidth = rightPos - leftPos;
+            const firstProgress = getProgress(parts[0].phases);
+            const fillWidth = (firstProgress / 100) * segmentWidth;
+            fill.style.left = leftPos + '%';
+            fill.style.width = fillWidth + '%';
+        }
+
+        // ===== INFO PANEL =====
+        function showPartInfo(partId) {
+            const part = parts.find(p => p.id === partId);
+            if (!part) return;
+
+            const panel = document.getElementById('infoPanel');
+            panel.querySelector('.info-placeholder').style.display = 'none';
+            const nameEl = document.getElementById('infoName');
+            const detailsEl = document.getElementById('infoDetails');
+            nameEl.style.display = 'block';
+            detailsEl.style.display = 'flex';
+
+            const progress = getProgress(part.phases);
+            const status = getStatusInfo(progress);
+            nameEl.textContent = `Sentinel A — ${part.label}`;
+            nameEl.className = 'info-name status-' + status.status;
+
+            const completed = part.phases.filter(s => s.pct >= 100).length;
+            const start = formatDate(part.startDate);
+
+            detailsEl.innerHTML = `
+                <div class="detail-item"><span class="label">Прогресс:</span> ${progress}%</div>
+                <div class="detail-item"><span class="label">Подэтапов:</span> ${part.phases.length}</div>
+                <div class="detail-item"><span class="label">Завершено:</span> ${completed}</div>
+                <div class="detail-item"><span class="label">Начало:</span> ${start}</div>
+            `;
+        }
+
+        // ===== BLOCKS =====
+        function renderBlocks() {
+            const container = document.getElementById('blocksContainer');
+            container.innerHTML = '';
+
+            parts.forEach(part => {
+                const progress = getProgress(part.phases);
+                const start = formatDate(part.startDate);
+
+                const block = document.createElement('div');
+                block.className = 'phase-block';
+
+                const header = document.createElement('div');
+                header.className = 'phase-header';
+                header.innerHTML = `
+                    <span class="phase-title">Sentinel A — ${part.label}</span>
+                    <div class="phase-meta">
+                        <span>Начало: ${start}</span>
+                    </div>
+                    <span class="phase-progress">${progress}%</span>
+                `;
+                block.appendChild(header);
+
+                const cardsWrap = document.createElement('div');
+                cardsWrap.className = 'phase-cards';
+                part.phases.forEach((sub, idx) => {
+                    cardsWrap.appendChild(createCard(sub, idx));
+                });
+
+                block.appendChild(cardsWrap);
+                container.appendChild(block);
+            });
+        }
+
+        function createCard(sub, index) {
+            const status = getStatusInfo(sub.pct);
+            const card = document.createElement('div');
+            card.className = 'phase-card';
+            card.style.animationDelay = (0.02 * (index + 1)) + 's';
+            card.setAttribute('tabindex', '0');
+            card.setAttribute('role', 'button');
+
+            const top = document.createElement('div');
+            top.className = 'card-top';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'card-name';
+            nameSpan.textContent = sub.name;
+            top.appendChild(nameSpan);
+
+            const pctSpan = document.createElement('span');
+            pctSpan.className = `card-pct ${status.status}`;
+            pctSpan.textContent = sub.pct + '%';
+            top.appendChild(pctSpan);
+
+            const dot = document.createElement('span');
+            dot.className = `card-status-dot ${status.status}`;
+            top.appendChild(dot);
+
+            card.appendChild(top);
+
+            const meta = document.createElement('div');
+            meta.className = 'card-meta';
+            if (sub.startDate) meta.innerHTML += `<span>Старт: ${formatDate(sub.startDate)}</span>`;
+            if (sub.endDate) meta.innerHTML += `<span>Финиш: ${formatDate(sub.endDate)}</span>`;
+            if (sub.pct > 0 && sub.pct < 100) {
+                const fc = formatForecast(sub);
+                if (fc !== '—') meta.innerHTML += `<span class="eta">Прогноз: ${fc}</span>`;
+            }
+            card.appendChild(meta);
+
+            card.addEventListener('click', () => openModal(sub));
+            card.addEventListener('keydown', e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openModal(sub);
+                }
+            });
+
+            return card;
+        }
+
+        // ===== MODAL =====
+        function openModal(sub) {
+            const overlay = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const status = getStatusInfo(sub.pct);
+            title.textContent = sub.name;
+            title.className = 'modal-title status-' + status.status;
+
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+
+            const isUnderground = sub.id.startsWith('C.');
+            const partLabel = isUnderground ? 'Подземная часть' : 'Наземная часть';
+            const all = undergroundPhases.concat(surfacePhases);
+
+            const fields = [
+                { key: 'Часть', value: partLabel },
+                { key: 'Статус', value: status.label },
+                { key: 'Прогресс', value: sub.pct + '%' },
+                { key: 'Начало', value: formatDate(sub.startDate) },
+                { key: 'Окончание', value: formatDate(sub.endDate) },
+                { key: 'Прогноз завершения', value: (sub.pct > 0 && sub.pct < 100) ? formatForecast(sub) : '—' },
+                { key: 'Описание', value: sub.description },
+                { key: 'Характеристики', value: sub.characteristics }
+            ];
+            if (sub.dependencies && sub.dependencies.length) {
+                const depNames = sub.dependencies.map(id => {
+                    const found = all.find(x => x.id === id);
+                    return found ? found.name : id;
+                }).join(', ');
+                fields.push({ key: 'Зависимости', value: depNames, extraClass: 'dependencies' });
+            }
+            fields.forEach(f => {
+                const row = document.createElement('div');
+                row.className = 'row';
+                const vc = f.extraClass ? `value ${f.extraClass}` : 'value';
+                row.innerHTML = `<span class="key">${f.key}</span><span class="${vc}">${f.value}</span>`;
+                body.appendChild(row);
+            });
+
+            overlay.classList.add('active');
+            document.getElementById('modalClose').focus();
+        }
+
+        // ===== ANALYTICS =====
+        function renderAnalytics() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            if (progressChartInstance) progressChartInstance.destroy();
+
+            const chartText = getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim() || '#b0c4de';
+            const chartGrid = getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim() || 'rgba(255,255,255,0.06)';
+            const accentGold = getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim() || '#f5b041';
+            const dotDone = getComputedStyle(document.documentElement).getPropertyValue('--dot-done').trim() || '#4cd9a0';
+
+            progressChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: parts.map(p => p.short),
+                    datasets: [{
+                        label: 'Прогресс, %',
+                        data: parts.map(p => getProgress(p.phases)),
+                        backgroundColor: [accentGold, dotDone],
+                        borderRadius: 6,
+                        barPercentage: 0.6,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { callbacks: { label: c => c.parsed.y + '%' } }
+                    },
+                    scales: {
+                        y: { min: 0, max: 100, grid: { color: chartGrid }, ticks: { color: chartText, callback: v => v + '%' } },
+                        x: { grid: { display: false }, ticks: { color: chartText } }
+                    }
+                }
+            });
+
+            const riskList = document.getElementById('riskList');
+            riskList.innerHTML = extraData.risks.map(r => {
+                const score = (r.probability * r.impact * 100).toFixed(0);
+                let cls = 'low';
+                if (score > 30) cls = 'medium';
+                if (score > 60) cls = 'high';
+                return `<div class="risk-item"><span class="risk-name">${r.name}</span><span class="risk-score ${cls}">${score}%</span></div>`;
+            }).join('');
+        }
+
+        // ===== STATS =====
+        function updateStats() {
+            const all = undergroundPhases.concat(surfacePhases);
+            const overall = getProgress(all);
+            const completed = all.filter(s => s.pct >= 100).length;
+            document.getElementById('totalProgress').textContent = overall + '%';
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('totalCount').textContent = all.length;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('ru-RU', {
+                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+            });
+            renderAnalytics();
+        }
+
+        // ===== THEME =====
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('arion-theme', theme);
+            currentTheme = theme;
+            renderTimeline();
+            renderAnalytics();
+        }
+
+        function openThemeModal() {
+            const overlay = document.getElementById('themeModalOverlay');
+            const c = document.getElementById('themeOptions');
+            c.innerHTML = '';
+            themes.forEach(t => {
+                const div = document.createElement('div');
+                div.className = 'theme-option' + (t.id === currentTheme ? ' active' : '');
+                div.innerHTML = `<div class="color-preview" style="background:${t.color};"></div>${t.label}`;
+                div.addEventListener('click', () => { applyTheme(t.id); overlay.classList.remove('active'); });
+                c.appendChild(div);
+            });
+            overlay.classList.add('active');
+        }
+
+        // ===== EXPORT =====
+        function exportPDF() { window.print(); }
+
+        function exportPNG() {
+            const bg = getComputedStyle(document.body).backgroundColor;
+            const orig = document.body.style.background;
+            document.body.style.background = bg;
+            html2canvas(document.getElementById('dashboard'), { scale: 2, backgroundColor: bg, useCORS: true })
+                .then(canvas => {
+                    document.body.style.background = orig;
+                    const a = document.createElement('a');
+                    a.download = 'Sentinel_dashboard.png';
+                    a.href = canvas.toDataURL('image/png');
+                    a.click();
+                }).catch(() => { document.body.style.background = orig; });
+        }
+
+        function exportCSV() {
+            const all = undergroundPhases.concat(surfacePhases);
+            const headers = ['ID', 'Часть', 'Название', 'Прогресс (%)', 'Начало', 'Окончание'];
+            const rows = all.map(s => [
+                s.id, s.id.startsWith('C.') ? 'Подземная' : 'Наземная',
+                s.name, s.pct, formatDate(s.startDate), formatDate(s.endDate)
+            ]);
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'Sentinel_status.csv';
+            a.click();
+        }
+
+        // ===== INIT =====
+        function init() {
+            function updateTime() {
+                document.getElementById('headerTime').textContent = new Date().toLocaleString('ru-RU', {
+                    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+            }
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            applyTheme(currentTheme);
+            renderBlocks();
+            updateStats();
+
+            document.getElementById('modalClose').addEventListener('click', () => document.getElementById('modalOverlay').classList.remove('active'));
+            document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+            document.getElementById('themeToggle').addEventListener('click', openThemeModal);
+            document.getElementById('themeModalClose').addEventListener('click', () => document.getElementById('themeModalOverlay').classList.remove('active'));
+            document.getElementById('themeModalOverlay').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+            document.getElementById('exportPDF').addEventListener('click', exportPDF);
+            document.getElementById('exportPNG').addEventListener('click', exportPNG);
+            document.getElementById('exportCSV').addEventListener('click', exportCSV);
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    document.getElementById('modalOverlay').classList.remove('active');
+                    document.getElementById('themeModalOverlay').classList.remove('active');
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
