@@ -649,6 +649,7 @@ const COMMANDS = {
             print(`Uptime: ${h}ч ${m}м ${s}с`);
         }
     },
+    konami:{ desc:'Подсказка', handler:()=>print('Это не команда. Попробуйте нажать ↑↑↓↓←→←→BA...','dim') },
     echo:{
         desc:'Вывести текст',
         handler:(args)=>{ print(args.join(' ')); }
