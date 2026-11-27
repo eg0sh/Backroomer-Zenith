@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -193,7 +193,7 @@ const ORGANIZATIONS = [
 const FILESYSTEM = {
     type:'dir', children:{
         '.diary.secret':{ type:'file', content:'Дневник дежурного\n\nСегодня опять слышал шум. Все говорят, что это нормально.\nЯ тоже говорю. Но кофе в автомате стал на вкус как помехи.' },
-        'readme.txt':{ type:'file', content:'FOUNDATION SECURE TERMINAL\n\nДобро пожаловать, гость. Уровень допуска: 1/5.\nВведите `help`, чтобы увидеть список команд.\nВведите `??` для краткой подсказки.' },
+        'readme.txt':{ type:'file', content:'FOUNDATION SECURE TERMINAL\n\nДобро пожаловать, гость. Уровень допуска: 0/5.\nВведите `help`, чтобы увидеть список команд.\nВведите `??` для краткой подсказки.' },
         'docs':{ type:'dir', children:{
             '.old_memo.secret':{ type:'file', content:'Служебная записка (не для печати)\n\nСнеговики с небес — единственное, что нравится всему персоналу.\nПредложение: объявить SCP-021 талисманом Фонда. Отклонено.' },
             'report_2026.txt':{ type:'file', content:'ГОДОВОЙ ОТЧЁТ 2026\n\nЗа год появилось множество новых аномалий.\nФонд практически ничего не сделал.\nПоявилось 7 связанных организаций, работающих с аномалиями.\nНаиболее активные: К.О.Н.Т.У.Р, A-co, LCSA.' },
@@ -638,7 +638,7 @@ const COMMANDS = {
             state.history.slice(-30).forEach((c,i)=>printLine(`  ${i+1}. ${c}`, 'dim'));
         }
     },
-    whoami:{ desc:'Кто я', handler:()=>{ print('guest (read-only). Уровень допуска: 1/5.', 'dim'); } },
+    whoami:{ desc:'Кто я', handler:()=>{ print('guest (read-only). Уровень допуска: 0/5.', 'dim'); } },
     date:{ desc:'Дата', handler:()=>{ print(new Date().toLocaleDateString('ru-RU')); } },
     time:{ desc:'Время', handler:()=>{ print(new Date().toLocaleTimeString('ru-RU')); } },
     uptime:{
@@ -870,7 +870,7 @@ const COMMANDS = {
 
     // --- 4.5 Файловая система ---
     ls:{
-        desc:'Список файлов (ls -a — скрытые)',
+        desc:'Список файлов',
         handler:(args=[])=>{
             const all = args.includes('-a');
             const r = resolvePath(state.cwd);
