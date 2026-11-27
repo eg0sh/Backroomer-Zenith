@@ -286,7 +286,7 @@ const ACHIEVEMENTS = [
     { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
     { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
     { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
-    { id:'all_done', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=34, final:true }
+    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=34, stage:1 }
 ];
 
 // ============================================================================
@@ -552,13 +552,15 @@ function unlockAchievement(id) {
 
 ACHIEVEMENTS.forEach(a=>{
     const t=state.unlocked[a.id];
-    if (a.final) {
+
+    if (a.stage === 1) {
         print('');
         print('══════════ ЭТАП I ══════════','warn');
         print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
         print('════════════════════════════','warn');
         return;
     }
+
     print(`  ${t?'★':'☆'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
 });
 
@@ -688,11 +690,19 @@ const COMMANDS = {
     ach:{ desc:'Список достижений', handler:()=>{
         const total=ACHIEVEMENTS.length, got=Object.keys(state.unlocked).length;
         print(`ДОСТИЖЕНИЯ: ${got}/${total}`,'head');
+
         ACHIEVEMENTS.forEach(a=>{
             const t=state.unlocked[a.id];
+
+            if (a.stage === 1) {
+                print(`  ${t?'♛':'♕'} ${a.name.padEnd(16)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
+                return;
+            }
+
             print(`  ${t?'★':'☆'} ${a.name.padEnd(16)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
         });
     }},
+    
     reset:{ desc:'Сбросить достижения и прогресс', handler:()=>{
         print('Будут удалены ВСЕ достижения и статистика. Введите «да» для подтверждения.','warn');
         state.game={ onInput: async t=>{
