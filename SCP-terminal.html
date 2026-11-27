@@ -286,7 +286,7 @@ const ACHIEVEMENTS = [
     { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
     { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
     { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
-    { id:'all_done', name:'Всё под контролем (Этап I)', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=33 }
+    { id:'all_done', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=33, final:true }
 ];
 
 // ============================================================================
@@ -540,15 +540,27 @@ function unlockAchievement(id) {
     if (!ach) return;
     sfx('ach');
     showPopup(ach);
-    printLine(`  ★ ДОСТИЖЕНИЕ: ${ach.name} — ${ach.desc}`, 'ach');
+    if (ach.final) {
+        printLine('');
+        printLine('  ♛ ЭТАП I ЗАВЕРШЁН ♛', 'ach');
+        printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
+        printLine('');
+    } else {
+        printLine(`  ★ ДОСТИЖЕНИЕ: ${ach.name} — ${ach.desc}`, 'ach');
+    }
 }
 
-function checkAchievements() {
-    ACHIEVEMENTS.forEach(a => {
-        if (state.unlocked[a.id]) return;
-        try { if (a.check(state)) unlockAchievement(a.id); } catch(e) {}
-    });
-}
+ACHIEVEMENTS.forEach(a=>{
+    const t=state.unlocked[a.id];
+    if (a.final) {
+        print('');
+        print('══════════ ЭТАП I ══════════','warn');
+        print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
+        print('════════════════════════════','warn');
+        return;
+    }
+    print(`  ${t?'★':'☆'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
+});
 
 // ============================================================================
 //  КОМАНДЫ
