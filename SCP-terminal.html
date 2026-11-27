@@ -286,7 +286,7 @@ const ACHIEVEMENTS = [
     { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
     { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
     { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
-    { id:'all_done', name:'Завершение', desc:'Получить все достижения', check:s=>Object.keys(s.unlocked).length>=ACHIEVEMENTS.length-1 }
+    { id:'all_done', name:'Всё под контролем (Этап I)', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=33 }
 ];
 
 // ============================================================================
