@@ -924,10 +924,10 @@ const COMMANDS = {
             walk(FILESYSTEM, '');
         }
     },
-    find:{ desc:'find [-a] текст — поиск по ФС', handler:(args)=>{
+    find:{ desc:'find текст — поиск по ФС', handler:(args)=>{
         const all = args.includes('-a');
         const q = args.filter(a=>a!=='-a').join(' ').toLowerCase();
-        if (!q) { print('Использование: find [-a] текст','warn'); return; }
+        if (!q) { print('Использование: find текст','warn'); return; }
         const hits=[];
         (function walk(node,path){
             for (const [n,c] of Object.entries(node.children)) {
