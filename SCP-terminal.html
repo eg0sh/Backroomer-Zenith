@@ -271,7 +271,7 @@ const ACHIEVEMENTS = [
     { id:'mathematician', name:'Математик', desc:'Ввести 42', check:s=>s.uniqueCommands.has('42') },
     { id:'traveller', name:'Путешественник', desc:'Открыть 3 страницы', check:s=>s.pagesOpened.size>=3 },
     { id:'librarian', name:'Библиотекарь', desc:'Прочитать 5 файлов', check:s=>s.filesRead.size>=5 },
-    { id:'archivist', name:'Архивариус', desc:'Прочитать 15 файлов', check:s=>s.filesRead.size>=15 },
+    // { id:'archivist', name:'Архивариус', desc:'Прочитать 15 файлов', check:s=>s.filesRead.size>=15 },
     { id:'persistent', name:'Настойчивый', desc:'20 неизвестных команд', check:s=>s.wrongCommands>=20 },
     { id:'amnesiac', name:'Забывчивый', desc:'Ввести clear 10 раз', check:s=>(s.commandCounts.clear||0)>=10 },
     { id:'helper', name:'Помощник', desc:'Ввести help 5 раз', check:s=>(s.commandCounts.help||0)>=5 },
@@ -837,6 +837,8 @@ const COMMANDS = {
             const s = PROJECTS.sentinel;
             print(`═══ ${s.name} ═══`, 'head');
             print(`Общий прогресс: ${s.progress}%`);
+            print('');
+            s.phases.forEach((p,i) => print(`  ${i+1}. ${p.name} — ${p.progress}%`, 'dim'));
             print('');
             print('Полный дашборд: open sentinel', 'dim');
         }
