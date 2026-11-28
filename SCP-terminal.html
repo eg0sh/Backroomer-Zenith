@@ -540,7 +540,7 @@ function unlockAchievement(id) {
     if (!ach) return;
     sfx('ach');
     showPopup(ach);
-    if (ach.final) {
+    if (ach.stage === 1) {
         printLine('');
         printLine('  ♛ ЭТАП I ЗАВЕРШЁН ♛', 'ach');
         printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
@@ -550,19 +550,12 @@ function unlockAchievement(id) {
     }
 }
 
-ACHIEVEMENTS.forEach(a=>{
-    const t=state.unlocked[a.id];
-
-    if (a.stage === 1) {
-        print('');
-        print('══════════ ЭТАП I ══════════','warn');
-        print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
-        print('════════════════════════════','warn');
-        return;
-    }
-
-    print(`  ${t?'★':'☆'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
-});
+function checkAchievements() {
+    ACHIEVEMENTS.forEach(a => {
+        if (state.unlocked[a.id]) return;
+        try { if (a.check(state)) unlockAchievement(a.id); } catch(e) {}
+    });
+}
 
 // ============================================================================
 //  КОМАНДЫ
@@ -690,16 +683,18 @@ const COMMANDS = {
     ach:{ desc:'Список достижений', handler:()=>{
         const total=ACHIEVEMENTS.length, got=Object.keys(state.unlocked).length;
         print(`ДОСТИЖЕНИЯ: ${got}/${total}`,'head');
+        print('══════════ ЭТАП I ══════════','warn')
 
         ACHIEVEMENTS.forEach(a=>{
             const t=state.unlocked[a.id];
 
             if (a.stage === 1) {
-                print(`  ${t?'♛':'♕'} ${a.name.padEnd(16)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
+                print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
+                print('══════════ ЭТАП II ══════════','warn')
                 return;
             }
 
-            print(`  ${t?'★':'☆'} ${a.name.padEnd(16)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
+            print(`  ${t?'★':'☆'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
         });
     }},
     
@@ -979,22 +974,51 @@ const COMMANDS = {
             overlay.appendChild(cvs);
             document.body.appendChild(overlay);
             const ctx = cvs.getContext('2d');
-            const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-            const fs = 16, cols = Math.floor(cvs.width/fs);
-            const drops = Array(cols).fill(1);
+    
+            // катакана (полуширинная) + цифры + латиница + кириллица + символы
+            const chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ'
+                        + '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                        + 'абвгдежзиклмнопрстуфхцчшэюя'
+                        + '<>[]{}=+*/|#$%&@:;?!';
+            const pick = () => chars[Math.floor(Math.random()*chars.length)];
+    
+            const fs = 16;
+            const cols = Math.ceil(cvs.width/fs);
+            const rows = Math.ceil(cvs.height/fs);
+            const color = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#00ff41';
+    
+            // у каждого столбца своя позиция (часть стартует выше экрана) и скорость
+            const drops  = Array.from({length:cols}, () => -Math.random()*rows);
+            const speeds = Array.from({length:cols}, () => 0.3 + Math.random()*0.9);
+            const lastRow = Array(cols).fill(-1);
+    
+            ctx.font = fs + 'px monospace';
             const timer = setInterval(()=>{
-                ctx.fillStyle = 'rgba(0,0,0,0.05)';
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';        // длинный затухающий шлейф
                 ctx.fillRect(0,0,cvs.width,cvs.height);
-                ctx.fillStyle = '#00ff41';
-                ctx.font = fs + 'px monospace';
-                for (let i=0;i<drops.length;i++) {
-                    const ch = chars[Math.floor(Math.random()*chars.length)];
-                    ctx.fillText(ch, i*fs, drops[i]*fs);
-                    if (drops[i]*fs > cvs.height && Math.random() > 0.975) drops[i] = 0;
-                    drops[i]++;
+    
+                for (let i=0;i<cols;i++) {
+                    const row = Math.floor(drops[i]);
+                    if (row >= 0 && row !== lastRow[i]) {
+                        // предыдущая клетка становится обычной (цветной)
+                        if (row > 0) {
+                            ctx.fillStyle = color;
+                            ctx.fillText(pick(), i*fs, (row-1)*fs);
+                        }
+                        // «голова» капли почти белая
+                        ctx.fillStyle = '#e8fff0';
+                        ctx.fillText(pick(), i*fs, row*fs);
+                        lastRow[i] = row;
+                    }
+                    drops[i] += speeds[i];
+                    if (drops[i] > rows && Math.random() > 0.96) {
+                        drops[i] = -Math.random()*20;       // новая капля через случайную паузу
+                        speeds[i] = 0.3 + Math.random()*0.9;
+                        lastRow[i] = -1;
+                    }
                 }
             }, 50);
-            setTimeout(()=>{ clearInterval(timer); overlay.remove(); }, 3500);
+            setTimeout(()=>{ clearInterval(timer); overlay.remove(); }, 6000);
         }
     },
     coffee:{ desc:'Пасхалка', handler:()=>{ print('Error 418: I\'m a teapot'); print('    ( (\n     ) )\n  ........\n  |      |]\n  \\      /\n   `----\''); } },
