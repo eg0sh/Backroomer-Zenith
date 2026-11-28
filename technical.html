@@ -420,8 +420,9 @@ function sfx(type){
     audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const P={key:[900,.02,'square',.02],enter:[500,.05,'square',.04],error:[140,.25,'sawtooth',.06],
-             ach:[880,.35,'sine',.08],glitch:[60,.3,'sawtooth',.05]}[type]; if(!P) return,
-             stageA:[1047,.4,'sine',.1], stageB:[1319,.4,'sine',.1], stageC:[1568,.9,'sine',.12];
+             ach:[880,.35,'sine',.08],glitch:[60,.3,'sawtooth',.05],
+             stageA:[1047,.4,'sine',.1],stageB:[1319,.4,'sine',.1],stageC:[1568,.9,'sine',.12]}[type];
+    if(!P) return;
     const o=audioCtx.createOscillator(), g=audioCtx.createGain();
     o.frequency.value=P[0]; o.type=P[2]; g.gain.value=P[3];
     o.connect(g); g.connect(audioCtx.destination);
