@@ -278,8 +278,8 @@ const ACHIEVEMENTS = [
     { id:'class_scholar', name:'Классификатор', desc:'Изучить все классы', check:s=>s.classesViewed.size>=SCP_CLASSES.length },
     { id:'org_contact', name:'Контакт', desc:'Изучить 3 организации', check:s=>s.orgsViewed.size>=3 },
     { id:'org_network', name:'Связной', desc:'Изучить все организации', check:s=>s.orgsViewed.size>=ORGANIZATIONS.length },
-    { id:'night_owl', name:'Ночная смена', desc:'Войти после 23:00', check:()=>{const h=new Date().getHours();return h>=23||h<5} },
-    { id:'early_bird', name:'Ранняя пташка', desc:'Войти до 6:00', check:()=>new Date().getHours()<6 },
+    { id:'night_owl', name:'Ночная смена', desc:'Войти с 23:00 до 4:00', check:()=>{const h=new Date().getHours();return h>=23||h<4} },
+    { id:'early_bird', name:'Ранняя пташка', desc:'Войти с 4:00 до 7:00', check:()=>{const h=new Date().getHours();return h>=4&&h<7} },
     { id:'theme_master', name:'Эстет', desc:'Сменить тему 5 раз', check:s=>s.themesChanged>=5 },
     { id:'mathematician', name:'Математик', desc:'Ввести 42', check:s=>s.uniqueCommands.has('42') },
     { id:'traveller', name:'Путешественник', desc:'Открыть 3 страницы', check:s=>s.pagesOpened.size>=3 },
@@ -570,11 +570,11 @@ async function unlockAchievement(id) {
     }
 }
 
-function checkAchievements() {
-    ACHIEVEMENTS.forEach(a => {
-        if (state.unlocked[a.id]) return;
-        try { if (a.check(state)) unlockAchievement(a.id); } catch(e) {}
-    });
+async function checkAchievements() {
+    for (const a of ACHIEVEMENTS) {
+        if (state.unlocked[a.id]) continue;
+        try { if (a.check(state)) await unlockAchievement(a.id); } catch(e) {}
+    }
 }
 
 // ============================================================================
@@ -1134,7 +1134,7 @@ const COMMANDS = {
             const w=t.toUpperCase();
             if (w==='EXIT') { state.game=null; print('Взлом прерван.','dim'); return; }
             if (!pool.includes(w)) { print('Этого слова нет в списке.','warn'); return; }
-            if (w===secret) { state.game=null; await typeText('ДОСТУП РАЗРЕШЁН.','success',30); unlockAchievement('hacker'); return; }
+            if (w===secret) { state.game=null; await typeText('ДОСТУП РАЗРЕШЁН.','success',30); await unlockAchievement('hacker'); return; }
             tries--; sfx('error');
             print(`Совпадений: ${like(w,secret)}/${secret.length}. Попыток: ${tries}`,'warn');
             if (tries<=0) { state.game=null; await typeText(`ТЕРМИНАЛ ЗАБЛОКИРОВАН. Пароль был: ${secret}`,'error',25); }
@@ -1163,7 +1163,7 @@ const COMMANDS = {
             if (round>=TOTAL) {
                 state.game=null;
                 await typeText(`Итог: ${score}/${TOTAL}`,'ach',25);
-                if (score>=4) unlockAchievement('guesser');
+                if (score>=4) await unlockAchievement('guesser');
             } else ask();
         }};
     }},
