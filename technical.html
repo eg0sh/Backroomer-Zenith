@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCP Foundation — Terminal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root,[data-theme="green"]{--fg:#00ff41;--fg-dim:#009933;--fg-glow:rgba(0,255,65,.5);--bg:#0a0a0a;--bg-term:#0d0d0d;--err:#ff3a3a;--warn:#ffb000;--info:#00b4ff}
+[data-theme="amber"]{--fg:#ffb000;--fg-dim:#885500;--fg-glow:rgba(255,176,0,.5)}
+[data-theme="white"]{--fg:#e0e0e0;--fg-dim:#666;--fg-glow:rgba(224,224,224,.4)}
+body{background:radial-gradient(ellipse at center,#0f1511 0%,#050605 70%,#000 100%);font-family:'Courier New',Courier,monospace;min-height:100vh;padding:1rem;display:flex;align-items:flex-start;justify-content:center;overflow-x:hidden}
+.terminal{width:100%;max-width:1100px;height:calc(100vh - 2rem);background:var(--bg-term);border:1px solid var(--fg-dim);border-radius:4px;display:flex;flex-direction:column;position:relative;overflow:hidden;box-shadow:0 0 40px var(--fg-glow),inset 0 0 100px rgba(0,0,0,.8);color:var(--fg);text-shadow:0 0 3px var(--fg-glow);cursor:text}
+.scanlines{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0,transparent 2px,rgba(0,0,0,.15) 3px,rgba(0,0,0,.15) 4px);z-index:10;animation:flicker 8s infinite}
+.vignette{position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 200px rgba(0,0,0,.9);z-index:9}
+@keyframes flicker{0%,100%{opacity:1}50%{opacity:.97}}
+.header{padding:.6rem 1rem;border-bottom:1px solid var(--fg-dim);font-size:.9rem;letter-spacing:.05em;z-index:5}
+.statusbar{padding:.3rem 1rem;font-size:.75rem;color:var(--fg-dim);border-bottom:1px solid var(--fg-dim);z-index:5}
+.output{flex:1;padding:1rem;overflow-y:auto;font-size:.95rem;line-height:1.4;white-space:pre-wrap;word-break:break-word;z-index:5}
+.output::-webkit-scrollbar{width:6px}.output::-webkit-scrollbar-track{background:transparent}.output::-webkit-scrollbar-thumb{background:var(--fg-dim)}
+.line{margin-bottom:.05rem}
+.line.input{color:var(--fg)}
+.line.success{color:#00ff88}
+.line.error{color:var(--err)}
+.line.warn{color:var(--warn)}
+.line.dim{color:var(--fg-dim)}
+.line.ach{color:var(--warn);font-weight:bold}
+.line.head{color:var(--fg);font-weight:bold;margin-top:.4rem}
+.input-line{display:flex;align-items:center;padding:.5rem 1rem;border-top:1px solid var(--fg-dim);background:var(--bg-term);z-index:5}
+.prompt{color:var(--fg);margin-right:.5rem}
+#input{flex:1;background:transparent;border:none;outline:none;color:var(--fg);font-family:inherit;font-size:.95rem;text-shadow:0 0 3px var(--fg-glow);caret-color:var(--fg); caret-shape:block}
+.footer{padding:.3rem 1rem;font-size:.7rem;color:var(--fg-dim);border-top:1px solid var(--fg-dim);z-index:5}
+.achievement-popup{position:fixed;top:1rem;right:1rem;background:var(--bg-term);border:1px solid var(--fg);padding:1rem 1.5rem;color:var(--fg);font-family:'Courier New',monospace;font-size:.9rem;box-shadow:0 0 30px var(--fg-glow);opacity:0;transform:translateX(100%);transition:all .3s ease;z-index:100;max-width:340px}
+.achievement-popup.show{opacity:1;transform:translateX(0)}
+.achievement-popup .title{font-weight:bold;margin-bottom:.2rem}
+.achievement-popup .desc{color:var(--fg-dim);font-size:.8rem}
+@media (max-width:700px){body{padding:0}.terminal{height:100vh;max-width:100%;border-radius:0;border:none}.achievement-popup{top:auto;bottom:1rem;right:1rem;left:1rem;max-width:none}}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(rgba(0,255,65,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,.035) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:radial-gradient(ellipse at center,transparent 35%,#000 100%);
+  -webkit-mask-image:radial-gradient(ellipse at center,transparent 35%,#000 100%)}
+.terminal{z-index:1}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+</style>
+</head>
+<body>
+<div class="terminal" id="terminal">
+<div class="scanlines"></div>
+<div class="vignette"></div>
+<div class="header" id="header-text">FOUNDATION SECURE TERMINAL — v4.8.0</div>
+<div class="statusbar" id="statusbar">SESSION #A7F3 · NODE: ZENITH-01 · LINK: OK</div>
+<div class="output" id="output"></div>
+<div class="input-line"><span class="prompt" id="prompt">> </span><input type="text" id="input" autocomplete="off" spellcheck="false" autocapitalize="off" autocorrect="off"></div>
+<div class="footer" id="footer">[▮▮▮▮▯] CPU 12% · MEM 3.4 GB · UPTIME 0d 0h</div>
+</div>
+<div class="achievement-popup" id="achievement-popup"></div>
+<script>
+// ============================================================================
+//                          БЛОК КОНСТАНТ
+// ----------------------------------------------------------------------------
+//  Всё, что можно менять/дополнять, находится здесь. Чтобы добавить новый SCP,
+//  организацию, класс, файл, достижение или страницу для «open» — просто
+//  добавьте объект в соответствующий массив.
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+//  1. ОБЩИЕ НАСТРОЙКИ ТЕРМИНАЛА
+//  version      — версия, отображается в шапке
+//  node         — имя узла в статус-баре
+//  session      — id сессии
+//  prompt       — символ приглашения перед вводом
+//  defaultTheme — тема по умолчанию: 'green' | 'amber' | 'white'
+//  bootSpeed    — задержка между строками boot, мс (клик/клавиша = пропустить)
+// ----------------------------------------------------------------------------
+const CONFIG = {
+    version: 'v4.8.0',
+    node: 'ZENITH-01',
+    session: '#A7F3',
+    prompt: '> ',
+    defaultTheme: 'green',
+    bootSpeed: 120
+};
+
+// ----------------------------------------------------------------------------
+//  2. SCP-ОБЪЕКТЫ
+//  id           — номер (без «SCP-»)
+//  name         — название
+//  class        — id класса из SCP_CLASSES
+//  risk         — id риска из RISK_CLASSES
+//  date         — дата обнаружения
+//  discoverer   — кто и где обнаружил
+//  conditions   — особые условия содержания
+//  description  — краткое описание для терминала (полное — на SCP-objects.html)
+// ----------------------------------------------------------------------------
+const SCP_OBJECTS = [
+    { id:'000', name:'Жуткий Шум', class:'veritas', risk:'moderate', date:'6.03.26', discoverer:'BEZL_gaming, Ур.0', conditions:'—', description:'Устойчивый звуковой фон всех уровней. Смесь шёпота, криков, скрежета, обрывков речи. Не имеет источника, вызывает паранойю и галлюцинации. Неотъемлемая часть реальности.' },
+    { id:'001', name:'Самооткрывание дверей/люков', class:'euclid', risk:'low', date:'6.03.26', discoverer:'BEZL_gaming, Ур.0, База Б.И.Г #1', conditions:'—', description:'Двери и люки на базах открываются и закрываются сами. Хаотичные движения, от медленных до многократных за секунду. Не влияют на стрельбу и зелья. Железные двери не подвержены.' },
+    { id:'002', name:'Частицы Шагов из Неоткуда', class:'undefined', risk:'unknown', date:'7.03.26', discoverer:'BEZL_gaming, Ур.0, База Б.И.Г #1', conditions:'—', description:'На поверхностях появляются частицы, имитирующие следы. Невидимой сущности нет. Физическое воздействие неэффективно. Гипотезы: искривление пространства-времени, квантовые флуктуации.' },
+    { id:'003', name:'Дверь Рассудка', class:'euclid', risk:'high', date:'7.03.26', discoverer:'BEZL_gaming, Ур.0', conditions:'—', description:'Еловая дверь, появляется случайно. В радиусе 0-3 блоков рассудок падает быстро, при взаимодействии — до 3-7%. Излучает радиацию, не блокируемую респиратором. Устойчива к SCP-001.' },
+    { id:'004', name:'Одичалые Часы', class:'aleator', risk:'critical', date:'8.03.26', discoverer:'Зануда, Однотоново', conditions:'—', description:'Часы с надписью «М4ГИЧ4СКIЕ Ч4СЫ». В левой руке через случайное время запускают событие любого масштаба (от наковальни до ядерного взрыва). В правой — нейтральны.', addendum:'25.09.26: при длительном нахождении в инвентаре часы издают тиканье, детский смех и фразы на неизвестном языке (A-co).' },
+    { id:'005', name:'Люди в Чёрном', class:'keter', risk:'high', date:'8.03.26', discoverer:'Зануда, Сцена', conditions:'—', description:'Чёрные силуэты без черт. Возникают из темноты, исчезают при прямом взгляде, появляются вновь при отведении. Неуязвимы для огнестрела. Цель — наблюдение.' },
+    { id:'006', name:'Рычаг-Призыватель', class:'aleator', risk:'critical', date:'8.03.26', discoverer:'Тусовщик, за картой', conditions:'—', description:'Рычаг, появляется на любых поверхностях (вода, лава), самореплицируется. Активация призывает неразумных сущностей случайным количеством. Уничтожать все рычаги в неподходящих местах.' },
+    { id:'007', name:'Галактика в Бутылке', class:'undefined', risk:'unknown', date:'9.03.26', discoverer:'Ефрейтор Зануд, Сцена', conditions:'—', description:'Бутылка с миниатюрной галактикой внутри. Природа (копия или новая) не установлена. Эффект употребления неизвестен. Гипотеза: возможное высвобождение вселенной.' },
+    { id:'008', name:'Двойник', class:'euclid', risk:'high', date:'9.03.26', discoverer:'4 Зануд, лагерь Зануд #13', conditions:'—', description:'Существо, принимающее облик любого игрока или сущности. Копирует движения, через время атакует, возвращаясь к искажённой форме. Урон зависит от жертвы.' },
+    { id:'009', name:'Меч Самоубийства', class:'euclid', risk:'high', date:'9.03.26', discoverer:'Зануда, Сцена', conditions:'—', description:'Идентичен железному мечу. При контакте с эфесом — суицидальные наклонности. Раны не смертельны, клинок не изнашивается. При использовании не по назначению разрушается. В инвентаре переходит в основной слот.' },
+    { id:'010', name:'В.Т.П.С.Г', class:'undefined', risk:'unknown', date:'11.03.26', discoverer:'Зануда, лагерь Зануд #48', conditions:'—', description:'Военная техника парит в воздухе какое-то время, затем исчезает. Причины и мотивы неизвестны.' },
+    { id:'011', name:'Привидение с Кладбища', class:'euclid', risk:'high', date:'11.03.26', discoverer:'Зануды, кладбище на Сцене', conditions:'—', description:'Привидение на кладбище Сцены. Активировано 22.09.26 ударом «Объекта 226» по могиле. Материализовалось со стонами и воем ветра. Три Зануды получили психотравмы. Доступ на кладбище закрыт.' },
+    { id:'012', name:'Странный Дёрн', class:'safe', risk:'low', date:'13.03.26', discoverer:'Зануда, Сцена', conditions:'—', description:'Блок земли, парящий над поверхностью. Случайные звуки и частицы. Безвреден. Природа левитации не объяснена.' },
+    { id:'013', name:'Странник', class:'euclid', risk:'low', date:'13.03.26', discoverer:'BEZL_gaming, Ур.0', conditions:'—', description:'Фигура в химзащите, блуждающая по уровням. Игнорирует других, держит предметы (фонарик, еду). Растворяется через время. Предположительно несколько особей.' },
+    { id:'014', name:'Летающий Поварской Колпак', class:'euclid', risk:'low', date:'8.03.26', discoverer:'Зануда, Сцена', conditions:'—', description:'Летающий колпак, проходит сквозь твёрдые поверхности, разрушает непрочные объекты (стекло). Опасности для живых не представляет.' },
+    { id:'015', name:'Душа Суицидального Тусовщика', class:'euclid', risk:'moderate', date:'7.03.26', discoverer:'Серость, Ур.53', conditions:'—', description:'Невидимый Тусовщик, покончивший с собой на Ур.53. Считает уровень своим домом. Проявляется шорохами, звуками, дверями. Способен менять уровень и наносить физический вред.' },
+    { id:'016', name:'Кусающийся Спороцвет', class:'euclid', risk:'high', date:'13.03.26', discoverer:'Генерал Зануд, Скукозона', conditions:'—', description:'Спороцвет, парящий в воздухе. Вдыхание спор — отравление. При попытке вреда жалит пропорционально удару. Распространяет ядовитый мох. Устойчив к холоду и молниям. Слабость — миндальная вода.' },
+    { id:'017', name:'Музыка из Неоткуда', class:'veritas', risk:'low', date:'13.03.26', discoverer:'BEZL_gaming, Ур.0, База Б.И.Г #1', conditions:'—', description:'Фоновая музыка, играющая даже при настройке «Музыка: 0%» (если общие звуки включены). Безвредна, часть звуковой среды.' },
+    { id:'018', name:'Воздушный Щит', class:'undefined', risk:'unknown', date:'14.03.26', discoverer:'Зануда, Ур.4', conditions:'—', description:'Щит, парящий в воздухе, периодически исчезает. Впечатление, что его удерживает невидимая сущность. Природа и цель не установлены.' },
+    { id:'019', name:'Фейковый Пол', class:'keter', risk:'high', date:'14.03.26', discoverer:'Зануда, Ур.0', conditions:'—', description:'Внезапное исчезновение пола, открывающее Пустоту. Предотвратить падение невозможно. Время и место непредсказуемы.' },
+    { id:'020', name:'Нарушители Мёртвой Тишины', class:'euclid', risk:'moderate', date:'17.03.26', discoverer:'BEZL_gaming, Ур.1', conditions:'—', description:'Неразумные сущности, появляющиеся даже во время Мёртвой Тишины. Причина нарушения исследуется.' },
+    { id:'021', name:'Снеговики с Небес', class:'ticonderoga', risk:'low', date:'18.03.26', discoverer:'Тусовщик, за картой', conditions:'—', description:'Снеговики, падающие с неба. Причина не установлена. Безвредны.' },
+    { id:'022', name:'Бутылка..?', class:'undefined', risk:'unknown', date:'18.03.26', discoverer:'Зануда, Ур.52', conditions:'—', description:'Пустая бутылка, появляется на поверхностях, при приближении исчезает. Не подвержена серверной очистке и SCP-023. Предположительно телепортируется, едина в экземпляре.' },
+    { id:'023', name:'Очистка', class:'ticonderoga', risk:'low', date:'19.03.26', discoverer:'BEZL_gaming, Ур.1', conditions:'—', description:'Случайная очистка сервера от выброшенных предметов в непредсказуемый момент. Безвредна.' },
+    { id:'024', name:'Урчащий Живот kastomminer', class:'undefined', risk:'unknown', date:'—', discoverer:'данные отсутствуют', conditions:'—', description:'Гипотетически существует. Данные отсутствуют.' },
+    { id:'025', name:'Инверсия', class:'noeticus', risk:'low', date:'23.03.26', discoverer:'Группа 3 Зануд, Сцена', conditions:'—', description:'Изменение цветовых фильтров окружения на случайные оттенки. Длится 5 сек. Каждый видит по-своему. Только восприятие, материя не меняется.' },
+    { id:'026', name:'Фантомный Предмет', class:'undefined', risk:'unknown', date:'23.03.26', discoverer:'Nastyamadness, Ур.0', conditions:'—', description:'Предмет в инвентаре с названием «############». Нельзя выбросить или использовать, хаотично меняет позицию. Не подтверждён другими. Возможно, галлюцинация.' },
+    { id:'027', name:'Галлюцинации Голода', class:'noeticus', risk:'low', date:'24.03.26', discoverer:'BEZL_gaming, Ур.0', conditions:'—', description:'Индикатор голода обнуляется, фактически сытость не меняется. Урон отсутствует. Длится ~30 сек.' },
+    { id:'028', name:'Смазанный Текст', class:'noeticus', risk:'low', date:'25.03.26', discoverer:'Зануда, Ур.52', conditions:'—', description:'Искажение любых текстов: буквы перемешиваются, замещаются символами иных алфавитов. Нейтрализуется миндальной (неоновой/супер) водой.' },
+    { id:'029', name:'Скрипун', class:'euclid', risk:'high', date:'26.03.26', discoverer:'Зануды «К.О.Н.Т.У.Р», лес Кожекрадов', conditions:'—', description:'Существо 3,5 блока высотой, 1 блок шириной, серое, тощее. Стоит под деревьями, издавая скрип. Враждебно к животным (63 убийства). К другим — только при угрозе.' },
+    { id:'030', name:'Парадокс Недосягаемости', class:'regium', risk:'moderate', date:'25.03.26', discoverer:'DanielDecarMosh, Ур.0.2', conditions:'—', description:'Коридор с двумя комнатами, бесконечно повторяющимися при движении вперёд. При повороте — возврат в начало. Возник после экспериментов с исказителем материи.' },
+    { id:'031', name:'Отключение Света', class:'undefined', risk:'unknown', date:'—', discoverer:'данные отсутствуют', conditions:'—', description:'Данные отсутствуют.' },
+    { id:'032', name:'Ветродуй', class:'undefined', risk:'high', date:'25.03.26', discoverer:'Тусовщик, лагерь Z.C.L', conditions:'—', description:'Воздушная аномалия, возникает на открытых пространствах при ветре >20 м/с. Может привести к гибели. В помещении безопасна.' },
+    { id:'033', name:'Колючий Отбрасыватель', class:'immunutus', risk:'moderate', date:'21.08.26', discoverer:'3 Зануд «A-co», Сцена', conditions:'—', description:'Парящий кактус с иероглифами. Отбрасывает предметы и существ рядом. Огнестойкий, неразрушимый. Обнаружено три экземпляра.' },
+    { id:'034', name:'Псевдоминдальная вода', class:'euclid', risk:'high', date:'21.08.26', discoverer:'2 Серости, Ур.4', conditions:'—', description:'Автомат, выдающий жидкость, идентичную миндальной воде. У животных — разложение за 10-20 сек. Предположительно внешнее заражение.' },
+    { id:'035', name:'Загадочные Таблетки', class:'undefined', risk:'unknown', date:'22.08.26', discoverer:'Зануда, Ур.5.1', conditions:'—', description:'Таблетки со случайным эффектом 30 сек: слепота, регенерация, сопротивление, иссушение. Устойчивы к огню, взрывам, очистке. Полный спектр неизвестен.' },
+    { id:'036', name:'Параноидальная Снежная Зона', class:'regium', risk:'moderate', date:'3.09.26', discoverer:'3 Зануда, снежный биом Сцены', conditions:'—', description:'Участок снежного биома. Каждые 5-18 ч падают синие снежинки с хрустальным звоном. Идентичны обычным, но холоднее. Содержат «параноицион», вызывающий головокружение, паранойю, голод (A-co и LCSA).' },
+    { id:'037', name:'Пукающие Грибы', class:'regium', risk:'moderate', date:'19:36, 9.09.26', discoverer:'2 Безликих «LCSA», Сцена', conditions:'—', description:'Скопления зелёных грибов у штаба LCSA. Слабо светятся, каждые 5-30 мин издают звук выхода газов. Длительное нахождение — удушье, кашель с зелёным паром. Огонь уничтожает.' },
+    { id:'038', name:'Пластинка «12»', class:'noeticus', risk:'unknown', date:'3:33, 12.09.26', discoverer:'Серость, Ур.19', conditions:'—', description:'Внешне — стандартная пластинка «11» (C418). Внутри — хаотичный звукоряд 46 сек 46 мс. Звуки: кашель, шаги, свиной хрюк, вагонеточный грохот. Хранится в A-co.' },
+    { id:'039', name:'Толкинг Экс', class:'euclid', risk:'moderate', date:'11:45–11:48, 13.09.26', discoverer:'Зануда «A-co», Сцена', conditions:'—', description:'Железный топор с разумом и речью. 18 языков. Дружелюбен к владельцу, при грубости царапает и выскальзывает. Видит на 20 чанков, обоняние 10 м, слух 1 км. Ночью шепчет на странных диалектах.' },
+    { id:'040', name:'[ДАННЫЕ УДАЛЕНЫ]', class:'undefined', risk:'unknown', date:'—', discoverer:'данные удалены', conditions:'—', description:'[ДАННЫЕ УДАЛЕНЫ]' },
+    { id:'041', name:'Сундук-Мутуген', class:'aleator', risk:'moderate', date:'15:02, 27.09.26', discoverer:'Зануда «A-co», Сцена', conditions:'—', description:'Сундук без крышки. Кладёт предмет — через минуту рядом появляется копия с одним случайным отклонением. Копия исчезает через 5 минут вместе с оригиналом.' },
+    { id:'042', name:'Объёмный?', class:'undefined', risk:'unknown', date:'16.10.26 (сон)', discoverer:'nepredzkazuemii, во сне', conditions:'протоколы не разработаны', description:'Предположительно — процесс «стирания» реальности. Предметы, уровни исчезают без пустоты. В финале субъект «перестаёт быть». Возможно Эверсио, Финис, Эросус или Ноэтикус. Подтверждения нет.' },
+    { id:'043', name:'Январский День?', class:'undefined', risk:'unknown', date:'16.10.26 (сон)', discoverer:'kastomminer, во сне', conditions:'протоколы не разработаны', description:'Карманная реальность — заснеженный дом. Время замерло, календари с одним словом «Январь». Возможная связь с SCP-042 или защитный механизм.' }
+];
+
+// ----------------------------------------------------------------------------
+//  3. КЛАССЫ ОБЪЕКТОВ
+//  id, name, latin, description, example
+// ----------------------------------------------------------------------------
+const SCP_CLASSES = [
+    { id:'safe', name:'Безопасный', latin:'Safe', description:'Объект полностью изучен, свойства статичны, предсказуемы. При стандартном хранении не представляет угрозы.', example:'SCP-012' },
+    { id:'euclid', name:'Евклид', latin:'Euclid', description:'Объект недостаточно изучен или нестабилен. Требует постоянного мониторинга и адаптивных протоколов.', example:'SCP-003, SCP-008, SCP-029' },
+    { id:'keter', name:'Кетер', latin:'Keter', description:'Объект крайне сложно удержать, требует огромных затрат, часто деструктивен.', example:'SCP-005, SCP-019' },
+    { id:'undefined', name:'Неопределённый', latin:'Undefined', description:'Свойства и способы удержания не изучены.', example:'SCP-002, SCP-007, SCP-042' },
+    { id:'thaumiel', name:'Таумиэль', latin:'Thaumiel', description:'Объект с собственным разумом, используется для сдерживания других аномалий. Требует одобрения O5.', example:'в реестре отсутствует' },
+    { id:'terminuel', name:'Терминуэль', latin:'Terminuel', description:'Неодушевлённый предмет, служит барьером или средством сдерживания.', example:'в реестре отсутствует' },
+    { id:'ticonderoga', name:'Тикондерога', latin:'Ticonderoga', description:'Объект невозможно сдержать, но и не нужно — он безвреден.', example:'SCP-021, SCP-023' },
+    { id:'sanveras', name:'Санверас', latin:'Sanveras', description:'Объект можно сдержать, но изоляция приведёт к более масштабной катастрофе. Оставляют на свободе.', example:'в реестре отсутствует' },
+    { id:'immunutus', name:'Иммутус', latin:'Immunutus', description:'Абсолютно неуязвим для любого воздействия. Уничтожение невозможно.', example:'SCP-033' },
+    { id:'erosus', name:'Эросус', latin:'Erosus', description:'Активно изменяет реальность по принципу вируса или меметического агента.', example:'в реестре отсутствует' },
+    { id:'aleator', name:'Алеатор', latin:'Aleator', description:'Абсолютная нестабильность локализации и эффекта. Любое взаимодействие запускает случайное изменение реальности.', example:'SCP-004, SCP-006, SCP-041' },
+    { id:'veritas', name:'Веритас', latin:'Veritas', description:'Аномалия глубоко интегрирована в экосистему или законы локации, стала неотъемлемой «нормой».', example:'SCP-000, SCP-017' },
+    { id:'regium', name:'Региум', latin:'Regium', description:'Класс присваивается целой локации, уровню или измерению, пропитанному аномальными свойствами.', example:'SCP-030, SCP-036, SCP-037' },
+    { id:'anamorph', name:'Анаморф', latin:'Anamorph', description:'Не имеет постоянной формы, зависит от восприятия наблюдателя.', example:'в реестре отсутствует' },
+    { id:'noeticus', name:'Ноэтикус', latin:'Noeticus', description:'Воздействует только на разум, память, восприятие. Материя не затрагивается.', example:'SCP-025, SCP-027, SCP-028, SCP-038' },
+    { id:'finis', name:'Финис', latin:'Finis', description:'Тотем или предвестник необратимого глобального события. Сдерживание и уничтожение невозможны.', example:'в реестре отсутствует' },
+    { id:'eversio', name:'Эверсио', latin:'Eversio', description:'Прорыв неизбежен, последствия — уничтожение реальности. Только отсрочка и документирование.', example:'в реестре отсутствует' },
+    { id:'neutralized', name:'Нейтрализованный', latin:'Neutralized', description:'Ранее аномальный, утратил свойства. Снят с учёта по экспертизе.', example:'в реестре отсутствует' },
+    { id:'explained', name:'Обоснованный', latin:'Explained', description:'Получил научное объяснение или признан мистификацией.', example:'в реестре отсутствует' }
+];
+
+// ----------------------------------------------------------------------------
+//  4. КЛАССЫ РИСКА
+// ----------------------------------------------------------------------------
+const RISK_CLASSES = [
+    { id:'low', name:'Низкий', latin:'Low', description:'Прямая угроза жизни или здоровью отсутствует даже при длительном контакте. Эффекты минимальны и обратимы.' },
+    { id:'moderate', name:'Средний', latin:'Moderate', description:'Возможны травмы, ухудшение психического состояния или материальный ущерб при неосторожном обращении. Стандартные меры предосторожности достаточны.' },
+    { id:'high', name:'Высокий', latin:'High', description:'Высока вероятность смерти, тяжёлых увечий или необратимого поражения личности. Требуется строгий протокол взаимодействия и изолированное содержание.' },
+    { id:'critical', name:'Критический', latin:'Critical', description:'Угроза для организации, группы или целого региона. Возможны массовые жертвы в пределах локации, подрыв инфраструктуры, необратимое поражение крупной группы населения. Требуется экстренное реагирование и готовность к ликвидации.' },
+    { id:'apocalyptic', name:'Апокалиптический', latin:'Apocalyptic', description:'Угроза континентального или межконтинентального масштаба. Массовая гибель населения в масштабах материка, коллапс цивилизации на обширных территориях, необратимые изменения условий обитания. Требуется полная мобилизация всех ресурсов Фонда и союзных организаций.' },
+    { id:'unknown', name:'Неизвестен', latin:'Unknown', description:'Данных недостаточно для оценки; рекомендуется режим максимальной осторожности до завершения исследований.' }
+];
+
+// ----------------------------------------------------------------------------
+//  5. ОРГАНИЗАЦИИ
+//  name, subtitle, founded, keyMembers, description, ranks
+// ----------------------------------------------------------------------------
+const ORGANIZATIONS = [
+    { name:'К.О.Н.Т.У.Р', subtitle:'Контроль Объектов Неизвестного Типа и Условной Реальности', founded:'9 марта 2026', keyMembers:'nepredskazuemii, Зануда #325, Зануда #1088, Nastyamadness, chm0_nYa', description:'Ведущая научно-исследовательская компания по изучению аномалий. Миссия — контроль над неизвестным, минимизация угроз, использование знаний для развития науки. Девиз: «Контроль ради жизни. Стабильность ради будущего».', ranks:'Совет, Ответственный за операции, Командир, Главный научный сотрудник, Старший/Научный/Младший сотрудник, Лаб. ассистент, Токсинолог, Исследователь, Обезвреживающий, Строитель, Инженер, Охранник, Камикадзе, Медик' },
+    { name:'A.N.O.M.A.L.Y', subtitle:'Анализ Нелинейных Объектов, Моделирование Аномалий и Локализация Изменений', founded:'13 марта 2026', keyMembers:'dima9967, 6 Зануд', description:'В составе «О-Сознания». Системный анализ аномалий в The Backrooms. Разработка протоколов сдерживания и методов локализации в лиминальных пространствах.', ranks:'Магистр, Координатор, Аналитик, Техник, Ликвидатор, Оперативник, Торговец, Разведчик' },
+    { name:'MI&LRI', subtitle:'Major Invention & Logistics Research Institute', founded:'21 марта 2026', keyMembers:'DanielDecarMosh, 3 Зануд', description:'«Мы занимается тем, о чём вам не скажем, ибо лень нам, да и не нужно вам».', ranks:'Директор, ст./научный/мл. сотрудник, командир/лейтенант/рядовой охраны, ст./инженер/мл. инженер, глава наблюдения' },
+    { name:'A-co', subtitle:'Anomaly Corporation', founded:'1 июля 2026', keyMembers:'Зануда #30006 (владелец), Зануда #49875 (главный работник, Майор)', description:'«Ищем, изучаем и пользуемся Аномалиями. Присоединяйтесь, если в чём-то вы с нами похожи».', ranks:'Стажёр, Работник I/II/III класса, Аномалиолог I/II/III класса, Высший Сотрудник, Глава Организации' },
+    { name:'Confident Anomaly Investigators', subtitle:'', founded:'6 июля 2026', keyMembers:'[скрыто]', description:'Отсутствует.', ranks:'[нету]' },
+    { name:'LCSA', subtitle:'Large Center for the Study of Anomalies', founded:'5 сентября 2026', keyMembers:'[скрыто]', description:'«Ведущая международная исследовательская организация. Систематическое наблюдение, классификация и нейтрализация отклонений, угрожающих целостности картины мира. Девиз: "Отрицать легче, чем принять. Мы принимаем"».', ranks:'Новичок/Стажёр/Оператор/Ветеран/Излом/Проводник (кл.I), Аналитик/Интерпретатор/Классификатор/Теоретик/Хранитель (кл.II), Техник/Инженер Сдерживания/Сапёр (кл.III), Координатор/Цензор/Совет Директоров (кл.IV)' },
+    { name:'Ω-Интеграл', subtitle:'Omega-Integral', founded:'6 сентября 2026', keyMembers:'[скрыто]', description:'Реальность — код. Аномалии — «артефакты компиляции». Цели: «Интеграция» (вживление аномалий в повседневность) и «Вычисление» (расшифровка природы хаоса). Внедряют аномальные свойства в промышленность, медицину, военное дело.', ranks:'Виток I: Вычислитель, Скрипт-Стажёр, Корректор, Оператор Потока; Виток II: Декомпилятор, Медик; Виток III: Фрактальный Монах, Главный Кузнец, Экзо-Хранитель' }
+];
+
+// ----------------------------------------------------------------------------
+//  6. ФАЙЛОВАЯ СИСТЕМА (симуляция)
+//  Структура: { type:'dir', children:{...} } или { type:'file', content:'...' }
+//  Для добавления файла — просто вставьте объект в children нужной папки.
+// ----------------------------------------------------------------------------
+const FILESYSTEM = {
+    type:'dir', children:{
+        '.diary.secret':{ type:'file', content:'Дневник дежурного\n\nСегодня опять слышал шум. Все говорят, что это нормально.\nЯ тоже говорю. Но кофе в автомате стал на вкус как помехи.' },
+        'readme.txt':{ type:'file', content:'FOUNDATION SECURE TERMINAL\n\nДобро пожаловать, гость. Уровень допуска: 0/5.\nВведите `help`, чтобы увидеть список команд.\nВведите `??` для краткой подсказки.' },
+        'notice.txt':{ type:'file', content:'ОБЪЯВЛЕНИЕ\n\nПерсоналу напоминается: шум на уровнях не является поводом для паники.\nЕсли шум ответил вам по имени, сообщите в отдел наблюдения.\nНе отвечайте ему.' },
+        'archive':{ type:'dir', children:{
+            'first_record.txt':{ type:'file', content:'ПЕРВАЯ ЗАПИСЬ РЕЕСТРА\n\n6.03.26. Зафиксирован SCP-000.\nЗаписавший не смог описать источник звука.\nПометка на полях: «он всегда был здесь».' },
+            '.last_entry.secret':{ type:'file', content:'Последняя запись архивариуса\n\nЯ перечитал все файлы по два раза.\nВ каждом из них на одну строку больше, чем я помню.' }
+        } },
+        'docs':{ type:'dir', children:{
+            '.old_memo.secret':{ type:'file', content:'Служебная записка (не для печати)\n\nСнеговики с небес — единственное, что нравится всему персоналу.\nПредложение: объявить SCP-021 талисманом Фонда. Отклонено.' },
+            'report_2026.txt':{ type:'file', content:'ГОДОВОЙ ОТЧЁТ 2026\n\nЗа год появилось множество новых аномалий.\nФонд практически ничего не сделал.\nПоявилось 7 связанных организаций, работающих с аномалиями.\nНаиболее активные: К.О.Н.Т.У.Р, A-co, LCSA.' },
+            'protocols.txt':{ type:'file', content:'ОБЩИЕ ПРОТОКОЛЫ\n\n1. Не смотреть прямо на то, что исчезает при взгляде.\n2. Не отвечать на звуки без источника.\n3. Не открывать двери, которые открылись сами.\n4. Если пол исчез, это уже не протокол.' },
+            'personnel.txt':{ type:'file', content:'ПЕРСОНАЛ\n\nНаиболее активные организации: К.О.Н.Т.У.Р, A-co, LCSA.\nКоличество сотрудников: [ДАННЫЕ УДАЛЕНЫ]\nКоличество Бактерий: больше, чем хотелось бы.' },
+            'incident_0306.txt':{ type:'file', content:'ИНЦИДЕНТ 6.03.26\n\nПервое наблюдение Жуткого Шума на Ур.0.\nНаблюдатель: BEZL_gaming.\nИсход: наблюдатель продолжил наблюдение.' },
+            'manifest.txt':{ type:'file', content:'МАНИФЕСТ SCP-ФОНДА\n\nSecure. Contain. Protect.\nМы защищаем нормальность любой ценой.\nМы - последний рубеж между человечеством и хаосом.' },
+            'hint.txt':{ type:'file', content:'Подсказка:\n\nПопробуйте ввести `42`. Или `xyzzy`. Или `matrix`.\nА ещё попробуйте ↑↑↓↓←→←→BA...' }
+        } },
+        'logs':{ type:'dir', children:{
+            'session.log':{ type:'file', content:'[22:14] дверь B открыта\n[22:18] дверь B закрыта\n[23:02] [УДАЛЕНО] замечен в коридоре\n[23:03] субъект исчез\n[04:11] [УДАЛЕНО] активирован в секторе 7\n[04:12] потеря связи с сектором' },
+            'night_watch.log':{ type:'file', content:'[00:10] обход завершён, всё спокойно\n[01:25] дверь B открылась сама\n[02:40] обход завершён, всё спокойно\n[03:33] обход не начинался\n[03:34] обход завершён' },
+            'camera_03.log':{ type:'file', content:'[ЗАПИСЬ] камера 3\n\n02:07 никого нет\n02:08 никого нет\n02:09 никого нет, запись идёт\n02:10 запись остановлена оператором\n(оператора в смене не было)' },
+        } },
+        'classified':{ type:'dir', children:{
+            '.o5_joke.secret':{ type:'file', content:'— Почему Фонд не боится темноты?\n— Потому что там уже сидит SCP-005.\n\n(анекдот одобрен советом, хотя никто не смеялся)' },
+            'file_226.enc':{ type:'file', content:'[ЗАШИФРОВАНО]\nТребуется допуск уровня 5.\nОбратитесь в отдел криптографии.' },
+            'o5_memo.enc':{ type:'file', content:'[ЗАШИФРОВАНО]\n\nЗаголовок читаем: «ПРОЕКТ ZENITH».\nОстальное требует допуска уровня 5.\nОбратитесь в раздел криптографии.' },
+            'redacted.txt':{ type:'file', content:'[ДАННЫЕ УДАЛЕНЫ]\nДоступ запрещён.' }
+        } }
+    }
+};
+
+// ----------------------------------------------------------------------------
+//  7. СТРАНИЦЫ ДЛЯ КОМАНДЫ `open`
+// ----------------------------------------------------------------------------
+const PAGE_MAP = {
+    'scp-objects':'SCP-objects.html',
+    'scp-class':'SCP-class.html',
+    'scp-organizations':'SCP-organizations.html',
+    'scp-menu':'SCP-menu.html',
+    'arion':'arion.html',
+    'sentinel':'sentinel.html',
+    'analysis':'analysis.html',
+    'index':'index.html'
+};
+
+// ----------------------------------------------------------------------------
+//  8. КРАТКАЯ СВОДКА ПО ПРОЕКТАМ (для команд arion/sentinel/fleet/budget/oil)
+// ----------------------------------------------------------------------------
+const PROJECTS = {
+    arion:{ name:'Arion', progress:47, budget:{ total:2000, spent:1314, remaining:686 }, phases:[
+        { name:'Разведка и бурение', progress:100 },
+        { name:'Промысел и ЦПС', progress:100 },
+        { name:'Магистраль и НПЗ', progress:100 },
+        { name:'СПГ, порт, энергетика', progress:0 },
+        { name:'Флот и судостроение', progress:49 },
+    ] },
+    sentinel:{ name:'Sentinel', progress:70, phases:[
+        { name:'Sentinel A — Подземная часть', progress:65 },
+        { name:'Sentinel A — Наземная часть', progress:78 },
+    ] },
+    oil:{ price:1033, currency:'USD/барр', period:'октябрь 2026' }
+};
+
+// ----------------------------------------------------------------------------
+//  9. ДОСТИЖЕНИЯ
+//  id, name, desc, check(state) — функция проверки
+//  В state: commands, uniqueCommands (Set), commandCounts (obj), scpsViewed (Set),
+//           classesViewed (Set), orgsViewed (Set), pagesOpened (Set),
+//           themesChanged, filesRead (Set), wrongCommands, secretAttempts,
+//           konamiDone, unlocked (obj)
+// ----------------------------------------------------------------------------
+const ACHIEVEMENTS = [
+    { id:'first', name:'Первый контакт', desc:'Ввести первую команду', check:s=>s.commands>=1 },
+    { id:'novice', name:'Новичок', desc:'Ввести 10 команд', check:s=>s.commands>=10 },
+    { id:'operator', name:'Оператор', desc:'Ввести 50 команд', check:s=>s.commands>=50 },
+    { id:'veteran', name:'Ветеран', desc:'Ввести 200 команд', check:s=>s.commands>=200 },
+    { id:'legend', name:'Легенда', desc:'Ввести 1000 команд', check:s=>s.commands>=1000 },
+    { id:'scp_curious', name:'Любопытный', desc:'Просмотреть 5 SCP', check:s=>s.scpsViewed.size>=5 },
+    { id:'scp_hunter', name:'Охотник', desc:'Просмотреть 15 SCP', check:s=>s.scpsViewed.size>=15 },
+    { id:'scp_master', name:'Мастер', desc:'Просмотреть 30 SCP', check:s=>s.scpsViewed.size>=30 },
+    { id:'scp_legend', name:'Хранитель', desc:'Просмотреть все SCP', check:s=>s.scpsViewed.size>=SCP_OBJECTS.length },
+    { id:'class_student', name:'Ученик', desc:'Изучить 5 классов', check:s=>s.classesViewed.size>=5 },
+    { id:'class_scholar', name:'Классификатор', desc:'Изучить все классы', check:s=>s.classesViewed.size>=SCP_CLASSES.length },
+    { id:'org_contact', name:'Контакт', desc:'Изучить 3 организации', check:s=>s.orgsViewed.size>=3 },
+    { id:'org_network', name:'Связной', desc:'Изучить все организации', check:s=>s.orgsViewed.size>=ORGANIZATIONS.length },
+    { id:'night_owl', name:'Ночная смена', desc:'Войти после 23:00', check:()=>{const h=new Date().getHours();return h>=23||h<5} },
+    { id:'early_bird', name:'Ранняя пташка', desc:'Войти до 6:00', check:()=>new Date().getHours()<6 },
+    { id:'theme_master', name:'Эстет', desc:'Сменить тему 5 раз', check:s=>s.themesChanged>=5 },
+    { id:'mathematician', name:'Математик', desc:'Ввести 42', check:s=>s.uniqueCommands.has('42') },
+    { id:'traveller', name:'Путешественник', desc:'Открыть 3 страницы', check:s=>s.pagesOpened.size>=3 },
+    { id:'librarian', name:'Библиотекарь', desc:'Прочитать 5 файлов', check:s=>s.filesRead.size>=5 },
+    { id:'archivist', name:'Архивариус', desc:'Прочитать 15 файлов', check:s=>s.filesRead.size>=15 },
+    { id:'persistent', name:'Настойчивый', desc:'20 неизвестных команд', check:s=>s.wrongCommands>=20 },
+    { id:'amnesiac', name:'Забывчивый', desc:'Ввести clear 10 раз', check:s=>(s.commandCounts.clear||0)>=10 },
+    { id:'helper', name:'Помощник', desc:'Ввести help 5 раз', check:s=>(s.commandCounts.help||0)>=5 },
+    { id:'arion_expert', name:'Арионовед', desc:'Ввести arion 3 раза', check:s=>(s.commandCounts.arion||0)>=3 },
+    { id:'neo', name:'Нео', desc:'Ввести matrix', check:s=>s.uniqueCommands.has('matrix') },
+    { id:'debugger', name:'Отладчик', desc:'Ввести debug', check:s=>s.uniqueCommands.has('debug') },
+    { id:'seeker', name:'Искатель', desc:'5 попыток доступа к секретным командам', check:s=>s.secretAttempts>=5 },
+    { id:'zenith_fan', name:'Адепт', desc:'Ввести zenith', check:s=>s.uniqueCommands.has('zenith') },
+    { id:'konami_master', name:'Konami-мастер', desc:'Ввести ↑↑↓↓←→←→BA', check:s=>s.konamiDone },
+    { id:'centurion', name:'Центурион', desc:'Ввести 100 уникальных команд', check:s=>s.uniqueCommands.size>=100 },
+    { id:'completionist', name:'Перфекционист', desc:'Получить 20 достижений', check:s=>Object.keys(s.unlocked).length>=20 },
+    { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
+    { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
+    { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
+    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>ACHIEVEMENTS.filter(a=>(a.stage||1)===1 && !a.stageEnd).every(a=>s.unlocked[a.id]), stage:1, stageEnd:1 }
+];
+
+// ============================================================================
+//                          ДВИЖОК ТЕРМИНАЛА
+// ============================================================================
+
+const output = document.getElementById('output');
+const input = document.getElementById('input');
+const terminal = document.getElementById('terminal');
+const statusbar = document.getElementById('statusbar');
+const footer = document.getElementById('footer');
+const popup = document.getElementById('achievement-popup');
+
+// ---------- Состояние (загружается из localStorage) ----------
+const state = {
+    commands:0,
+    uniqueCommands:new Set(),
+    commandCounts:{},
+    scpsViewed:new Set(),
+    classesViewed:new Set(),
+    orgsViewed:new Set(),
+    pagesOpened:new Set(),
+    themesChanged:0,
+    filesRead:new Set(),
+    wrongCommands:0,
+    secretAttempts:0,
+    konamiDone:false,
+    unlocked:{},
+    history:[],
+    historyIndex:-1,
+    cwd:'/',
+    theme:CONFIG.defaultTheme,
+    sound:true,
+    game:null,
+};
+
+// Загрузка сохранений
+try {
+    const saved = JSON.parse(localStorage.getItem('scp_term_state') || 'null');
+    if (saved) {
+        state.unlocked = saved.unlocked || {};
+        state.history = saved.history || [];
+        state.theme = saved.theme || CONFIG.defaultTheme;
+        state.scpsViewed = new Set(saved.scpsViewed || []);
+        state.classesViewed = new Set(saved.classesViewed || []);
+        state.orgsViewed = new Set(saved.orgsViewed || []);
+        state.pagesOpened = new Set(saved.pagesOpened || []);
+        state.filesRead = new Set(saved.filesRead || []);
+        state.themesChanged = saved.themesChanged || 0;
+        state.konamiDone = saved.konamiDone || false;
+        state.commandCounts = saved.commandCounts || {};
+        state.commands = saved.commands || 0;
+        state.uniqueCommands = new Set(saved.uniqueCommands || []);
+        state.wrongCommands = saved.wrongCommands || 0;
+        state.secretAttempts = saved.secretAttempts || 0;
+        if (saved.sound!==undefined) state.sound=saved.sound;
+    }
+} catch(e) {}
+
+function saveState() {
+    try {
+        localStorage.setItem('scp_term_state', JSON.stringify({
+            unlocked:state.unlocked,
+            history:state.history.slice(-50),
+            theme:state.theme,
+            scpsViewed:[...state.scpsViewed],
+            classesViewed:[...state.classesViewed],
+            orgsViewed:[...state.orgsViewed],
+            pagesOpened:[...state.pagesOpened],
+            filesRead:[...state.filesRead],
+            themesChanged:state.themesChanged,
+            konamiDone:state.konamiDone,
+            commandCounts:state.commandCounts,
+            commands:state.commands,
+            uniqueCommands:[...state.uniqueCommands],
+            wrongCommands:state.wrongCommands,
+            secretAttempts:state.secretAttempts,
+            sound:state.sound,
+        }));
+    } catch(e) {}
+}
+
+// ---------- Вывод ----------
+function printLine(text = '', cls = '') {
+    const div = document.createElement('div');
+    div.className = 'line ' + cls;
+    div.textContent = text;
+    output.appendChild(div);
+    output.scrollTop = output.scrollHeight;
+}
+function print(text = '', cls = '') {
+    String(text).split('\n').forEach(l => printLine(l, cls));
+}
+const rand = a => a[Math.floor(Math.random()*a.length)];
+let busy=false, skipType=false;
+
+function typeLine(text, cls='', delay=18){
+  return new Promise(res=>{
+    const div=document.createElement('div'); div.className='line '+cls; output.appendChild(div);
+    let i=0;
+    const t=setInterval(()=>{
+      if(skipType) i=text.length; else { i++; if(i%3===0) sfx('key'); }
+      div.textContent=text.slice(0,i);
+      output.scrollTop=output.scrollHeight;
+      if(i>=text.length){ clearInterval(t); res(); }
+    },delay);
+  });
+}
+async function typeText(text, cls='', delay=18){
+  for(const l of String(text).split('\n')) await typeLine(l, cls, delay);
+}
+
+// Звук
+let audioCtx=null;
+function sfx(type){
+  if(state.sound===false) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    const P={key:[900,.02,'square',.02],enter:[500,.05,'square',.04],error:[140,.25,'sawtooth',.06],
+             ach:[880,.35,'sine',.08],glitch:[60,.3,'sawtooth',.05]}[type]; if(!P) return;
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=P[0]; o.type=P[2]; g.gain.value=P[3];
+    o.connect(g); g.connect(audioCtx.destination);
+    g.gain.exponentialRampToValueAtTime(.0001, audioCtx.currentTime+P[1]);
+    o.start(); o.stop(audioCtx.currentTime+P[1]);
+  }catch(e){}
+}
+
+// Статус-бар, глюки, ночь
+function setStatus(ok=true){ statusbar.textContent=`SESSION ${CONFIG.session} · NODE: ${CONFIG.node} · LINK: ${ok?'OK':'LOST'}`; }
+function isNight(){ const h=new Date().getHours(); return h>=23||h<6; }
+function scheduleRandom(fn,min,max){ setTimeout(()=>{ fn(); scheduleRandom(fn,min,max); }, min+Math.random()*(max-min)); }
+
+const GLITCH_LINES=['[ПОТЕРЯ СВЯЗИ]','[ПАКЕТ ПОВРЕЖДЁН]','[ОШИБКА СЕКТОРА 0x7F3A]','[СИГНАЛ НЕ ОПОЗНАН]','█▓▒░ ░▒▓█ ░▒▓','[ПЕРЕПОДКЛЮЧЕНИЕ... OK]'];
+const NIGHT_LINES=['замечено движение в секторе 7','[УДАЛЕНО] покинул камеру содержания','дверь B открылась сама','шёпот на канале связи','субъект не отвечает на вызовы','тиканье в пустом помещении'];
+const NIGHT_LOG_EXTRA=['[00:41] [УДАЛЕНО] вернулся','[02:07] камера 3: никого нет, но запись идёт','[03:33] пластинка проиграна без оператора'];
+
+function glitchEvent(){
+  sfx('glitch'); setStatus(false);
+  printLine(rand(GLITCH_LINES),'error');
+  terminal.style.transform='translateX(3px)';
+  setTimeout(()=>{ terminal.style.transform=''; setStatus(true); },400);
+}
+function nightEvent(){
+  if(!isNight()) return;
+  const d=new Date(), hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+  printLine(`[${hm}] ${rand(NIGHT_LINES)}`,'warn');
+}
+
+const FORTUNES=[
+ 'SCP-004: «М4ГИЧ4СКIЕ Ч4СЫ» тикают, даже когда вы их не слышите.',
+ 'SCP-019: пол — это просто договорённость.',
+ 'SCP-009: клинок не изнашивается. В отличие от владельца.',
+ 'SCP-039: топор говорит на 18 языках. Грубить ему всё равно не стоит.',
+ 'SCP-000: шум был здесь раньше вас.',
+ 'SCP-023: что выброшено — будет очищено.',
+ 'SCP-005: не смотрите прямо. Они это любят.',
+ 'LCSA: «Отрицать легче, чем принять. Мы принимаем».',
+ 'К.О.Н.Т.У.Р: «Контроль ради жизни. Стабильность ради будущего».',
+ 'SCP-043: в январе всегда январь.'
+];
+const ALIASES=Object.create(null);
+
+// ---------- Нормализированный путь (для cd + cat) ----------
+function normPath(path){
+    const out = [];
+    for (const p of path.split('/')) {
+        if (!p || p === '.') continue;
+        if (p === '..') { out.pop(); continue; }
+        out.push(p);
+    }
+    return '/' + out.join('/');
+}
+  
+// ---------- Утилиты ----------
+const ROMAN=['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
+function normalizeId(id) {
+    return String(id).replace(/^scp-?/i, '').trim().padStart(3, '0');
+}
+function getClass(id) { return SCP_CLASSES.find(c => c.id === id); }
+function getRisk(id) { return RISK_CLASSES.find(r => r.id === id); }
+function getSCP(id) { return SCP_OBJECTS.find(s => s.id === normalizeId(id)); }
+function dateKey(s){ const m=String(s).match(/(\d{1,2})\.(\d{1,2})\.(\d{2,4})/); return m?`${+m[1]}.${+m[2]}.${+m[3]%100}`:null; }
+
+// ---------- Levenshtein для подсказки опечаток ----------
+function levenshtein(a, b) {
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    const m = [];
+    for (let i = 0; i <= b.length; i++) m[i] = [i];
+    for (let j = 0; j <= a.length; j++) m[0][j] = j;
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            m[i][j] = b[i-1] === a[j-1]
+                ? m[i-1][j-1]
+                : Math.min(m[i-1][j-1]+1, m[i][j-1]+1, m[i-1][j]+1);
+        }
+    }
+    return m[b.length][a.length];
+}
+
+// ---------- Работа с ФС ----------
+function resolvePath(path) {
+    if (!path || path === '/') return { node:FILESYSTEM, path:'/' };
+    const parts = path.replace(/^\//, '').split('/').filter(Boolean);
+    let cur = FILESYSTEM, curPath = '/';
+    for (const p of parts) {
+        if (cur.type !== 'dir' || !cur.children[p]) return null;
+        cur = cur.children[p];
+        curPath = curPath === '/' ? '/' + p : curPath + '/' + p;
+    }
+    return { node:cur, path:curPath };
+}
+
+// ---------- Печать карточки SCP ----------
+function printSCP(scp) {
+    const cls = getClass(scp.class);
+    const risk = getRisk(scp.risk);
+    print(`═══════════ SCP-${scp.id} — ${scp.name} ═══════════`);
+    print(`  Класс:      ${cls ? cls.name + ' (' + cls.latin + ')' : scp.class}`);
+    print(`  Риск:       ${risk ? risk.name + ' (' + risk.latin + ')' : scp.risk}`);
+    print(`  Обнаружен:  ${scp.date}`);
+    print(`  Кто:        ${scp.discoverer}`);
+    print(`  Содержание: ${scp.conditions}`);
+    print('');
+    print(`  Описание:`);
+    print('  ' + scp.description, 'dim');
+    if (scp.addendum) {
+        print('');
+        print('  ДОПОЛНЕНИЕ:', 'warn');
+        print('  ' + scp.addendum, 'dim');
+    }
+    print('═════════════════════════════════════', 'dim');
+    state.scpsViewed.add(scp.id);
+    saveState();
+    checkAchievements();
+}
+
+// ---------- Вызов popup достижения ----------
+function showPopup(ach) {
+    popup.innerHTML = `<div class="title">★ ${ach.name}</div><div class="desc">${ach.desc}</div>`;
+    popup.classList.add('show');
+    setTimeout(() => popup.classList.remove('show'), 4000);
+}
+
+function unlockAchievement(id) {
+    if (state.unlocked[id]) return;
+    state.unlocked[id] = Date.now();
+    saveState();
+    const ach = ACHIEVEMENTS.find(a => a.id === id);
+    if (!ach) return;
+    sfx('ach');
+    showPopup(ach);
+    if (ach.stageEnd) {
+        printLine('');
+        printLine(`  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛`, 'ach');
+        printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
+        printLine('');
+    } else {
+        printLine(`  ★ ДОСТИЖЕНИЕ: ${ach.name} — ${ach.desc}`, 'ach');
+    }
+}
+
+function checkAchievements() {
+    ACHIEVEMENTS.forEach(a => {
+        if (state.unlocked[a.id]) return;
+        try { if (a.check(state)) unlockAchievement(a.id); } catch(e) {}
+    });
+}
+
+// ============================================================================
+//  КОМАНДЫ
+// ============================================================================
+
+// --- Секретные (4.4) — все показывают ACCESS DENIED ---
+async function classified() {
+    state.secretAttempts++; saveState(); checkAchievements(); sfx('error');
+    await typeText('ДОСТУП ЗАПРЕЩЁН.','error',30);
+    await typeText('Требуемый уровень допуска: 5. Ваш уровень: 0/5.','warn',15);
+    print('Попытка доступа зафиксирована.','dim');
+}
+
+// --- Хелперы для секретных команд ---
+const cmdClassification = () => classified();
+const cmdAlert = () => classified();
+const cmdBreach = () => classified();
+const cmdLogs = () => classified();
+const cmdScan = () => classified();
+const cmdAnomalies = () => classified();
+const cmdAccess = () => classified();
+const cmdDecrypt = () => classified();
+const cmdSignal = () => classified();
+
+// --- Реестр команд ---
+const COMMANDS = {
+    // --- 4.1 Базовые ---
+    help: {
+        desc:'Список доступных команд',
+        handler:(args)=>{
+            if (args[0]) {
+                const cmd = COMMANDS[args[0].toLowerCase()];
+                if (!cmd) { printLine(`Нет команды «${args[0]}».`, 'error'); return; }
+                print(`Команда: ${args[0]}`);
+                print(`Описание: ${cmd.desc}`);
+                return;
+            }
+            print('ДОСТУПНЫЕ КОМАНДЫ:', 'head');
+            print('');
+            print('[ Базовые ]', 'warn');
+            ['help','clear','history','whoami','date','time','uptime','echo','theme','exit','ach','reset','sound','alias','unalias'].forEach(c=>{
+                print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
+            });
+            print('');
+            print('[ SCP-База ]', 'warn');
+            ['scp','class','org'].forEach(c=>{
+                print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
+            });
+            print('');
+            print('[ Интеграция ]', 'warn');
+            ['arion','sentinel','budget','oil','open'].forEach(c=>{
+                print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
+            });
+            print('');
+            print('[ Файловая система ]', 'warn');
+            ['ls','cd','cat','pwd','tree','find', 'stat'].forEach(c=>{
+                print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
+            });
+            print(''); print('[ Игры ]','warn');
+            ['hack','guess'].forEach(c=>{
+              print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
+            });
+            print('');
+            print('[ Секретные ]', 'warn');
+            print('  ... найдите сами. Подсказка: `??`.', 'dim');
+        }
+    },
+    '??':{ desc:'Краткая справка', handler:()=>{
+        print('Краткая справка:', 'head');
+        print('  help — все команды');
+        print('  scp list — список SCP');
+        print('  scp show 011 — карточка объекта');
+        print('  class list — классы объектов');
+        print('  org list — организации');
+        print('  open [page] — перейти на страницу');
+        print('  theme [green|amber|white] — тема');
+        print('  clear — очистить экран');
+        print('  exit — выход в SCP-меню');
+        print('');
+        print('В разгадке секретов вам поможет подстановка....', 'dim');
+    } },
+    clear:{ desc:'Очистить экран', handler:()=>{ output.innerHTML=''; } },
+    history:{
+        desc:'История команд',
+        handler:()=>{
+            if (!state.history.length) { printLine('История пуста.', 'dim'); return; }
+            state.history.slice(-30).forEach((c,i)=>printLine(`  ${i+1}. ${c}`, 'dim'));
+        }
+    },
+    whoami:{ desc:'Кто я', handler:()=>{ print('guest (read-only). Уровень допуска: 0/5.', 'dim'); } },
+    date:{ desc:'Дата', handler:()=>{ print(new Date().toLocaleDateString('ru-RU')); } },
+    time:{ desc:'Время', handler:()=>{ print(new Date().toLocaleTimeString('ru-RU')); } },
+    uptime:{
+        desc:'Время работы',
+        handler:()=>{
+            const t = Math.floor((Date.now() - SESSION_START)/1000);
+            const h = Math.floor(t/3600), m = Math.floor((t%3600)/60), s = t%60;
+            print(`Uptime: ${h}ч ${m}м ${s}с`);
+        }
+    },
+    konami:{ desc:'Подсказка', handler:()=>print('Это не команда. Попробуйте нажать ↑↑↓↓←→←→BA...','dim') },
+    echo:{
+        desc:'Вывести текст',
+        handler:(args)=>{ print(args.join(' ')); }
+    },
+    theme:{
+        desc:'Сменить тему: green | amber | white',
+        handler:(args)=>{
+            const t = args[0] && args[0].toLowerCase();
+            if (!['green','amber','white'].includes(t)) {
+                print('Использование: theme [green|amber|white]', 'warn');
+                return;
+            }
+            document.documentElement.setAttribute('data-theme', t);
+            state.theme = t;
+            state.themesChanged++;
+            saveState();
+            checkAchievements();
+            print(`Тема: ${t}`, 'success');
+        }
+    },
+    exit:{ desc:'Выход в SCP-меню', handler:()=>{ print('Отключение от узла...', 'dim'); setTimeout(()=>location.href='SCP-menu.html', 400); } },
+    quit:{ desc:'Выход в SCP-меню', handler:()=>COMMANDS.exit.handler([]) },
+
+    ach:{ desc:'Список достижений', handler:()=>{
+        const total=ACHIEVEMENTS.length, got=Object.keys(state.unlocked).length;
+        print(`ДОСТИЖЕНИЯ: ${got}/${total}`,'head');
+        print('══════════ ЭТАП I ══════════','warn')
+
+        ACHIEVEMENTS.forEach(a=>{
+            const t=state.unlocked[a.id];
+
+            if (a.stageEnd) {
+                print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
+                print(`══════════ ЭТАП ${ROMAN[a.stageEnd+1]} ══════════`,'warn');
+                return;
+            }
+
+            print(`  ${t?'★':'☆'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'success':'dim');
+        });
+    }},
+    
+    reset:{ desc:'Сбросить достижения и прогресс', handler:()=>{
+        print('Будут удалены ВСЕ достижения и статистика. Введите «да» для подтверждения.','warn');
+        state.game={ onInput: async t=>{
+            state.game=null;
+            if (t.toLowerCase()!=='да') { print('Отменено.','dim'); return; }
+            state.unlocked={}; state.commands=0; state.uniqueCommands=new Set(); state.commandCounts={};
+            state.scpsViewed=new Set(); state.classesViewed=new Set(); state.orgsViewed=new Set();
+            state.pagesOpened=new Set(); state.filesRead=new Set(); state.themesChanged=0;
+            state.wrongCommands=0; state.secretAttempts=0; state.konamiDone=false; state.history=[];
+            saveState(); print('Прогресс сброшен.','success');
+        }};
+    }},
+    sound:{ desc:'sound on|off', handler:(a)=>{
+        if(a[0]==='on') state.sound=true; else if(a[0]==='off') state.sound=false; else { print(`Звук: ${state.sound!==false?'вкл':'выкл'}. Использование: sound on|off`,'warn'); return; }
+        saveState(); print(`Звук: ${state.sound?'вкл':'выкл'}`,'success');
+    }},
+  
+    // --- 4.2 SCP ---
+    scp:{
+        desc:'scp list | show [id] | search [текст] | random | stats | date [дата дд.мм.гггг]',
+        handler:(args)=>{
+            const sub = (args[0]||'').toLowerCase();
+            if (sub === 'list') {
+                print(`НАЙДЕНО ОБЪЕКТОВ: ${SCP_OBJECTS.length}`, 'head');
+                print('');
+                SCP_OBJECTS.forEach(s=>{
+                    const cls = getClass(s.class), risk = getRisk(s.risk);
+                    print(`  SCP-${s.id}  ${s.name}  [${cls?cls.latin:s.class}/${risk?risk.latin:s.risk}]`, 'dim');
+                });
+            } else if (sub === 'show') {
+                const id = args[1];
+                if (!id) { print('Использование: scp show [id]', 'warn'); return; }
+                const scp = getSCP(id);
+                if (!scp) { print(`SCP-${id} не найден.`, 'error'); return; }
+                printSCP(scp);
+            } else if (sub === 'search') {
+                const q = args.slice(1).join(' ').toLowerCase();
+                if (!q) { print('Использование: scp search [текст]', 'warn'); return; }
+                const found = SCP_OBJECTS.filter(s =>
+                    s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q)
+                );
+                if (!found.length) { print('Ничего не найдено.', 'warn'); return; }
+                print(`НАЙДЕНО: ${found.length}`, 'head');
+                found.forEach(s => print(`  SCP-${s.id} — ${s.name}`, 'dim'));
+            } else if (sub === 'random') {
+                printSCP(SCP_OBJECTS[Math.floor(Math.random()*SCP_OBJECTS.length)]);
+            } else if (sub === 'date') {
+                const k = dateKey(args[1]||'');
+                if (!k) { print('Использование: scp date дд.мм.гггг','warn'); return; }
+                const found = SCP_OBJECTS.filter(s => dateKey(s.date)===k);
+                if (!found.length) { print('В этот день ничего не найдено.','warn'); return; }
+                print(`НАЙДЕНО В ЭТОТ ДЕНЬ: ${found.length}`,'head');
+                found.forEach(s=>print(`  SCP-${s.id} — ${s.name}`,'dim'));
+            } else if (sub === 'stats') {
+                const byClass={}, byRisk={};
+                SCP_OBJECTS.forEach(s=>{ byClass[s.class]=(byClass[s.class]||0)+1; byRisk[s.risk]=(byRisk[s.risk]||0)+1; });
+                const out=(title,src,label)=>{
+                    print(title,'head');
+                    const max=Math.max(...Object.values(src));
+                    Object.entries(src).sort((a,b)=>b[1]-a[1]).forEach(([k,n])=>
+                        print(`  ${label(k).padEnd(18)} ${'█'.repeat(Math.max(1,Math.round(n/max*20)))} ${n}`,'dim'));
+                };
+                out('ПО КЛАССАМ:',byClass,k=>(getClass(k)||{name:k}).name);
+                print('');
+                out('ПО РИСКУ:',byRisk,k=>(getRisk(k)||{name:k}).name);
+            } else {
+                print('Использование: scp list | show [id] | search [текст] | random | stats | date [дата дд.мм.гггг]', 'warn');
+            }
+        }
+    },
+    class:{
+        desc:'class list | class [id] | class risk | class risk [id]',
+        handler:(args)=>{
+            const sub = (args[0]||'').toLowerCase();
+            if (!sub) { print('Использование: class list | class [id]', 'warn'); return; }
+            if (sub === 'risk') {
+                const q = args.slice(1).join(' ').toLowerCase();
+                if (!q || q==='list') { print('КЛАССЫ РИСКА:','head'); RISK_CLASSES.forEach(r=>print(`  ${r.name} (${r.latin})`,'dim')); return; }
+                const r = RISK_CLASSES.find(x=>x.id===q||x.name.toLowerCase()===q||x.latin.toLowerCase()===q);
+                if (!r) { print(`Класс риска «${q}» не найден.`,'error'); return; }
+                print(`═══ ${r.name} (${r.latin}) ═══`,'head');
+                print(r.description);
+                return;
+            }
+            if (sub === 'list') {
+                print('КЛАССЫ ОБЪЕКТОВ:', 'head');
+                SCP_CLASSES.forEach(c => print(`  ${c.name} (${c.latin})`, 'dim'));
+                return;
+            }
+            const cl = SCP_CLASSES.find(c => c.id === sub || c.name.toLowerCase() === sub || c.latin.toLowerCase() === sub);
+            if (!cl) { print(`Класс «${args[0]}» не найден.`, 'error'); return; }
+            print(`═══ ${cl.name} (${cl.latin}) ═══`, 'head');
+            print(cl.description);
+            print(`Пример: ${cl.example}`, 'dim');
+            state.classesViewed.add(cl.id);
+            saveState();
+            checkAchievements();
+        }
+    },
+    org:{
+        desc:'org list | org [название]',
+        handler:(args)=>{
+            const sub = (args[0]||'').toLowerCase();
+            if (!sub) { print('Использование: org list | org [название]', 'warn'); return; }
+            if (sub === 'list') {
+                print('СВЯЗАННЫЕ ОРГАНИЗАЦИИ:', 'head');
+                ORGANIZATIONS.forEach(o => print(`  ${o.name}`, 'dim'));
+                return;
+            }
+            const query = args.join(' ').toLowerCase();
+            const org = ORGANIZATIONS.find(o =>
+                o.name.toLowerCase().includes(query) ||
+                (o.subtitle||'').toLowerCase().includes(query)
+            );
+            if (!org) { print('Организация не найдена.', 'error'); return; }
+            print(`═══ ${org.name} ═══`, 'head');
+            if (org.subtitle) print(org.subtitle, 'dim');
+            print(`Основана: ${org.founded}`);
+            print(`Ключевые: ${org.keyMembers}`);
+            print('');
+            print('Описание:');
+            print(org.description, 'dim');
+            print('');
+            print(`Ранги: ${org.ranks}`, 'dim');
+            state.orgsViewed.add(org.name);
+            saveState();
+            checkAchievements();
+        }
+    },
+
+    // --- 4.3 Интеграция ---
+    arion:{
+        desc:'Сводка по Arion',
+        handler:(args)=>{
+            if (args[0] === 'phase' && args[1]) {
+                const p = PROJECTS.arion.phases[+args[1]-1];
+                if (!p) { print('Фаза не найдена.', 'error'); return; }
+                print(`Фаза ${args[1]}: ${p.name}`, 'head');
+                print(`Прогресс: ${p.progress}%`);
+                return;
+            }
+            const a = PROJECTS.arion;
+            print('═══ Arion ═══', 'head');
+            print(`Общий прогресс: ${a.progress}%`);
+            print(`Бюджет: $${a.budget.total} млн (потрачено $${a.budget.spent}, осталось $${a.budget.remaining})`);
+            print('');
+            a.phases.forEach((p,i) => print(`  ${i+1}. ${p.name} — ${p.progress}%`, 'dim'));
+            print('');
+            print('Полный дашборд: open arion', 'dim');
+        }
+    },
+    sentinel:{
+        desc:'Сводка по Sentinel',
+        handler:()=>{
+            const s = PROJECTS.sentinel;
+            print(`═══ ${s.name} ═══`, 'head');
+            print(`Общий прогресс: ${s.progress}%`);
+            print('');
+            s.phases.forEach((p,i) => print(`  ${i+1}. ${p.name} — ${p.progress}%`, 'dim'));
+            print('');
+            print('Полный дашборд: open sentinel', 'dim');
+        }
+    },
+    budget:{ desc:'Бюджет проекта', handler:()=>{ const b=PROJECTS.arion.budget; print('═══ БЮДЖЕТ ═══', 'head'); print(`Всего: $${b.total} млн`); print(`Потрачено: $${b.spent} млн`); print(`Осталось: $${b.remaining} млн`); } },
+    oil:{ desc:'Цена нефти', handler:()=>{ const o=PROJECTS.oil; print(`Цена нефти: $${o.price} ${o.currency} (${o.period})`); } },
+    open:{
+        desc:'Перейти на страницу: open [page]',
+        handler:(args)=>{
+            const page = (args[0]||'').toLowerCase();
+            const url = PAGE_MAP[page];
+            if (!url) { print(`Неизвестная страница: ${page}`, 'error'); print('Доступно: ' + Object.keys(PAGE_MAP).join(', '), 'dim'); return; }
+            state.pagesOpened.add(page);
+            saveState();
+            checkAchievements();
+            print(`Открываю ${url}...`, 'dim');
+            setTimeout(()=>location.href=url, 400);
+        }
+    },
+
+    // --- 4.4 Засекреченные ---
+    containment:{ desc:'Засекречено', handler:cmdClassification },
+    alert:{ desc:'Засекречено', handler:cmdAlert },
+    breach:{ desc:'Засекречено', handler:cmdBreach },
+    logs:{ desc:'Засекречено', handler:cmdLogs },
+    scan:{ desc:'Засекречено', handler:cmdScan },
+    anomalies:{ desc:'Засекречено', handler:cmdAnomalies },
+    access:{ desc:'Засекречено', handler:cmdAccess },
+    decrypt:{ desc:'Засекречено', handler:cmdDecrypt },
+    signal:{ desc:'Засекречено', handler:cmdSignal },
+
+    // --- 4.5 Файловая система ---
+    ls:{
+        desc:'Список файлов',
+        handler:(args=[])=>{
+            const all = args.includes('-a');
+            const r = resolvePath(state.cwd);
+            if (!r || r.node.type !== 'dir') { print('Ошибка ФС.','error'); return; }
+            const entries = Object.entries(r.node.children).filter(([n])=>all||!n.startsWith('.'));
+            if (!entries.length) { printLine('(пусто)','dim'); return; }
+            entries.forEach(([name,node])=>print(`  ${name}${node.type==='dir'?'/':''}`,'dim'));
+        }},
+        dir:{ desc:'Синоним ls', handler:(a)=>COMMANDS.ls.handler(a) },
+    cd:{
+        desc:'Перейти в папку',
+        handler:(args)=>{
+            const target = args[0] || '/';
+            const newPath = normPath(target.startsWith('/') ? target : state.cwd + '/' + target);
+            const r = resolvePath(newPath);
+            if (!r) { print('Путь не найден.', 'error'); return; }
+            if (r.node.type !== 'dir') { print('Это не папка.', 'error'); return; }
+            state.cwd = r.path;
+            print(`Текущая папка: ${state.cwd}`, 'dim');
+        }
+    },
+    cat:{
+        desc:'Прочитать файл (без аргументов — ASCII-кот)',
+        handler:(args)=>{
+            const name = args[0];
+            if (!name) { print(' /\\_/\\\n( o.o )\n > ^ <'); return; }
+            const path = normPath(name.startsWith('/') ? name : state.cwd + '/' + name);
+            const r = resolvePath(path);
+            if (!r) { print('Файл не найден.', 'error'); return; }
+            if (r.node.type !== 'file') { print('Это не файл.', 'error'); return; }
+            let text = r.node.content;
+            if (r.path==='/logs/session.log' && isNight()) text += '\n' + NIGHT_LOG_EXTRA.join('\n');
+            print(text);
+            state.filesRead.add(r.path);
+            saveState();
+            checkAchievements();
+        }
+    },
+    pwd:{ desc:'Текущая папка', handler:()=>print(state.cwd) },
+    tree:{
+        desc:'Дерево каталогов',
+        handler:()=>{
+            function walk(node, indent) {
+                if (node.type === 'file') return;
+                Object.entries(node.children).forEach(([name, child]) => {
+                    if (name.startsWith('.')) return;
+                    print(`${indent}${name}${child.type==='dir'?'/':''}`, 'dim');
+                    if (child.type === 'dir') walk(child, indent + '  ');
+                });
+            }
+            walk(FILESYSTEM, '');
+        }
+    },
+    find:{ desc:'find текст — поиск по ФС', handler:(args)=>{
+        const all = args.includes('-a');
+        const q = args.filter(a=>a!=='-a').join(' ').toLowerCase();
+        if (!q) { print('Использование: find текст','warn'); return; }
+        const hits=[];
+        (function walk(node,path){
+            for (const [n,c] of Object.entries(node.children)) {
+                if (n.startsWith('.') && !all) continue;
+                const p=(path==='/'?'':path)+'/'+n;
+                if (n.toLowerCase().includes(q)) hits.push(p+(c.type==='dir'?'/':'')+'  [имя]');
+                else if (c.type==='file' && c.content.toLowerCase().includes(q)) hits.push(p+'  [содержимое]');
+                if (c.type==='dir') walk(c,p);
+            }
+        })(FILESYSTEM,'/');
+        if (!hits.length) { print('Ничего не найдено.','warn'); return; }
+        hits.forEach(h=>print('  '+h,'dim'));
+    }},
+
+    stat:{ desc:'stat [файл] — сведения о файле (без аргумента: прогресс чтения)', handler:(args)=>{
+        const files=[];
+        (function walk(node,path){
+            for (const [n,c] of Object.entries(node.children)) {
+                const p=(path==='/'?'':path)+'/'+n;
+                if (c.type==='dir') walk(c,p); else files.push(p);
+            }
+        })(FILESYSTEM,'/');
+    
+        if (!args[0]) {
+            const read=files.filter(p=>state.filesRead.has(p)).length;
+            print('═══ АРХИВ ═══','head');
+            print(`Файлов в системе: ${files.length}`);
+            print(`Прочитано: ${read}/${files.length}`);
+            print(`Не прочитано: ${files.length-read}`,'dim');
+            return;
+        }
+        const r=resolvePath(normPath(args[0].startsWith('/')?args[0]:state.cwd+'/'+args[0]));
+        if (!r) { print('Путь не найден.','error'); return; }
+        if (r.node.type==='dir') {
+            print(`Папка: ${r.path}`,'head');
+            print(`Элементов: ${Object.keys(r.node.children).length}`);
+            return;
+        }
+        const text=r.node.content;
+        print(`Файл: ${r.path}`,'head');
+        print(`Размер: ${text.length} симв.`);
+        print(`Строк: ${text.split('\n').length}`);
+        print(`Прочитан: ${state.filesRead.has(r.path)?'да':'нет'}`, state.filesRead.has(r.path)?'success':'warn');
+    }},
+
+    // --- 4.6 Пасхалки ---
+    matrix:{
+        desc:'Дождь символов',
+        handler:()=>{
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:200;overflow:hidden;pointer-events:none';
+            const cvs = document.createElement('canvas');
+            cvs.width = innerWidth; cvs.height = innerHeight;
+            cvs.style.cssText = 'display:block';
+            overlay.appendChild(cvs);
+            document.body.appendChild(overlay);
+            const ctx = cvs.getContext('2d');
+    
+            // катакана (полуширинная) + цифры + латиница + кириллица + символы
+            const chars = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ'
+                        + '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                        + 'абвгдежзиклмнопрстуфхцчшэюя'
+                        + '<>[]{}=+*/|#$%&@:;?!';
+            const pick = () => chars[Math.floor(Math.random()*chars.length)];
+    
+            const fs = 16;
+            const cols = Math.ceil(cvs.width/fs);
+            const rows = Math.ceil(cvs.height/fs);
+            const color = getComputedStyle(document.documentElement).getPropertyValue('--fg').trim() || '#00ff41';
+    
+            // у каждого столбца своя позиция (часть стартует выше экрана) и скорость
+            const drops  = Array.from({length:cols}, () => -Math.random()*rows);
+            const speeds = Array.from({length:cols}, () => 0.3 + Math.random()*0.9);
+            const lastRow = Array(cols).fill(-1);
+    
+            ctx.font = fs + 'px monospace';
+            const timer = setInterval(()=>{
+                ctx.fillStyle = 'rgba(0,0,0,0.08)';        // длинный затухающий шлейф
+                ctx.fillRect(0,0,cvs.width,cvs.height);
+    
+                for (let i=0;i<cols;i++) {
+                    const row = Math.floor(drops[i]);
+                    if (row >= 0 && row !== lastRow[i]) {
+                        // предыдущая клетка становится обычной (цветной)
+                        if (row > 0) {
+                            ctx.fillStyle = color;
+                            ctx.fillText(pick(), i*fs, (row-1)*fs);
+                        }
+                        // «голова» капли почти белая
+                        ctx.fillStyle = '#e8fff0';
+                        ctx.fillText(pick(), i*fs, row*fs);
+                        lastRow[i] = row;
+                    }
+                    drops[i] += speeds[i];
+                    if (drops[i] > rows && Math.random() > 0.96) {
+                        drops[i] = -Math.random()*20;       // новая капля через случайную паузу
+                        speeds[i] = 0.3 + Math.random()*0.9;
+                        lastRow[i] = -1;
+                    }
+                }
+            }, 50);
+            setTimeout(()=>{ clearInterval(timer); overlay.remove(); }, 6000);
+        }
+    },
+    coffee:{ desc:'Пасхалка', handler:()=>{ print('Error 418: I\'m a teapot'); print('    ( (\n     ) )\n  ........\n  |      |]\n  \\      /\n   `----\''); } },
+    sudo:{ desc:'Пасхалка', handler:()=>print('Nice try. Permission denied.') },
+    '42':{ desc:'Ответ на главный вопрос', handler:()=>print('The answer to life, the universe, and everything.') },
+    xyzzy:{ desc:'Классика', handler:()=>print('A hollow voice says \'fool\'.') },
+    zenith:{
+        desc:'Логотип Zenith',
+        handler:()=>print(
+            ' ________  _______  _   _  _____  _    _\n'+
+            '|___  /  ||  _____|| \\ | ||_   _|| |  | |\n'+
+            '    / /   | |__    |  \\| |  | |  | |__| |\n'+
+            '   / /    |  __|   | . ` |  | |  |  __  |\n'+
+            '  / /__   | |____  | |\\  | _| |_ | |  | |\n'+
+            ' /_____|  |______| |_| \\_||_____||_|  |_|'
+        )
+    },
+    coinflip:{ desc:'Монетка', handler:()=>print(Math.random()<0.5?'Орёл':'Решка') },
+    dice:{ desc:'Кубик', handler:()=>print(`Выпало: ${Math.ceil(Math.random()*6)}`) },
+    godmode:{ desc:'Пасхалка', handler:()=>print('God mode is not available. You are mortal.') },
+    cats:{
+        desc:'ASCII-кот',
+        handler:()=>print(' /\\_/\\\n( o.o )\n > ^ <')
+    },
+    fortune:{ desc:'Случайная цитата из лора', handler:()=>typeText(rand(FORTUNES),'warn',20) },
+    
+    neofetch:{ desc:'Информация о системе', handler:()=>{
+        const logo=['  ____   ____ ____ ',' / ___| / ___|  _ \\',' \\___ \\| |   | |_) |','  ___) | |___|  __/ ',' |____/ \\____|_|    '];
+        const t=Math.floor((Date.now()-SESSION_START)/1000);
+        const info=['guest@zenith-01','---------------',`OS: Foundation OS ${CONFIG.version}`,`Node: ${CONFIG.node}`,
+            `Uptime: ${Math.floor(t/3600)}ч ${Math.floor(t%3600/60)}м`,`SCP в реестре: ${SCP_OBJECTS.length}`,
+            `Достижения: ${Object.keys(state.unlocked).length}/${ACHIEVEMENTS.length}`,`Тема: ${state.theme}`];
+        info.forEach((l,i)=>print((logo[i]||'').padEnd(22)+l));
+    }},
+    
+    alias:{ desc:'alias имя=команда (на сессию)', handler:(args)=>{
+        if (!args.length) {
+            const k=Object.keys(ALIASES);
+            if (!k.length) { print('Алиасов нет.','dim'); return; }
+            k.forEach(a=>print(`  ${a} = ${ALIASES[a]}`,'dim')); return;
+        }
+        const s=args.join(' ');
+        const m=s.match(/^(\S+?)\s*=\s*(.+)$/) || s.match(/^(\S+)\s+(.+)$/);
+        if (!m) { print('Использование: alias имя=команда','warn'); return; }
+        const n=m[1].toLowerCase();
+        if (COMMANDS[n]) { print('Нельзя перекрыть встроенную команду.','error'); return; }
+        ALIASES[n]=m[2].trim(); print(`alias ${n} = ${ALIASES[n]}`,'success');
+    }},
+    unalias:{ desc:'Удалить алиас', handler:(a)=>{ if(ALIASES[a[0]]){ delete ALIASES[a[0]]; print('Удалён.','success'); } else print('Нет такого алиаса.','warn'); } },
+
+    // --- 4.7 Игры ---
+    hack:{ desc:'Мини-игра: подбор пароля', handler:()=>{
+        const WORDS=['ZENITH','SECURE','BUNKER','SIGNAL','ACCESS','SENSOR','ORIGIN','CIPHER','DEFEND','GUARDS','MATRIX','TARGET'];
+        const pool=[...WORDS].sort(()=>Math.random()-.5).slice(0,8);
+        const secret=rand(pool); let tries=4;
+        const like=(a,b)=>[...a].filter((c,i)=>c===b[i]).length;
+        print('ВЗЛОМ: найдите пароль. Попыток: 4. Совпадение = буквы на своих местах. exit — выйти.','head');
+        print(pool.join('  '),'warn');
+        state.game={ onInput: async t=>{
+            const w=t.toUpperCase();
+            if (w==='EXIT') { state.game=null; print('Взлом прерван.','dim'); return; }
+            if (!pool.includes(w)) { print('Этого слова нет в списке.','warn'); return; }
+            if (w===secret) { state.game=null; await typeText('ДОСТУП РАЗРЕШЁН.','success',30); unlockAchievement('hacker'); return; }
+            tries--; sfx('error');
+            print(`Совпадений: ${like(w,secret)}/${secret.length}. Попыток: ${tries}`,'warn');
+            if (tries<=0) { state.game=null; await typeText(`ТЕРМИНАЛ ЗАБЛОКИРОВАН. Пароль был: ${secret}`,'error',25); }
+        }};
+    }},
+    
+    guess:{ desc:'Мини-игра: угадай SCP и класс', handler:()=>{
+        const pool=SCP_OBJECTS.filter(s=>s.date!=='—' && !/SCP-\d+/.test(s.description)); const TOTAL=5;
+        let round=0, score=0, cur=null;
+        const ask=()=>{
+            round++; const s=rand(pool); const mode=Math.random()<.5?'id':'class';
+            cur={s,mode};
+            print('');
+            if (mode==='id') { print(`Раунд ${round}/${TOTAL}. Чей номер? Описание:`,'head'); print('  '+s.description,'dim'); }
+            else { print(`Раунд ${round}/${TOTAL}. Какой класс у SCP-${s.id} «${s.name}»?`,'head'); }
+        };
+        print('GUESS: ответьте на 5 вопросов. exit — выйти.','head'); ask();
+        state.game={ onInput: async t=>{
+            if (t.toLowerCase()==='exit') { state.game=null; print('Игра прервана.','dim'); return; }
+            const {s,mode}=cur; const q=t.toLowerCase();
+            let ok;
+            if (mode==='id') ok = normalizeId(t)===s.id;
+            else { const c=getClass(s.class); ok = c && (q===c.id||q===c.name.toLowerCase()||q===c.latin.toLowerCase()); }
+            if (ok) { score++; print('Верно!','success'); }
+            else { sfx('error'); print(`Неверно. Ответ: ${mode==='id'?'SCP-'+s.id:getClass(s.class).name}`,'error'); }
+            if (round>=TOTAL) {
+                state.game=null;
+                await typeText(`Итог: ${score}/${TOTAL}`,'ach',25);
+                if (score>=4) unlockAchievement('guesser');
+            } else ask();
+        }};
+    }},
+
+    // --- 4.8 Только debug ---
+    debug:{
+        desc:'Отладка состояния',
+        handler:()=>{
+            print('═══ DEBUG ═══', 'head');
+            print(`Команд: ${state.commands}`);
+            print(`Уникальных: ${state.uniqueCommands.size}`);
+            print(`Ошибок: ${state.wrongCommands}`);
+            print(`SCP: ${state.scpsViewed.size}/${SCP_OBJECTS.length}`);
+            print(`Классов: ${state.classesViewed.size}/${SCP_CLASSES.length}`);
+            print(`Орг: ${state.orgsViewed.size}/${ORGANIZATIONS.length}`);
+            print(`Файлов: ${state.filesRead.size}`);
+            print(`Достижений: ${Object.keys(state.unlocked).length}/${ACHIEVEMENTS.length}`);
+            print(`Тема: ${state.theme}`);
+            print(`CWD: ${state.cwd}`);
+        }
+    }
+};
+
+// --- Расширение секретных команд с доп. словом ---
+// 'code red' -> alert
+const EXTRA_CLASSIFIED = ['code red'];
+
+// ============================================================================
+//  ОБРАБОТКА ВВОДА
+// ============================================================================
+
+let SESSION_START = Date.now();
+
+async function processCommand(raw) {
+    let cmd = raw.trim();
+    if (!cmd) return;
+
+    // активная игра/подтверждение перехватывает ввод
+    if (state.game) {
+        busy=true; skipType=false;
+        try { await state.game.onInput(cmd); } finally { busy=false; }
+        return;
+    }
+
+    state.commands++;
+    state.uniqueCommands.add(cmd.toLowerCase());
+    state.history.push(cmd);
+    state.historyIndex = state.history.length;
+
+    // алиасы
+    const f0 = cmd.split(/\s+/)[0].toLowerCase();
+    if (ALIASES[f0]) cmd = ALIASES[f0] + cmd.slice(f0.length);
+
+    const first = cmd.split(/\s+/)[0].toLowerCase();
+    if (Object.hasOwn(COMMANDS, first)) state.commandCounts[first] = (state.commandCounts[first] || 0) + 1;
+
+    busy=true; skipType=false;
+    try {
+        if (cmd.toLowerCase() === 'code red') { await cmdAlert(); }
+        else {
+            const parts = cmd.split(/\s+/);
+            const name = parts[0].toLowerCase();
+            const args = parts.slice(1);
+            const command = Object.hasOwn(COMMANDS, name) ? COMMANDS[name] : null;
+            if (!command) {
+                let best=null, bestDist=3;
+                Object.keys(COMMANDS).forEach(k=>{ const d=levenshtein(name,k); if(d<bestDist){bestDist=d;best=k;} });
+                state.wrongCommands++; sfx('error');
+                print(best ? `Команда «${name}» не найдена. Возможно, вы имели в виду «${best}»?`
+                           : `Команда «${name}» не найдена. Введите «help».`, 'error');
+            } else {
+                try { await command.handler(args); } catch(e) { print('Ошибка выполнения: '+e.message,'error'); }
+            }
+        }
+    } finally { busy=false; }
+    saveState();
+    checkAchievements();
+}
+
+// ============================================================================
+//  АВТОДОПОЛНЕНИЕ, ИСТОРИЯ, КОМБИНАЦИИ
+// ============================================================================
+
+const SUBCOMMANDS = {
+    scp:['list','show','search','random','stats','date'],
+    class:['list','risk'],
+    org:['list'],
+    theme:['green','amber','white'],
+    open:Object.keys(PAGE_MAP),
+    arion:['phase'],
+    sound:['on','off']
+};
+
+input.addEventListener('keydown', e => {
+    if (busy) { e.preventDefault(); skipType=true; return; }
+    if (e.key.length===1 && !e.ctrlKey) sfx('key');
+    if (e.key === 'Enter') {
+        sfx('enter');
+        const val = input.value;
+        if (val.trim()) {
+            printLine(CONFIG.prompt + val, 'input');
+            processCommand(val);
+        }
+        input.value = '';
+        state.historyIndex = state.history.length;
+        e.preventDefault();
+    } else if (e.key === 'Tab') {
+        e.preventDefault();
+        autocomplete();
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (state.historyIndex > 0) {
+            state.historyIndex--;
+            input.value = state.history[state.historyIndex];
+        }
+    } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (state.historyIndex < state.history.length - 1) {
+            state.historyIndex++;
+            input.value = state.history[state.historyIndex];
+        } else {
+            state.historyIndex = state.history.length;
+            input.value = '';
+        }
+    } else if (e.key === 'l' && e.ctrlKey) {
+        e.preventDefault();
+        output.innerHTML = '';
+    } else if (e.key === 'c' && e.ctrlKey) {
+        state.game=null;
+        e.preventDefault();
+        input.value = '';
+    }
+});
+
+function autocomplete() {
+    const val = input.value;
+    const parts = val.trim().split(/\s+/);
+    if (!parts[0]) return;
+    if (parts.length === 1) {
+        const prefix = parts[0].toLowerCase();
+        const matches = Object.keys(COMMANDS).filter(c => c.startsWith(prefix));
+        if (matches.length === 1) {
+            input.value = matches[0] + ' ';
+        } else if (matches.length > 1) {
+            printLine('  ' + matches.join('  '), 'dim');
+        }
+    } else {
+        const first = parts[0].toLowerCase();
+        const subs = SUBCOMMANDS[first];
+        if (!subs) return;
+        const last = parts[parts.length-1].toLowerCase();
+        const matches = subs.filter(s => s.startsWith(last));
+        if (matches.length === 1) {
+            parts[parts.length-1] = matches[0];
+            input.value = parts.join(' ') + ' ';
+        } else if (matches.length > 1) {
+            printLine('  ' + matches.join('  '), 'dim');
+        }
+    }
+}
+
+// Konami
+let konamiBuf = [];
+const KONAMI_SEQ = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+document.addEventListener('keydown', e => {
+    if (e.repeat) return;
+    if (['Shift','Control','Alt','Meta','CapsLock'].includes(e.key)) return;
+    konamiBuf.push(e.code);
+    if (konamiBuf.length > KONAMI_SEQ.length) konamiBuf.shift();
+    if (konamiBuf.join() === KONAMI_SEQ.join()) {
+    state.konamiDone = true;
+    saveState();
+    checkAchievements();
+    konamiBuf = [];
+    setTimeout(()=>{ input.value=''; }, 0);
+        (async()=>{
+            busy=true; skipType=false;
+            print('');
+            await typeText('  ↑↑↓↓←→←→BA — секретный код активирован!','ach',25);
+            print('  +30 жизней, бесконечные патроны.','dim');
+            print('');
+            busy=false;
+        })();
+    }
+});
+
+// Клик по терминалу → фокус
+terminal.addEventListener('click', () => input.focus());
+
+// `??` — отдельная обработка через input
+input.addEventListener('input', () => {
+    // Ничего не делаем, но можно добавить подсветку
+});
+
+// ============================================================================
+//  ВООТ И ИНИЦИАЛИЗАЦИЯ
+// ============================================================================
+
+let booting = true;
+document.addEventListener('click', () => { booting = false; });
+document.addEventListener('keydown', () => { booting = false; });
+
+async function boot() {
+    const lines = [
+        'FOUNDATION BIOS v2.1.4',
+        'Memory check .......... OK',
+        'Boot device: /dev/zenith-01',
+        'Loading kernel ............ done',
+        'Mounting /secure .......... OK',
+        'Verifying signature ....... OK',
+        'Handshake with NODE: ZENITH-01 ............ ACCEPTED',
+        'Authentication: guest (read-only)',
+        '',
+        "Type 'help' to list available commands. '??' for hint."
+    ];
+    for (const l of lines) {
+        printLine(l);
+        if (booting) await new Promise(r => setTimeout(r, CONFIG.bootSpeed));
+    }
+    booting = false;
+    input.focus();
+    checkAchievements();
+}
+
+function init() {
+    document.documentElement.setAttribute('data-theme', state.theme);
+    document.getElementById('header-text').textContent = `FOUNDATION SECURE TERMINAL — ${CONFIG.version}`;
+    setStatus(true);
+    if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+    // footer обновим интервалом
+    setInterval(() => {
+        const t = Math.floor((Date.now()-SESSION_START)/1000);
+        const d = Math.floor(t/86400), h = Math.floor((t%86400)/3600);
+        const cpu = 10 + Math.floor(Math.random()*8);
+        const mem = (3 + Math.random()).toFixed(1);
+        footer.textContent = `[▮▮▮▮▯] CPU ${cpu}% · MEM ${mem} GB · UPTIME ${d}d ${h}h`;
+    }, 3000);
+
+    scheduleRandom(glitchEvent, 60000, 180000);   // редкие глюки
+    scheduleRandom(nightEvent, 30000, 90000);     // ночные события (только 23:00–06:00)
+  
+    boot();
+}
+
+init();
+</script>
+</body>
+</html>
