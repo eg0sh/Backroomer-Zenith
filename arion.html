@@ -1268,7 +1268,11 @@
             if (sub.pct >= 100) return false;
             const fc = calculateForecast(sub);
             if (!fc) return false;
-            return fc < new Date();
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const forecastDate = new Date(fc);
+            forecastDate.setHours(0, 0, 0, 0);
+            return forecastDate < today;
         }
 
         // ============================================================
