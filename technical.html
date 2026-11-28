@@ -705,7 +705,7 @@ const COMMANDS = {
         const list=ACHIEVEMENTS.filter(a=>!a.stageEnd);
         const total=list.length, got=list.filter(a=>state.unlocked[a.id]).length;
         print(`ДОСТИЖЕНИЯ: ${got}/${total}`,'head');
-        print('══════════ ЭТАП I ══════════','warn')
+        print('══════════ ЭТАП I ══════════','warn');
 
         ACHIEVEMENTS.forEach(a=>{
             const t=state.unlocked[a.id];
