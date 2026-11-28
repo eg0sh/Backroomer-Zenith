@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -194,18 +194,29 @@ const FILESYSTEM = {
     type:'dir', children:{
         '.diary.secret':{ type:'file', content:'Дневник дежурного\n\nСегодня опять слышал шум. Все говорят, что это нормально.\nЯ тоже говорю. Но кофе в автомате стал на вкус как помехи.' },
         'readme.txt':{ type:'file', content:'FOUNDATION SECURE TERMINAL\n\nДобро пожаловать, гость. Уровень допуска: 0/5.\nВведите `help`, чтобы увидеть список команд.\nВведите `??` для краткой подсказки.' },
+        'notice.txt':{ type:'file', content:'ОБЪЯВЛЕНИЕ\n\nПерсоналу напоминается: шум на уровнях не является поводом для паники.\nЕсли шум ответил вам по имени, сообщите в отдел наблюдения.\nНе отвечайте ему.' },
+        'archive':{ type:'dir', children:{
+            'first_record.txt':{ type:'file', content:'ПЕРВАЯ ЗАПИСЬ РЕЕСТРА\n\n6.03.26. Зафиксирован SCP-000.\nЗаписавший не смог описать источник звука.\nПометка на полях: «он всегда был здесь».' },
+            '.last_entry.secret':{ type:'file', content:'Последняя запись архивариуса\n\nЯ перечитал все файлы по два раза.\nВ каждом из них на одну строку больше, чем я помню.' }
+        } },
         'docs':{ type:'dir', children:{
             '.old_memo.secret':{ type:'file', content:'Служебная записка (не для печати)\n\nСнеговики с небес — единственное, что нравится всему персоналу.\nПредложение: объявить SCP-021 талисманом Фонда. Отклонено.' },
             'report_2026.txt':{ type:'file', content:'ГОДОВОЙ ОТЧЁТ 2026\n\nЗа год появилось множество новых аномалий.\nФонд практически ничего не сделал.\nПоявилось 7 связанных организаций, работающих с аномалиями.\nНаиболее активные: К.О.Н.Т.У.Р, A-co, LCSA.' },
+            'protocols.txt':{ type:'file', content:'ОБЩИЕ ПРОТОКОЛЫ\n\n1. Не смотреть прямо на то, что исчезает при взгляде.\n2. Не отвечать на звуки без источника.\n3. Не открывать двери, которые открылись сами.\n4. Если пол исчез, это уже не протокол.' },
+            'personnel.txt':{ type:'file', content:'ПЕРСОНАЛ\n\nНаиболее активные организации: К.О.Н.Т.У.Р, A-co, LCSA.\nКоличество сотрудников: [ДАННЫЕ УДАЛЕНЫ]\nКоличество Зануд: больше, чем хотелось бы.' },
+            'incident_0306.txt':{ type:'file', content:'ИНЦИДЕНТ 6.03.26\n\nПервое наблюдение Жуткого Шума на Ур.0.\nНаблюдатель: BEZL_gaming.\nИсход: наблюдатель продолжил наблюдение.' },
             'manifest.txt':{ type:'file', content:'МАНИФЕСТ SCP-ФОНДА\n\nSecure. Contain. Protect.\nМы защищаем нормальность любой ценой.\nМы - последний рубеж между человечеством и хаосом.' },
             'hint.txt':{ type:'file', content:'Подсказка:\n\nПопробуйте ввести `42`. Или `xyzzy`. Или `matrix`.\nА ещё попробуйте ↑↑↓↓←→←→BA...' }
         } },
         'logs':{ type:'dir', children:{
             'session.log':{ type:'file', content:'[22:14] дверь B открыта\n[22:18] дверь B закрыта\n[23:02] [УДАЛЕНО] замечен в коридоре\n[23:03] субъект исчез\n[04:11] [УДАЛЕНО] активирован в секторе 7\n[04:12] потеря связи с сектором' }
+            'night_watch.log':{ type:'file', content:'[00:10] обход завершён, всё спокойно\n[01:25] дверь B открылась сама\n[02:40] обход завершён, всё спокойно\n[03:33] обход не начинался\n[03:34] обход завершён' },
+            'camera_03.log':{ type:'file', content:'[ЗАПИСЬ] камера 3\n\n02:07 никого нет\n02:08 никого нет\n02:09 никого нет, запись идёт\n02:10 запись остановлена оператором\n(оператора в смене не было)' },
         } },
         'classified':{ type:'dir', children:{
             '.o5_joke.secret':{ type:'file', content:'— Почему Фонд не боится темноты?\n— Потому что там уже сидит SCP-005.\n\n(анекдот одобрен советом, хотя никто не смеялся)' },
             'file_226.enc':{ type:'file', content:'[ЗАШИФРОВАНО]\nТребуется допуск уровня 5.\nОбратитесь в отдел криптографии.' },
+            'o5_memo.enc':{ type:'file', content:'[ЗАШИФРОВАНО]\n\nЗаголовок читаем: «ПРОЕКТ ZENITH».\nОстальное требует допуска уровня 5.\nОбратитесь в раздел криптографии.' },
             'redacted.txt':{ type:'file', content:'[ДАННЫЕ УДАЛЕНЫ]\nДоступ запрещён.' }
         } }
     }
@@ -286,7 +297,7 @@ const ACHIEVEMENTS = [
     { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
     { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
     { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
-    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>Object.keys(s.unlocked).length>=34, stage:1 }
+    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>ACHIEVEMENTS.filter(a=>(a.stage||1)===1 && !a.final).every(a=>s.unlocked[a.id]), stage:1, final:true }
 ];
 
 // ============================================================================
@@ -463,6 +474,7 @@ function normPath(path){
 }
   
 // ---------- Утилиты ----------
+const ROMAN=['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
 function normalizeId(id) {
     return String(id).replace(/^scp-?/i, '').trim().padStart(3, '0');
 }
@@ -540,9 +552,9 @@ function unlockAchievement(id) {
     if (!ach) return;
     sfx('ach');
     showPopup(ach);
-    if (ach.stage === 1) {
+    if (ach.stageEnd) {
         printLine('');
-        printLine('  ♛ ЭТАП I ЗАВЕРШЁН ♛', 'ach');
+        printLine('  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛', 'ach');
         printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
         printLine('');
     } else {
@@ -611,7 +623,7 @@ const COMMANDS = {
             });
             print('');
             print('[ Файловая система ]', 'warn');
-            ['ls','cd','cat','pwd','tree','find'].forEach(c=>{
+            ['ls','cd','cat','pwd','tree','find', 'stat'].forEach(c=>{
                 print(`  ${c.padEnd(10)} ${COMMANDS[c].desc}`, 'dim');
             });
             print(''); print('[ Игры ]','warn');
@@ -688,9 +700,9 @@ const COMMANDS = {
         ACHIEVEMENTS.forEach(a=>{
             const t=state.unlocked[a.id];
 
-            if (a.stage === 1) {
+            if (a.stageEnd) {
                 print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
-                print('══════════ ЭТАП II ══════════','warn')
+                print('══════════ ЭТАП ${ROMAN[a.stageEnd+1]} ══════════','warn')
                 return;
             }
 
@@ -960,6 +972,37 @@ const COMMANDS = {
         })(FILESYSTEM,'/');
         if (!hits.length) { print('Ничего не найдено.','warn'); return; }
         hits.forEach(h=>print('  '+h,'dim'));
+    }},
+
+    stat:{ desc:'stat [файл] — сведения о файле (без аргумента: прогресс чтения)', handler:(args)=>{
+        const files=[];
+        (function walk(node,path){
+            for (const [n,c] of Object.entries(node.children)) {
+                const p=(path==='/'?'':path)+'/'+n;
+                if (c.type==='dir') walk(c,p); else files.push(p);
+            }
+        })(FILESYSTEM,'/');
+    
+        if (!args[0]) {
+            const read=files.filter(p=>state.filesRead.has(p)).length;
+            print('═══ АРХИВ ═══','head');
+            print(`Файлов в системе: ${files.length}`);
+            print(`Прочитано: ${read}/${files.length}`);
+            print(`Не прочитано: ${files.length-read}`,'dim');
+            return;
+        }
+        const r=resolvePath(normPath(args[0].startsWith('/')?args[0]:state.cwd+'/'+args[0]));
+        if (!r) { print('Путь не найден.','error'); return; }
+        if (r.node.type==='dir') {
+            print(`Папка: ${r.path}`,'head');
+            print(`Элементов: ${Object.keys(r.node.children).length}`);
+            return;
+        }
+        const text=r.node.content;
+        print(`Файл: ${r.path}`,'head');
+        print(`Размер: ${text.length} симв.`);
+        print(`Строк: ${text.split('\n').length}`);
+        print(`Прочитан: ${state.filesRead.has(r.path)?'да':'нет'}`, state.filesRead.has(r.path)?'success':'warn');
     }},
 
     // --- 4.6 Пасхалки ---
