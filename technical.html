@@ -35,12 +35,6 @@ body{background:radial-gradient(ellipse at center,#0f1511 0%,#050605 70%,#000 10
 .achievement-popup .title{font-weight:bold;margin-bottom:.2rem}
 .achievement-popup .desc{color:var(--fg-dim);font-size:.8rem}
 @media (max-width:700px){body{padding:0}.terminal{height:100vh;max-width:100%;border-radius:0;border:none}.achievement-popup{top:auto;bottom:1rem;right:1rem;left:1rem;max-width:none}}
-body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
-  background-image:linear-gradient(rgba(0,255,65,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,65,.035) 1px,transparent 1px);
-  background-size:48px 48px;
-  mask-image:radial-gradient(ellipse at center,transparent 35%,#000 100%);
-  -webkit-mask-image:radial-gradient(ellipse at center,transparent 35%,#000 100%)}
-.terminal{z-index:1}
 body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.04;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
 </style>
@@ -426,7 +420,8 @@ function sfx(type){
     audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     const P={key:[900,.02,'square',.02],enter:[500,.05,'square',.04],error:[140,.25,'sawtooth',.06],
-             ach:[880,.35,'sine',.08],glitch:[60,.3,'sawtooth',.05]}[type]; if(!P) return;
+             ach:[880,.35,'sine',.08],glitch:[60,.3,'sawtooth',.05]}[type]; if(!P) return,
+             stageA:[1047,.4,'sine',.1], stageB:[1319,.4,'sine',.1], stageC:[1568,.9,'sine',.12];
     const o=audioCtx.createOscillator(), g=audioCtx.createGain();
     o.frequency.value=P[0]; o.type=P[2]; g.gain.value=P[3];
     o.connect(g); g.connect(audioCtx.destination);
@@ -483,6 +478,7 @@ function normPath(path){
   
 // ---------- Утилиты ----------
 const ROMAN=['','I','II','III','IV','V','VI','VII','VIII','IX','X'];
+const fsClass=(name,node)=> node.type==='dir' ? 'warn' : name.endsWith('.secret') ? 'success' : name.endsWith('.enc') ? 'error' : 'dim';
 function normalizeId(id) {
     return String(id).replace(/^scp-?/i, '').trim().padStart(3, '0');
 }
@@ -552,20 +548,23 @@ function showPopup(ach) {
     setTimeout(() => popup.classList.remove('show'), 4000);
 }
 
-function unlockAchievement(id) {
+async function unlockAchievement(id) {
     if (state.unlocked[id]) return;
     state.unlocked[id] = Date.now();
     saveState();
     const ach = ACHIEVEMENTS.find(a => a.id === id);
     if (!ach) return;
-    sfx('ach');
     showPopup(ach);
     if (ach.stageEnd) {
+        ['stageA','stageB','stageC'].forEach((s,i)=>setTimeout(()=>sfx(s), i*180));
+        const prev=busy; busy=true; skipType=false;
         printLine('');
-        printLine(`  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛`, 'ach');
-        printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
+        await typeText(`  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛`, 'ach', 45);
+        await typeText(`  ${ach.name} — ${ach.desc}`, 'ach', 25);
         printLine('');
+        busy=prev;
     } else {
+        sfx('ach');
         printLine(`  ★ ДОСТИЖЕНИЕ: ${ach.name} — ${ach.desc}`, 'ach');
     }
 }
@@ -662,7 +661,8 @@ const COMMANDS = {
         desc:'История команд',
         handler:()=>{
             if (!state.history.length) { printLine('История пуста.', 'dim'); return; }
-            state.history.slice(-30).forEach((c,i)=>printLine(`  ${i+1}. ${c}`, 'dim'));
+            const h=state.history.slice(-30), off=state.history.length-h.length;
+            h.forEach((c,i)=>printLine(`  ${off+i+1}. ${c}`,'dim'));
         }
     },
     whoami:{ desc:'Кто я', handler:()=>{ print('guest (read-only). Уровень допуска: 0/5.', 'dim'); } },
@@ -701,7 +701,8 @@ const COMMANDS = {
     quit:{ desc:'Выход в SCP-меню', handler:()=>COMMANDS.exit.handler([]) },
 
     ach:{ desc:'Список достижений', handler:()=>{
-        const total=ACHIEVEMENTS.length, got=Object.keys(state.unlocked).length;
+        const list=ACHIEVEMENTS.filter(a=>!a.stageEnd);
+        const total=list.length, got=list.filter(a=>state.unlocked[a.id]).length;
         print(`ДОСТИЖЕНИЯ: ${got}/${total}`,'head');
         print('══════════ ЭТАП I ══════════','warn')
 
@@ -917,7 +918,7 @@ const COMMANDS = {
             if (!r || r.node.type !== 'dir') { print('Ошибка ФС.','error'); return; }
             const entries = Object.entries(r.node.children).filter(([n])=>all||!n.startsWith('.'));
             if (!entries.length) { printLine('(пусто)','dim'); return; }
-            entries.forEach(([name,node])=>print(`  ${name}${node.type==='dir'?'/':''}`,'dim'));
+            entries.forEach(([name,node])=>print(`  ${name}${node.type==='dir'?'/':''}`, fsClass(name,node)));
         }},
         dir:{ desc:'Синоним ls', handler:(a)=>COMMANDS.ls.handler(a) },
     cd:{
@@ -957,7 +958,7 @@ const COMMANDS = {
                 if (node.type === 'file') return;
                 Object.entries(node.children).forEach(([name, child]) => {
                     if (name.startsWith('.')) return;
-                    print(`${indent}${name}${child.type==='dir'?'/':''}`, 'dim');
+                    print(`${indent}${name}${child.type==='dir'?'/':''}`, fsClass(name,child));
                     if (child.type === 'dir') walk(child, indent + '  ');
                 });
             }
