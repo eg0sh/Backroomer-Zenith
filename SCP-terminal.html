@@ -209,7 +209,7 @@ const FILESYSTEM = {
             'hint.txt':{ type:'file', content:'Подсказка:\n\nПопробуйте ввести `42`. Или `xyzzy`. Или `matrix`.\nА ещё попробуйте ↑↑↓↓←→←→BA...' }
         } },
         'logs':{ type:'dir', children:{
-            'session.log':{ type:'file', content:'[22:14] дверь B открыта\n[22:18] дверь B закрыта\n[23:02] [УДАЛЕНО] замечен в коридоре\n[23:03] субъект исчез\n[04:11] [УДАЛЕНО] активирован в секторе 7\n[04:12] потеря связи с сектором' }
+            'session.log':{ type:'file', content:'[22:14] дверь B открыта\n[22:18] дверь B закрыта\n[23:02] [УДАЛЕНО] замечен в коридоре\n[23:03] субъект исчез\n[04:11] [УДАЛЕНО] активирован в секторе 7\n[04:12] потеря связи с сектором' },
             'night_watch.log':{ type:'file', content:'[00:10] обход завершён, всё спокойно\n[01:25] дверь B открылась сама\n[02:40] обход завершён, всё спокойно\n[03:33] обход не начинался\n[03:34] обход завершён' },
             'camera_03.log':{ type:'file', content:'[ЗАПИСЬ] камера 3\n\n02:07 никого нет\n02:08 никого нет\n02:09 никого нет, запись идёт\n02:10 запись остановлена оператором\n(оператора в смене не было)' },
         } },
@@ -297,7 +297,7 @@ const ACHIEVEMENTS = [
     { id:'secret_reader', name:'Тайный читатель', desc:'Прочитать .secret файл', check:s=>[...s.filesRead].some(p=>p.endsWith('.secret')) },
     { id:'hacker', name:'Хакер', desc:'Выиграть в hack', check:()=>false },
     { id:'guesser', name:'Знаток', desc:'Набрать 4+ в guess', check:()=>false },
-    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>ACHIEVEMENTS.filter(a=>(a.stage||1)===1 && !a.final).every(a=>s.unlocked[a.id]), stage:1, final:true }
+    { id:'stage1_complete', name:'Всё под контролем', desc:'Получить все достижения I этапа', check:s=>ACHIEVEMENTS.filter(a=>(a.stage||1)===1 && !a.stageEnd).every(a=>s.unlocked[a.id]), stage:1, stageEnd:1 }
 ];
 
 // ============================================================================
@@ -554,7 +554,7 @@ function unlockAchievement(id) {
     showPopup(ach);
     if (ach.stageEnd) {
         printLine('');
-        printLine('  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛', 'ach');
+        printLine(`  ♛ ЭТАП ${ROMAN[ach.stageEnd]} ЗАВЕРШЁН ♛`, 'ach');
         printLine(`  ${ach.name} — ${ach.desc}`, 'ach');
         printLine('');
     } else {
@@ -702,7 +702,7 @@ const COMMANDS = {
 
             if (a.stageEnd) {
                 print(`  ${t?'♛':'♕'} ${a.name.padEnd(20)} ${a.desc}${t?'  ('+new Date(t).toLocaleDateString('ru-RU')+')':''}`, t?'ach':'dim');
-                print('══════════ ЭТАП ${ROMAN[a.stageEnd+1]} ══════════','warn')
+                print(`══════════ ЭТАП ${ROMAN[a.stageEnd+1]} ══════════`,'warn');
                 return;
             }
 
