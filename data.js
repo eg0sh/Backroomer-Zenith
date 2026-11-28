@@ -305,7 +305,7 @@ const DATA = (() => {
           { month: 'август.26', value: 788 },
           { month: 'сентябрь.26', value: 846 },
           { month: 'октябрь.26', value: 1033 }
-        ]
+        ],
         oilShortLabels: ['апр','май','июн','июл','авг','сен','окт']
     };
 
@@ -432,6 +432,7 @@ const DATA = (() => {
           description: 'Склад авиационного топлива, заправщики, системы подачи к ВПП и перрону.',
           characteristics: '3 резервуара по 1 000 м³, 4 топливозаправщика, подземные линии к перрону.',
           dependencies: ['M.3'] }
+    ]
     const sentinel = {
         undergroundPhases, surfacePhases,
         parts: [
