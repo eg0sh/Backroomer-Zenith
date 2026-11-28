@@ -432,7 +432,7 @@ const DATA = (() => {
           description: 'Склад авиационного топлива, заправщики, системы подачи к ВПП и перрону.',
           characteristics: '3 резервуара по 1 000 м³, 4 топливозаправщика, подземные линии к перрону.',
           dependencies: ['M.3'] }
-    ]
+    ];
     const sentinel = {
         undergroundPhases, surfacePhases,
         parts: [
